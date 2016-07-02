@@ -50,7 +50,6 @@ module.exports = function() {
     }
 
     function toSystem(system, name, cb) {
-        debug('Starting component %s', name)
         getDependencies(name, system, function(err, dependencies) {
             if (err) return cb(err)
             startComponent(dependencies, name, system, cb)
@@ -58,12 +57,9 @@ module.exports = function() {
     }
 
     function startComponent(dependencies, name, system, cb) {
+        debug('Starting component %s', name)
         components[name].start(dependencies, function(err, started) {
-            if (err) {
-                debug('Component %s failed to start: %s', name, err.message)
-                return cb(err)
-            }
-            debug('Component %s started successfully', name)
+            if (err) return cb(err)
             set(system, name, started)
             cb(null, system)
         })
@@ -83,10 +79,7 @@ module.exports = function() {
         debug('Stopping component %s', name)
         var stop = components[name].stop || noop
         stop(function(err, started) {
-            if (err) {
-                debug('Component %s failed to stop: %s', name, err.message)
-                return cb(err)
-            }
+            if (err) return cb(err)
             debug('Component %s stopped successfully', name)
             cb(null)
         })
