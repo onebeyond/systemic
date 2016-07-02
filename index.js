@@ -44,7 +44,10 @@ module.exports = function() {
 
     function start(cb) {
         debug('Starting system')
-        async.seq(sortComponents, startComponents)(cb)
+        async.seq(sortComponents, startComponents, function(components, cb) {
+            debug('System started')
+            cb(null, components)
+        })(cb)
         return api
     }
 
@@ -64,13 +67,17 @@ module.exports = function() {
         components[name].start(dependencies, function(err, started) {
             if (err) return cb(err)
             set(system, name, started)
+            debug('Component %s started', name)
             cb(null, system)
         })
     }
 
     function stop(cb) {
         debug('Stopping system')
-        async.seq(sortComponents, stopComponents)(cb)
+        async.seq(sortComponents, stopComponents, function(cb) {
+            debug('System stopped')
+            cb()
+        })(cb)
         return api
     }
 
@@ -83,27 +90,29 @@ module.exports = function() {
         var stop = components[name].stop || noop
         stop(function(err, started) {
             if (err) return cb(err)
-            debug('Component %s stopped successfully', name)
+            debug('Component %s stopped', name)
             cb(null)
         })
     }
 
     function sortComponents(cb) {
+        var result = []
         try {
             var graph = new Toposort()
             Object.keys(components).forEach(function(name) {
                 graph.add(name, map(dependencies[name], 'source'))
             })
-            return cb(null, intersection(graph.sort(), Object.keys(components)))
+            result = intersection(graph.sort(), Object.keys(components))
         } catch (err) {
             return cb(err)
         }
+        return cb(null, result)
     }
 
     function getDependencies(name, system, cb) {
         async.reduce(dependencies[name], {}, function(accumulator, dependency, cb) {
             if (!has(system, dependency.source)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.source)))
-            debug('Injecting dependency %s as %s', dependency.source, dependency.destination)
+            debug('Preparing dependency %s as %s', dependency.source, dependency.destination)
             set(accumulator, dependency.destination, get(system, dependency.source))
             cb(null, accumulator)
         }, cb)

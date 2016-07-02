@@ -160,6 +160,16 @@ describe('System', function() {
               })
     })
 
+    it('should inject dependency sub documents', function(done) {
+        system.add('config', new Config({ foo: { bar: 'baz' }}))
+              .add('foo', new Component()).dependsOn({'config.foo': 'config'})
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo.dependencies.config.bar, 'baz')
+                  done()
+              })
+    })
+
     it('should reject direct cyclic dependencies', function(done) {
         system.add('foo', new Component())
               .dependsOn('foo')
@@ -216,6 +226,12 @@ describe('System', function() {
             state.started = true
             state.dependencies = dependencies
             cb(null, state)
+        }
+    }
+
+    function Config(config) {
+        this.start = function(dependencies, cb) {
+            cb(null, config)
         }
     }
 })
