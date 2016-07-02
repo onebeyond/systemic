@@ -3,7 +3,11 @@ var System = require('..')
 
 describe('System', function() {
 
-    var system = new System()
+    var system
+
+    beforeEach(function() {
+        system = new System()
+    })
 
     it('should start without components', function(done) {
         system.start(function(err, components) {
@@ -55,6 +59,13 @@ describe('System', function() {
                     done()
                 })
             })
+    })
+
+    it('should throw an error if the same component is added twice', function() {
+        assert.throws(function() {
+            system.add('foo', new StartStopComponent()).add('foo', new StartStopComponent())
+        }, 'Duplicate component: foo')
+
     })
 
     function StartStopComponent() {

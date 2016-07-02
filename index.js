@@ -45,6 +45,7 @@ module.exports = function() {
 
     function add(name, component) {
         debug('Adding %s', name)
+        if (components.hasOwnProperty(name)) throw new Error('Duplicate component: ' + name)
         components[name] = component
         return api
     }
