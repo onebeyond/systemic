@@ -25,6 +25,9 @@
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",
-    "debug": "^2.2.0"
+    "debug": "^2.2.0",
+    "lodash.get": "^4.3.0",
+    "lodash.has": "^4.4.0",
+    "lodash.set": "^4.2.0"
   }
 }
