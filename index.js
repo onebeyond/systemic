@@ -6,6 +6,7 @@ var get = require('lodash.get')
 var set = require('lodash.set')
 var has = require('lodash.has')
 var intersection = require('lodash.intersection')
+var map = require('lodash.map')
 
 module.exports = function() {
 
@@ -27,8 +28,12 @@ module.exports = function() {
 
     function dependsOn() {
         if (!current) throw new Error('You must add a component before calling dependsOn')
-        var names = Array.prototype.slice.call(arguments)
-        dependencies[current] = dependencies[current].concat(names)
+        var args = Array.prototype.slice.call(arguments)
+        dependencies[current] = args.reduce(function(accumulator, arg) {
+            var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
+            var destination = typeof arg === 'string' ? arg : arg[source]
+            return accumulator.concat({ source: source, destination: destination })
+        }, dependencies[current])
         return api
     }
 
@@ -73,16 +78,17 @@ module.exports = function() {
     function sortComponents() {
         var graph = new Toposort()
         Object.keys(components).forEach(function(name) {
-            graph.add(name, dependencies[name])
+            graph.add(name, map(dependencies[name], 'source'))
         })
         return intersection(graph.sort().reverse(), Object.keys(components))
     }
 
     function getDependencies(name, system, cb) {
-        async.reduce(dependencies[name], {}, function(dependencies, dependencyName, cb) {
-            if (!has(system, dependencyName)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependencyName)))
-            set(dependencies, dependencyName, get(system, dependencyName))
-            cb(null, dependencies)
+        async.reduce(dependencies[name], {}, function(accumulator, dependency, cb) {
+            if (!has(system, dependency.source)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.source)))
+            debug('Injecting dependency %s as %s', dependency.source, dependency.destination)
+            set(accumulator, dependency.destination, get(system, dependency.source))
+            cb(null, accumulator)
         }, cb)
     }
 

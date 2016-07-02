@@ -126,6 +126,18 @@ describe('System', function() {
               })
     })
 
+    it('should map dependencies to a new name', function(done) {
+        system.add('bar', new Component())
+              .add('foo', new Component())
+                  .dependsOn({ bar: 'baz' })
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(!components.foo.dependencies.bar)
+                  assert(components.foo.dependencies.baz)
+                  done()
+              })
+    })
+
     it('should inject dependencies defined out of order', function(done) {
         system.add('foo', new Component()).dependsOn('bar')
               .add('bar', new Component())
