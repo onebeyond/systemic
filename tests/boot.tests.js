@@ -61,11 +61,22 @@ describe('System', function() {
             })
     })
 
-    it('should throw an error if the same component is added twice', function() {
+    it('should reject duplicate components', function() {
         assert.throws(function() {
             system.add('foo', new StartStopComponent()).add('foo', new StartStopComponent())
         }, 'Duplicate component: foo')
+    })
 
+    it('should reject attempts to add an undefined component', function() {
+        assert.throws(function() {
+            system.add('foo', undefined)
+        }, 'Component foo is null or undefined')
+    })
+
+    it('should reject components without a start function', function() {
+        assert.throws(function() {
+            system.add('foo', {})
+        }, 'Component foo is missing a start function')
     })
 
     function StartStopComponent() {

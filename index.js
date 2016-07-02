@@ -1,5 +1,6 @@
 var async = require('async')
 var debug = require('debug')('node-boot:index')
+var format = require('util').format
 
 module.exports = function() {
 
@@ -45,7 +46,9 @@ module.exports = function() {
 
     function add(name, component) {
         debug('Adding %s', name)
-        if (components.hasOwnProperty(name)) throw new Error('Duplicate component: ' + name)
+        if (components.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
+        if (!component) throw new Error(format('Component %s is null or undefined', name))
+        if (!component.start) throw new Error(format('Component %s is missing a start function', name))
         components[name] = component
         return api
     }
