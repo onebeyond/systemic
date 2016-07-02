@@ -12,33 +12,30 @@ var intersection = require('lodash.intersection')
 
 module.exports = function() {
 
-    var components = {}
-    var dependencies = {}
+    var definitions = {}
     var current
-
 
     function add(name, component) {
         debug('Adding %s', name)
-        if (components.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
+        if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         if (!component.start) throw new Error(format('Component %s is missing a start function', name))
-        components[name] = component
-        dependencies[name] = []
+        definitions[name] = { component: component, dependencies: [] }
         current = name
         return api
     }
 
     function dependsOn() {
         if (!current) throw new Error('You must add a component before calling dependsOn')
-        dependencies[current] = toArray(arguments).reduce(toDependencyDefinitions, dependencies[current])
+        definitions[current].dependencies = toArray(arguments).reduce(toDependencyDefinitions, definitions[current].dependencies)
         return api
     }
 
     function toDependencyDefinitions(accumulator, arg) {
         var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
         var destination = typeof arg === 'string' ? arg : arg[source]
-        if (find(dependencies[current], { source: source })) throw new Error(format('Component %s has a duplicate dependency %s', current, source))
-        if (find(dependencies[current], { destination: destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, destination))
+        if (find(definitions[current].dependencies, { source: source })) throw new Error(format('Component %s has a duplicate dependency %s', current, source))
+        if (find(definitions[current].dependencies, { destination: destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, destination))
         return accumulator.concat({ source: source, destination: destination })
     }
 
@@ -64,7 +61,7 @@ module.exports = function() {
 
     function startComponent(dependencies, name, system, cb) {
         debug('Starting component %s', name)
-        components[name].start(dependencies, function(err, started) {
+        definitions[name].component.start(dependencies, function(err, started) {
             if (err) return cb(err)
             set(system, name, started)
             debug('Component %s started', name)
@@ -87,7 +84,7 @@ module.exports = function() {
 
     function stopComponent(name, cb) {
         debug('Stopping component %s', name)
-        var stop = components[name].stop || noop
+        var stop = definitions[name].component.stop || noop
         stop(function(err, started) {
             if (err) return cb(err)
             debug('Component %s stopped', name)
@@ -99,10 +96,10 @@ module.exports = function() {
         var result = []
         try {
             var graph = new Toposort()
-            Object.keys(components).forEach(function(name) {
-                graph.add(name, map(dependencies[name], 'source'))
+            Object.keys(definitions).forEach(function(name) {
+                graph.add(name, map(definitions[name].dependencies, 'source'))
             })
-            result = intersection(graph.sort(), Object.keys(components))
+            result = intersection(graph.sort(), Object.keys(definitions))
         } catch (err) {
             return cb(err)
         }
@@ -110,7 +107,7 @@ module.exports = function() {
     }
 
     function getDependencies(name, system, cb) {
-        async.reduce(dependencies[name], {}, function(accumulator, dependency, cb) {
+        async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
             if (!has(system, dependency.source)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.source)))
             debug('Preparing dependency %s as %s', dependency.source, dependency.destination)
             set(accumulator, dependency.destination, get(system, dependency.source))
