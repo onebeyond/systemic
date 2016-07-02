@@ -109,6 +109,16 @@ describe('System', function() {
               })
     })
 
+    it('should inject dependencies defined out of order', function(done) {
+        system.add('foo', new Component()).dependsOn('bar')
+              .add('bar', new Component())
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo.dependencies.bar)
+                  done()
+              })
+    })
+
     function Component() {
 
         var state = { started: true, stopped: true, dependencies: [] }
