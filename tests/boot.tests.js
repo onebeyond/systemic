@@ -3,8 +3,10 @@ var System = require('..')
 
 describe('System', function() {
 
+    var system = new System()
+
     it('should start without components', function(done) {
-        new System().start(function(err, components) {
+        system.start(function(err, components) {
             assert.ifError(err)
             assert.equal(Object.keys(components).length, 0)
             done()
@@ -12,7 +14,6 @@ describe('System', function() {
     })
 
     it('should stop without components', function(done) {
-        var system = new System()
         system.start(function(err, components) {
             assert.ifError(err)
             system.stop(done)
@@ -20,6 +21,63 @@ describe('System', function() {
     })
 
     it('should tolerate being stoped without being started', function(done) {
-        new System().stop(done)
+        system.stop(done)
     })
+
+    it('should start components', function(done) {
+        system.add('foo', new StartStopComponent())
+            .start(function(err, components) {
+                assert.ifError(err)
+                assert(components.foo.started, 'Component was not started')
+                done()
+            })
+    })
+
+    it('should stop components', function(done) {
+        system.add('foo', new StartStopComponent())
+            .start(function(err, components) {
+                assert.ifError(err)
+                system.stop(function(err) {
+                    assert.ifError(err)
+                    assert(components.foo.stopped, 'Component was not stopped')
+                    done()
+                })
+            })
+    })
+
+    it('should tolerate components without stop methods', function(done) {
+        system.add('foo', new StartOnlyComponent())
+            .start(function(err, components) {
+                assert.ifError(err)
+                system.stop(function(err) {
+                    assert.ifError(err)
+                    assert(components.foo.stopped, 'Component was not stopped')
+                    done()
+                })
+            })
+    })
+
+    function StartStopComponent() {
+
+        var state = { started: true, stopped: true }
+
+        this.start = function(dependencies, cb) {
+            state.started = true
+            cb(null, state)
+        }
+        this.stop = function(cb) {
+            state.stopped = true
+            cb()
+        }
+    }
+
+    function StartOnlyComponent() {
+
+        var state = { started: true, stopped: true }
+
+        this.start = function(dependencies, cb) {
+            state.started = true
+            cb(null, state)
+        }
+    }
 })

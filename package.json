@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive tests",
-    "lint": "node_modules/.bin/eslint .",
+    "lint": "eslint .",
     "prepush": "npm run lint && npm test"
   },
   "keywords": [
@@ -22,5 +22,9 @@
     "eslint-config-imperative": "0.0.6",
     "husky": "^0.11.4",
     "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "debug": "^2.2.0"
   }
 }
