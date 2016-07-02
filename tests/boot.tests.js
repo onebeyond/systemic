@@ -160,6 +160,27 @@ describe('System', function() {
               })
     })
 
+    it('should reject direct cyclic dependencies', function(done) {
+        system.add('foo', new Component())
+              .dependsOn('foo')
+              .start(function(err, components) {
+                  assert(err)
+                  assert(/Cyclic dependency found/.test(err.message), err.message)
+                  done()
+              })
+    })
+
+
+    it('should reject indirect cyclic dependencies', function(done) {
+        system.add('foo', new Component()).dependsOn('bar')
+              .add('bar', new Component()).dependsOn('foo')
+              .start(function(err, components) {
+                  assert(err)
+                  assert(/Cyclic dependency found/.test(err.message), err.message)
+                  done()
+              })
+    })
+
     function Component() {
 
         var state = { started: true, stopped: true, dependencies: [] }

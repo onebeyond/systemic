@@ -39,22 +39,25 @@ module.exports = function() {
 
     function start(cb) {
         debug('Starting system')
-        async.reduce(sortComponents(), {}, function(system, name, cb) {
-            debug('Starting component %s', name)
-            getDependencies(name, system, function(err, dependencies) {
-                if (err) return cb(err)
-                components[name].start(dependencies, function(err, started) {
-                    if (err) {
-                        debug('Component %s failed to start: %s', name, err.message)
-                        return cb(err)
-                    }
-                    debug('Component %s started successfully', name)
-                    set(system, name, started)
-                    cb(null, system)
+        sortComponents(function(err, topology) {
+            if (err) return cb(err)
+            async.reduce(topology, {}, function(system, name, cb) {
+                debug('Starting component %s', name)
+                getDependencies(name, system, function(err, dependencies) {
+                    if (err) return cb(err)
+                    components[name].start(dependencies, function(err, started) {
+                        if (err) {
+                            debug('Component %s failed to start: %s', name, err.message)
+                            return cb(err)
+                        }
+                        debug('Component %s started successfully', name)
+                        set(system, name, started)
+                        cb(null, system)
+                    })
                 })
-            })
 
-        }, cb)
+            }, cb)
+        })
         return api
     }
 
@@ -75,12 +78,16 @@ module.exports = function() {
         return api
     }
 
-    function sortComponents() {
-        var graph = new Toposort()
-        Object.keys(components).forEach(function(name) {
-            graph.add(name, map(dependencies[name], 'source'))
-        })
-        return intersection(graph.sort().reverse(), Object.keys(components))
+    function sortComponents(cb) {
+        try {
+            var graph = new Toposort()
+            Object.keys(components).forEach(function(name) {
+                graph.add(name, map(dependencies[name], 'source'))
+            })
+            return cb(null, intersection(graph.sort().reverse(), Object.keys(components)))
+        } catch (err) {
+            return cb(err)
+        }
     }
 
     function getDependencies(name, system, cb) {
