@@ -5,10 +5,10 @@ var Toposort = require('toposort-class')
 var get = require('lodash.get')
 var set = require('lodash.set')
 var has = require('lodash.has')
-var intersection = require('lodash.intersection')
 var map = require('lodash.map')
-var toArray = require('lodash.toarray')
 var find = require('lodash.find')
+var toArray = require('lodash.toarray')
+var intersection = require('lodash.intersection')
 
 module.exports = function() {
 
