@@ -101,10 +101,27 @@ describe('System', function() {
 
     it('should inject dependencies', function(done) {
         system.add('bar', new Component())
-              .add('foo', new Component()).dependsOn('bar')
+              .add('baz', new Component())
+              .add('foo', new Component())
+                  .dependsOn('bar')
+                  .dependsOn('baz')
               .start(function(err, components) {
                   assert.ifError(err)
                   assert(components.foo.dependencies.bar)
+                  assert(components.foo.dependencies.baz)
+                  done()
+              })
+    })
+
+    it('should inject multiple dependencies expressed in a single dependsOn', function(done) {
+        system.add('bar', new Component())
+              .add('baz', new Component())
+              .add('foo', new Component())
+                  .dependsOn('bar', 'baz')
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo.dependencies.bar)
+                  assert(components.foo.dependencies.baz)
                   done()
               })
     })

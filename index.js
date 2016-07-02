@@ -25,9 +25,10 @@ module.exports = function() {
         return api
     }
 
-    function dependsOn(name) {
+    function dependsOn() {
         if (!current) throw new Error('You must add a component before calling dependsOn')
-        dependencies[current].push(name)
+        var names = Array.prototype.slice.call(arguments)
+        dependencies[current] = dependencies[current].concat(names)
         return api
     }
 
