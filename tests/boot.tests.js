@@ -170,7 +170,6 @@ describe('System', function() {
               })
     })
 
-
     it('should reject indirect cyclic dependencies', function(done) {
         system.add('foo', new Component()).dependsOn('bar')
               .add('bar', new Component()).dependsOn('foo')

@@ -7,6 +7,7 @@ var set = require('lodash.set')
 var has = require('lodash.has')
 var intersection = require('lodash.intersection')
 var map = require('lodash.map')
+var toArray = require('lodash.toarray')
 
 module.exports = function() {
 
@@ -28,54 +29,67 @@ module.exports = function() {
 
     function dependsOn() {
         if (!current) throw new Error('You must add a component before calling dependsOn')
-        var args = Array.prototype.slice.call(arguments)
-        dependencies[current] = args.reduce(function(accumulator, arg) {
-            var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
-            var destination = typeof arg === 'string' ? arg : arg[source]
-            return accumulator.concat({ source: source, destination: destination })
-        }, dependencies[current])
+        dependencies[current] = toArray(arguments).reduce(toDependencyDefinitions, dependencies[current])
         return api
+    }
+
+    function toDependencyDefinitions(accumulator, arg) {
+        var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
+        var destination = typeof arg === 'string' ? arg : arg[source]
+        return accumulator.concat({ source: source, destination: destination })
     }
 
     function start(cb) {
         debug('Starting system')
-        sortComponents(function(err, topology) {
-            if (err) return cb(err)
-            async.reduce(topology, {}, function(system, name, cb) {
-                debug('Starting component %s', name)
-                getDependencies(name, system, function(err, dependencies) {
-                    if (err) return cb(err)
-                    components[name].start(dependencies, function(err, started) {
-                        if (err) {
-                            debug('Component %s failed to start: %s', name, err.message)
-                            return cb(err)
-                        }
-                        debug('Component %s started successfully', name)
-                        set(system, name, started)
-                        cb(null, system)
-                    })
-                })
-
-            }, cb)
-        })
+        async.seq(sortComponents, startComponents)(cb)
         return api
+    }
+
+    function startComponents(components, cb) {
+        async.reduce(components.reverse(), {}, toSystem, cb)
+    }
+
+    function toSystem(system, name, cb) {
+        debug('Starting component %s', name)
+        getDependencies(name, system, function(err, dependencies) {
+            if (err) return cb(err)
+            startComponent(dependencies, name, system, cb)
+        })
+    }
+
+    function startComponent(dependencies, name, system, cb) {
+        components[name].start(dependencies, function(err, started) {
+            if (err) {
+                debug('Component %s failed to start: %s', name, err.message)
+                return cb(err)
+            }
+            debug('Component %s started successfully', name)
+            set(system, name, started)
+            cb(null, system)
+        })
     }
 
     function stop(cb) {
         debug('Stopping system')
-        async.each(Object.keys(components), function(name, cb) {
-            debug('Stopping component %s', name)
-            var stop = components[name].stop || noop
-            stop(function(err, started) {
-                if (err) {
-                    debug('Component %s failed to stop: %s', name, err.message)
-                    return cb(err)
-                }
-                debug('Component %s stopped successfully', name)
-                cb(null)
-            })
-        }, cb)
+        async.seq(sortComponents, stopComponents)(cb)
         return api
+    }
+
+    function stopComponents(components, cb) {
+        async.each(components, stopComponent, cb)
+    }
+
+    function stopComponent(name, cb) {
+        debug('Stopping component %s', name)
+        var stop = components[name].stop || noop
+        stop(function(err, started) {
+            if (err) {
+                debug('Component %s failed to stop: %s', name, err.message)
+                return cb(err)
+            }
+            debug('Component %s stopped successfully', name)
+            cb(null)
+        })
     }
 
     function sortComponents(cb) {
@@ -84,7 +98,7 @@ module.exports = function() {
             Object.keys(components).forEach(function(name) {
                 graph.add(name, map(dependencies[name], 'source'))
             })
-            return cb(null, intersection(graph.sort().reverse(), Object.keys(components)))
+            return cb(null, intersection(graph.sort(), Object.keys(components)))
         } catch (err) {
             return cb(err)
         }
