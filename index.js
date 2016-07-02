@@ -77,7 +77,7 @@ module.exports = function() {
         async.seq(sortComponents, stopComponents, function(cb) {
             debug('System stopped')
             cb()
-        })(cb)
+        })(cb || noop)
         return api
     }
 
@@ -119,7 +119,7 @@ module.exports = function() {
     }
 
     function noop(cb) {
-        cb()
+        cb && cb()
     }
 
     var api = {
