@@ -180,6 +180,19 @@ describe('System', function() {
               })
     })
 
+    it('should reject duplicate dependencies [source]', function() {
+        assert.throws(function() {
+            system.add('foo', new Component()).dependsOn('bar').dependsOn('bar')
+        }, 'Component foo has a duplicate dependency bar')
+    })
+
+    it('should reject duplicate depencies [dest]', function() {
+        assert.throws(function() {
+            system.add('foo', new Component()).dependsOn({ bar: 'baz' }).dependsOn({ shaz: 'baz' })
+        }, 'Component foo has a duplicate dependency baz')
+    })
+
+
     function Component() {
 
         var state = { started: true, stopped: true, dependencies: [] }

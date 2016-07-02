@@ -8,6 +8,7 @@ var has = require('lodash.has')
 var intersection = require('lodash.intersection')
 var map = require('lodash.map')
 var toArray = require('lodash.toarray')
+var find = require('lodash.find')
 
 module.exports = function() {
 
@@ -36,6 +37,8 @@ module.exports = function() {
     function toDependencyDefinitions(accumulator, arg) {
         var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
         var destination = typeof arg === 'string' ? arg : arg[source]
+        if (find(dependencies[current], { source: source })) throw new Error(format('Component %s has a duplicate dependency %s', current, source))
+        if (find(dependencies[current], { destination: destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, destination))
         return accumulator.concat({ source: source, destination: destination })
     }
 
