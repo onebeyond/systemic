@@ -148,6 +148,18 @@ describe('System', function() {
               })
     })
 
+    it('should support nested component names', function(done) {
+        system.add('foo.bar', new Component())
+              .add('baz', new Component())
+                  .dependsOn('foo.bar')
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo.bar.started)
+                  assert(components.baz.dependencies.foo.bar)
+                  done()
+              })
+    })
+
     function Component() {
 
         var state = { started: true, stopped: true, dependencies: [] }

@@ -49,7 +49,7 @@ module.exports = function() {
                         return cb(err)
                     }
                     debug('Component %s started successfully', name)
-                    system[name] = started
+                    set(system, name, started)
                     cb(null, system)
                 })
             })
