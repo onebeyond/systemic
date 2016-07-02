@@ -1,0 +1,26 @@
+{
+  "name": "node-boot",
+  "version": "0.1.0",
+  "description": "A minimal dependency injection library for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive tests",
+    "lint": "node_modules/.bin/eslint .",
+    "prepush": "npm run lint && npm test"
+  },
+  "keywords": [
+    "dependency",
+    "injection",
+    "context",
+    "boot"
+  ],
+  "author": "GuideSmiths Ltd",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^0.23.0",
+    "eslint-config-imperative": "0.0.6",
+    "husky": "^0.11.4",
+    "mocha": "^2.5.3"
+  }
+}
