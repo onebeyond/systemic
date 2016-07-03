@@ -13,8 +13,7 @@ const mongo = require('./components/mongo')
 new System()
     .configure(config())
     .add('logger', logger()).dependsOn('config')
-    .add('mongo.primary', mongo()).dependsOn('config', 'logger')
-    .add('mongo.secondary', mongo()).dependsOn('config', 'logger')
+    .add('mongo', mongo()).dependsOn('config', 'logger')
     .start((err, { config, logger, mongo }) => {
         if (err) throw err
         logger.info('Started')
