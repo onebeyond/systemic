@@ -129,7 +129,7 @@ describe('System', function() {
     it('should map dependencies to a new name', function(done) {
         system.add('bar', new Component())
               .add('foo', new Component())
-                  .dependsOn({ bar: 'baz' })
+                  .dependsOn({ component: 'bar', destination: 'baz' })
               .start(function(err, components) {
                   assert.ifError(err)
                   assert(!components.foo.dependencies.bar)
@@ -162,7 +162,7 @@ describe('System', function() {
 
     it('should inject dependency sub documents', function(done) {
         system.add('config', new Config({ foo: { bar: 'baz' }}))
-              .add('foo', new Component()).dependsOn({'config.foo': 'config'})
+              .add('foo', new Component()).dependsOn({ component: 'config', source: 'foo', destination: 'config' })
               .start(function(err, components) {
                   assert.ifError(err)
                   assert(components.foo.dependencies.config.bar, 'baz')
@@ -190,18 +190,44 @@ describe('System', function() {
               })
     })
 
-    it('should reject duplicate dependencies [source]', function() {
+    it('should tolerate duplicate dependencies with different destinations', function(done) {
+        system.add('foo', new Component())
+              .dependsOn({ component: 'bar', destination: 'a'})
+              .dependsOn({ component: 'bar', destination: 'b'})
+              .add('bar', new Component())
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo.dependencies.a)
+                  assert(components.foo.dependencies.b)
+                  done()
+              })
+    })
+
+    it('should reject duplicate dependency implicit destinations', function() {
         assert.throws(function() {
             system.add('foo', new Component()).dependsOn('bar').dependsOn('bar')
         }, 'Component foo has a duplicate dependency bar')
     })
 
-    it('should reject duplicate depencies [dest]', function() {
+    it('should reject duplicate dependency explicit destinations', function() {
         assert.throws(function() {
-            system.add('foo', new Component()).dependsOn({ bar: 'baz' }).dependsOn({ shaz: 'baz' })
+            system.add('foo', new Component()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' })
         }, 'Component foo has a duplicate dependency baz')
     })
 
+    xit('should provide a short hand for scoped dependencies such as config', function(done) {
+        system.configure(new Config({ foo: { bar: 'baz'} }))
+              .add('foo', new Component()).dependsOn('config')
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo.dependencies.config.bar, 'baz')
+                  done()
+              })
+    })
+
+    xit('should reject invalid dependencies')
+    xit('should fail to add components to a running system')
+    xit('should tolerate attempts to start a running system')
 
     function Component() {
 

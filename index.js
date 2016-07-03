@@ -8,6 +8,7 @@ var has = require('lodash.has')
 var map = require('lodash.map')
 var find = require('lodash.find')
 var toArray = require('lodash.toarray')
+var defaults = require('lodash.defaults')
 var intersection = require('lodash.intersection')
 
 module.exports = function() {
@@ -32,11 +33,10 @@ module.exports = function() {
     }
 
     function toDependencyDefinitions(accumulator, arg) {
-        var source = typeof arg === 'string' ? arg : Object.keys(arg)[0]
-        var destination = typeof arg === 'string' ? arg : arg[source]
-        if (find(definitions[current].dependencies, { source: source })) throw new Error(format('Component %s has a duplicate dependency %s', current, source))
-        if (find(definitions[current].dependencies, { destination: destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, destination))
-        return accumulator.concat({ source: source, destination: destination })
+        var record = typeof arg === 'string' ? { component: arg, source: '', destination: arg } : defaults({}, arg, { source: '', destination: arg })
+        if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', current, JSON.stringify(arg)))
+        if (find(definitions[current].dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, record.destination))
+        return accumulator.concat(record)
     }
 
     function start(cb) {
@@ -97,7 +97,7 @@ module.exports = function() {
         try {
             var graph = new Toposort()
             Object.keys(definitions).forEach(function(name) {
-                graph.add(name, map(definitions[name].dependencies, 'source'))
+                graph.add(name, map(definitions[name].dependencies, 'component'))
             })
             result = intersection(graph.sort(), Object.keys(definitions))
         } catch (err) {
@@ -108,9 +108,10 @@ module.exports = function() {
 
     function getDependencies(name, system, cb) {
         async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
-            if (!has(system, dependency.source)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.source)))
-            debug('Preparing dependency %s as %s', dependency.source, dependency.destination)
-            set(accumulator, dependency.destination, get(system, dependency.source))
+            if (!has(system, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
+            debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
+            var component = get(system, dependency.component)
+            set(accumulator, dependency.destination, dependency.source ? get(component, dependency.source) : component)
             cb(null, accumulator)
         }, cb)
     }
