@@ -1,9 +1,9 @@
-# node-boot (working title)
+# systemic
 A minimal dependency injection library
 
 ## tl;dr
 ```js
-const System = require('node-boot')
+const System = require('systemic')
 const config = require('./components/config')
 const logger = require('./components/logger')
 const mongo = require('./components/mongo')
@@ -28,7 +28,7 @@ However we've found that when writing microservices the life cycle of an applica
 Our first attempt at a dependency injection framework was [Electrician](https://www.npmjs.com/package/electrician). It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library. This is it.
 
 ### Concepts
-node-boot has 3 main concepts
+systemic has 3 main concepts
 
 1. Systems
 2. Components
@@ -37,7 +37,7 @@ node-boot has 3 main concepts
 #### Systems
 You add components to a system (which is in itself a component).
 ```js
-const System = require('node-boot')
+const System = require('systemic')
 const mongo = require('./components/mongo')
 
 new System()
@@ -47,7 +47,7 @@ new System()
         // Do something useful with mongo
     })
 ```
-When you start the system, node-boot iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, node-boot iterates through all the components stopping them in the reverse order.
+When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
 
 #### Components
 A component is an object with optional asynchronous start and stop functions, e.g.
@@ -76,7 +76,7 @@ module.exports = function() {
 #### Dependencies
 If the component has dependencies they must be registered with the system
 ```js
-const System = require('node-boot')
+const System = require('systemic')
 const config = require('./components/config')
 const mongo = require('./components/mongo')
 

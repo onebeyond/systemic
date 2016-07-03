@@ -1,5 +1,5 @@
 {
-  "name": "node-boot",
+  "name": "systemic",
   "version": "0.1.0",
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
@@ -12,6 +12,8 @@
     "dependency",
     "injection",
     "context",
+    "inversion of control",
+    "ioc",
     "boot"
   ],
   "author": "GuideSmiths Ltd",
