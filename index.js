@@ -14,7 +14,7 @@ var intersection = require('lodash.intersection')
 module.exports = function() {
 
     var definitions = {}
-    var current
+    var currentDefinition
     var running = false
 
     function configure(component) {
@@ -25,22 +25,22 @@ module.exports = function() {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        definitions[name] = Object.assign({}, options, { component: component.start ? component : wrap(component), dependencies: [] })
-        current = name
+        definitions[name] = Object.assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
+        currentDefinition = definitions[name]
         return api
     }
 
     function dependsOn() {
-        if (!current) throw new Error('You must add a component before calling dependsOn')
-        if (definitions[current].component.start.length === 1) throw new Error(format('Component %s has no dependencies', current))
-        definitions[current].dependencies = toArray(arguments).reduce(toDependencyDefinitions, definitions[current].dependencies)
+        if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
+        if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s has no dependencies', currentDefinition.name))
+        currentDefinition.dependencies = toArray(arguments).reduce(toDependencyDefinitions, currentDefinition.dependencies)
         return api
     }
 
     function toDependencyDefinitions(accumulator, arg) {
         var record = typeof arg === 'string' ? { component: arg, destination: arg } : defaults({}, arg, { destination: arg.component })
-        if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', current, JSON.stringify(arg)))
-        if (find(definitions[current].dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, record.destination))
+        if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)))
+        if (find(currentDefinition.dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
         return accumulator.concat(record)
     }
 
