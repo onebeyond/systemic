@@ -2,7 +2,7 @@ module.exports = function(options) {
 
     function start(dependencies, cb) {
         return cb(null, {
-            logging: {
+            logger: {
                 level: 'warn'
             },
             mongo: {

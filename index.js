@@ -17,12 +17,16 @@ module.exports = function() {
     var current
     var running = false
 
-    function add(name, component) {
+    function configure(component) {
+        return add('config', component, { scoped: true })
+    }
+
+    function add(name, component, options) {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         if (!component.start) throw new Error(format('Component %s is missing a start function', name))
-        definitions[name] = { component: component, dependencies: [] }
+        definitions[name] = Object.assign({}, options, { component: component, dependencies: [] })
         current = name
         return api
     }
@@ -34,7 +38,7 @@ module.exports = function() {
     }
 
     function toDependencyDefinitions(accumulator, arg) {
-        var record = typeof arg === 'string' ? { component: arg, source: '', destination: arg } : defaults({}, arg, { source: '', destination: arg })
+        var record = typeof arg === 'string' ? { component: arg, destination: arg } : defaults({}, arg, { destination: arg.component })
         if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', current, JSON.stringify(arg)))
         if (find(definitions[current].dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', current, record.destination))
         return accumulator.concat(record)
@@ -113,7 +117,9 @@ module.exports = function() {
     function getDependencies(name, system, cb) {
         async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
             if (!has(system, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
-            debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
+            if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
+            dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
+                              : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
             var component = get(system, dependency.component)
             set(accumulator, dependency.destination, dependency.source ? get(component, dependency.source) : component)
             cb(null, accumulator)
@@ -121,10 +127,9 @@ module.exports = function() {
     }
 
     function noop() {
-        if (arguments.length === 0) return
-        var args = [null].concat(toArray(arguments))
+        var args = toArray(arguments)
         var cb = args.pop()
-        cb.apply(null, args)
+        cb && cb.apply(null, [null].concat(args))
     }
 
     function restart(cb) {
@@ -133,6 +138,7 @@ module.exports = function() {
     }
 
     var api = {
+        configure: configure,
         add: add,
         dependsOn: dependsOn,
         start: start,

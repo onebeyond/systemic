@@ -1,16 +1,16 @@
-var System = require('../..')
+var System = require('..')
 var config = require('./components/config')
 var logger = require('./components/logger')
 var mongo = require('./components/mongo')
 
 var system = new System()
-system.add('config', config())
+system.configure(config())
       .add('logger', logger())
-          .dependsOn({ component: 'config', source: 'logging', destination: 'config' })
+          .dependsOn('config')
       .add('mongo.primary', mongo())
-          .dependsOn({ component: 'config', source: 'mongo.primary', destination: 'config' }, 'logger')
+          .dependsOn('config', 'logger')
       .add('mongo.secondary', mongo())
-          .dependsOn({ component:'config', source: 'mongo.secondary', destination: 'config' }, 'logger')
+          .dependsOn('config', 'logger')
       .start(function(err, components) {
           if (err) throw err
           system.stop()

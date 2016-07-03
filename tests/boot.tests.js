@@ -245,12 +245,22 @@ describe('System', function() {
         }, 'Component foo has a duplicate dependency baz')
     })
 
-    xit('should provide a short hand for scoped dependencies such as config', function(done) {
+    it('should provide a shorthand for scoped dependencies such as config', function(done) {
         system.configure(new Config({ foo: { bar: 'baz'} }))
               .add('foo', new Component()).dependsOn('config')
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.bar, 'baz')
+                  done()
+              })
+    })
+
+    it('should allow shorthand to be overriden', function(done) {
+        system.configure(new Config({ foo: { bar: 'baz'} }))
+              .add('foo', new Component()).dependsOn({ component: 'config', source: '' })
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo.dependencies.config.foo.bar, 'baz')
                   done()
               })
     })
