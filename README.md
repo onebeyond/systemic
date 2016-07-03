@@ -25,7 +25,7 @@ Node.js applications tend to be small and "flatter" than applications developed 
 
 However we've found that when writing microservices the life cycle of an application and its dependencies is a nuisance to manage over and over again. We wanted a way to consistently express that our service should establish database connections before listening for http requests, and shutdown those connections only after it had stopped listening. We found that before doing anything we need to load config from remote sources, and configure loggers. This is why we use DI.
 
-Our first attempt at a dependency injection framework was (https://www.npmjs.com/package/electrician)[Electrician]. It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library. This is it.
+Our first attempt at a dependency injection framework was [Electrician](https://www.npmjs.com/package/electrician). It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library. This is it.
 
 ### Concepts
 node-boot has 3 main concepts
