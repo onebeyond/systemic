@@ -9,6 +9,7 @@ var map = require('lodash.map')
 var find = require('lodash.find')
 var toArray = require('lodash.toarray')
 var defaults = require('lodash.defaults')
+var assign = require('lodash.assign')
 var intersection = require('lodash.intersection')
 
 module.exports = function() {
@@ -25,7 +26,7 @@ module.exports = function() {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        definitions[name] = Object.assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
+        definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
         return api
     }
