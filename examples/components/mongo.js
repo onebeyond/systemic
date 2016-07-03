@@ -1,7 +1,7 @@
 module.exports = function(options) {
 
-    function start(dependencies, cb) {
-        dependencies.logger.info('Connecting to', dependencies.config.url)
+    function start({ logger, config }, cb) {
+        logger.info('Connecting to', config.url)
         cb(null, {})
     }
 
