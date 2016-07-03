@@ -15,6 +15,7 @@ module.exports = function() {
 
     var definitions = {}
     var current
+    var running = false
 
     function add(name, component) {
         debug('Adding %s', name)
@@ -41,14 +42,16 @@ module.exports = function() {
 
     function start(cb) {
         debug('Starting system')
-        async.seq(sortComponents, startComponents, function(components, cb) {
+        async.seq(sortComponents, ensureComponents, function(components, cb) {
             debug('System started')
+            running = components
             cb(null, components)
         })(cb)
         return api
     }
 
-    function startComponents(components, cb) {
+    function ensureComponents(components, cb) {
+        if (running) return cb(null, running)
         async.reduce(components.reverse(), {}, toSystem, cb)
     }
 
@@ -73,6 +76,7 @@ module.exports = function() {
         debug('Stopping system')
         async.seq(sortComponents, stopComponents, function(cb) {
             debug('System stopped')
+            running = false
             cb()
         })(cb || noop)
         return api
@@ -116,15 +120,24 @@ module.exports = function() {
         }, cb)
     }
 
-    function noop(cb) {
-        cb && cb()
+    function noop() {
+        if (arguments.length === 0) return
+        var args = [null].concat(toArray(arguments))
+        var cb = args.pop()
+        cb.apply(null, args)
+    }
+
+    function restart(cb) {
+        async.seq(api.stop, api.start)(cb)
+        return api
     }
 
     var api = {
         add: add,
         dependsOn: dependsOn,
         start: start,
-        stop: stop
+        stop: stop,
+        restart: restart
     }
 
     return api

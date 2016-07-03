@@ -24,8 +24,34 @@ describe('System', function() {
         })
     })
 
-    it('should tolerate being stoped without being started', function(done) {
+    it('should tolerate being stopped without being started', function(done) {
         system.stop(done)
+    })
+
+    it('should tolerate being started wthout being stopped', function(done) {
+        system.add('foo', new Component())
+        system.start(function(err, components) {
+            assert.ifError(err)
+            assert.equal(components.foo.counter, 1)
+            system.start(function(err, components) {
+                assert.ifError(err)
+                assert.equal(components.foo.counter, 1)
+                done()
+            })
+        })
+    })
+
+    it('should restart', function(done) {
+        system.add('foo', new Component())
+        system.start(function(err, components) {
+            assert.ifError(err)
+            assert.equal(components.foo.counter, 1)
+            system.restart(function(err, components) {
+                assert.ifError(err)
+                assert.equal(components.foo.counter, 2)
+                done()
+            })
+        })
     })
 
     it('should start components', function(done) {
@@ -71,12 +97,6 @@ describe('System', function() {
         assert.throws(function() {
             system.add('foo', undefined)
         }, 'Component foo is null or undefined')
-    })
-
-    it('should reject components without a start function', function() {
-        assert.throws(function() {
-            system.add('foo', {})
-        }, 'Component foo is missing a start function')
     })
 
     it('should reject components without a start function', function() {
@@ -170,6 +190,16 @@ describe('System', function() {
               })
     })
 
+    it('should reject invalid dependencies', function() {
+        assert.throws(function() {
+          new System().add('foo', new Component()).dependsOn(1)
+        }, 'Component foo has an invalid dependency 1')
+
+        assert.throws(function() {
+          new System().add('foo', new Component()).dependsOn({})
+        }, 'Component foo has an invalid dependency {}')
+    })
+
     it('should reject direct cyclic dependencies', function(done) {
         system.add('foo', new Component())
               .dependsOn('foo')
@@ -225,16 +255,13 @@ describe('System', function() {
               })
     })
 
-    xit('should reject invalid dependencies')
-    xit('should fail to add components to a running system')
-    xit('should tolerate attempts to start a running system')
-
     function Component() {
 
-        var state = { started: true, stopped: true, dependencies: [] }
+        var state = { counter: 0, started: true, stopped: true, dependencies: [] }
 
         this.start = function(dependencies, cb) {
             state.started = true
+            state.counter++
             state.dependencies = dependencies
             cb(null, state)
         }
