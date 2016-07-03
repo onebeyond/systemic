@@ -1,4 +1,4 @@
-# systemic
+# Systemic
 A minimal dependency injection library
 
 ## tl;dr
@@ -28,7 +28,7 @@ However we've found that when writing microservices the life cycle of an applica
 Our first attempt at a dependency injection framework was [Electrician](https://www.npmjs.com/package/electrician). It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library. This is it.
 
 ### Concepts
-systemic has 3 main concepts
+Systemic has 3 main concepts
 
 1. Systems
 2. Components
