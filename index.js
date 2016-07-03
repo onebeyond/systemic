@@ -25,14 +25,14 @@ module.exports = function() {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        if (!component.start) throw new Error(format('Component %s is missing a start function', name))
-        definitions[name] = Object.assign({}, options, { component: component, dependencies: [] })
+        definitions[name] = Object.assign({}, options, { component: component.start ? component : wrap(component), dependencies: [] })
         current = name
         return api
     }
 
     function dependsOn() {
         if (!current) throw new Error('You must add a component before calling dependsOn')
+        if (definitions[current].component.start.length === 1) throw new Error(format('Component %s has no dependencies', current))
         definitions[current].dependencies = toArray(arguments).reduce(toDependencyDefinitions, definitions[current].dependencies)
         return api
     }
@@ -68,12 +68,15 @@ module.exports = function() {
 
     function startComponent(dependencies, name, system, cb) {
         debug('Starting component %s', name)
-        definitions[name].component.start(dependencies, function(err, started) {
+        var component = definitions[name].component
+        var onStarted = function(err, started) {
             if (err) return cb(err)
             set(system, name, started)
             debug('Component %s started', name)
             cb(null, system)
-        })
+        }
+        var args = component.start.length === 1 ? [onStarted] : [dependencies, onStarted]
+        component.start.apply(component, args)
     }
 
     function stop(cb) {
@@ -130,6 +133,14 @@ module.exports = function() {
         var args = toArray(arguments)
         var cb = args.pop()
         cb && cb.apply(null, [null].concat(args))
+    }
+
+    function wrap(component) {
+        return {
+            start: function(cb) {
+                return cb(null, component)
+            }
+        }
     }
 
     function restart(cb) {

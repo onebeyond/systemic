@@ -75,6 +75,15 @@ describe('System', function() {
             })
     })
 
+    it('should pass through components without start methods', function(done) {
+        system.add('foo', { ok: true })
+            .start(function(err, components) {
+                assert.ifError(err)
+                assert.equal(components.foo.ok, true)
+                done()
+            })
+    })
+
     it('should tolerate components without stop methods', function(done) {
         system.add('foo', new Unstoppable())
             .start(function(err, components) {
@@ -99,16 +108,16 @@ describe('System', function() {
         }, 'Component foo is null or undefined')
     })
 
-    it('should reject components without a start function', function() {
-        assert.throws(function() {
-            system.add('foo', {})
-        }, 'Component foo is missing a start function')
-    })
-
     it('should reject dependsOn called before adding components', function() {
         assert.throws(function() {
             system.dependsOn('foo')
         }, 'You must add a component before calling dependsOn')
+    })
+
+    it('should reject dependsOn called for components without start methods', function() {
+        assert.throws(function() {
+            system.add('foo', { ok: true }).dependsOn('foo')
+        }, 'Component foo has no dependencies')
     })
 
     it('should report missing dependencies', function(done) {
