@@ -3,10 +3,10 @@ A minimal dependency injection library
 
 ## tl;dr
 ```js
-var System = require('node-boot')
-var config = require('./components/config')
-var logger = require('./components/logger')
-var mongo = require('./components/mongo')
+const System = require('node-boot')
+const config = require('./components/config')
+const logger = require('./components/logger')
+const mongo = require('./components/mongo')
 
 new System()
     .configure(config())
