@@ -126,7 +126,7 @@ Now ```config.mongo``` will be injected as ```config``` instead of the entire co
 
 #### Configuration Shorthand
 Configuration *can* work just like any other component, but because it is so common to want to inject nested sub-documents, e.g. ```config.logger``` or ```config.mongo``` into your components, there's a shorthand for doing this...
-```
+```js
 new System()
     .configure(config())
     .add('mongo', mongo()).dependsOn('config')
