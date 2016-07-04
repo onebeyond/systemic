@@ -1,5 +1,5 @@
 var async = require('async')
-var debug = require('debug')('node-boot:index')
+var debug = require('debug')('systemic:index')
 var format = require('util').format
 var Toposort = require('toposort-class')
 var get = require('lodash.get')
