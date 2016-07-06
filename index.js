@@ -8,7 +8,7 @@ var has = require('lodash.has')
 var map = require('lodash.map')
 var find = require('lodash.find')
 var toArray = require('lodash.toarray')
-var defaults = require('lodash.defaults')
+var merge = require('lodash.merge')
 var assign = require('lodash.assign')
 var intersection = require('lodash.intersection')
 
@@ -39,7 +39,7 @@ module.exports = function() {
     }
 
     function toDependencyDefinitions(accumulator, arg) {
-        var record = typeof arg === 'string' ? { component: arg, destination: arg } : defaults({}, arg, { destination: arg.component })
+        var record = typeof arg === 'string' ? { component: arg, destination: arg } : merge({}, { destination: arg.component }, arg)
         if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)))
         if (find(currentDefinition.dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
         return accumulator.concat(record)
