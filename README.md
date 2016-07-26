@@ -136,3 +136,15 @@ new System()
     })
 ```
 The ```configure``` method creates a *scoped* dependency which will default the ```source``` attribute when a component depends on it.
+
+
+#### Merging Systems
+You can merge two systems by calling ```system.merge(other)```. Definitions in the other system will override previously setup definitions in the master system. This can be especially useful for overwriting components with test doubles.
+```js
+const master = new System().add('clock', realClock())
+const stubs = new System().add('clock', fakeClock())
+master.merge(stubs).start((err, components) => {
+    if (err) throw err
+    // clock is stubbed
+})
+```

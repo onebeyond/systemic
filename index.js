@@ -31,6 +31,16 @@ module.exports = function() {
         return api
     }
 
+    function merge(subSystem) {
+        debug('Merging sub system definitions')
+        definitions = assign({}, definitions, subSystem._definitions)
+        return api
+    }
+
+    function _merge(other) {
+        return assign({}, definitions, other)
+    }
+
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
         if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s has no dependencies', currentDefinition.name))
@@ -152,10 +162,12 @@ module.exports = function() {
     var api = {
         configure: configure,
         add: add,
+        merge: merge,
         dependsOn: dependsOn,
         start: start,
         stop: stop,
-        restart: restart
+        restart: restart,
+        _definitions: definitions
     }
 
     return api
