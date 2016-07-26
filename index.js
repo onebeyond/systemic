@@ -37,10 +37,6 @@ module.exports = function() {
         return api
     }
 
-    function _merge(other) {
-        return assign({}, definitions, other)
-    }
-
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
         if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s has no dependencies', currentDefinition.name))
