@@ -313,6 +313,25 @@ describe('System', function() {
               })
     })
 
+    it('should set components for the first time', function(done) {
+       system.set('foo', 1)
+             .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo, 1)
+                  done()
+             })
+    })
+
+    it('should replace existing components with set', function(done) {
+       system.set('foo', 1)
+             .set('foo', 2)
+             .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo, 2)
+                  done()
+             })
+    })
+
     function Component() {
 
         var state = { counter: 0, started: true, stopped: true, dependencies: [] }

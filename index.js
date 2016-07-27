@@ -2,9 +2,9 @@ var async = require('async')
 var debug = require('debug')('systemic:index')
 var format = require('util').format
 var Toposort = require('toposort-class')
-var get = require('lodash.get')
-var set = require('lodash.set')
-var has = require('lodash.has')
+var getProp = require('lodash.get')
+var setProp = require('lodash.set')
+var hasProp = require('lodash.has')
 var map = require('lodash.map')
 var find = require('lodash.find')
 var toArray = require('lodash.toarray')
@@ -25,6 +25,15 @@ module.exports = function() {
     function add(name, component, options) {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
+        return _set(name, component, options)
+    }
+
+    function set(name, component, options) {
+        debug('Setting %s', name)
+        return _set(name, component, options)
+    }
+
+    function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
@@ -78,7 +87,7 @@ module.exports = function() {
         var component = definitions[name].component
         var onStarted = function(err, started) {
             if (err) return cb(err)
-            set(system, name, started)
+            setProp(system, name, started)
             debug('Component %s started', name)
             cb(null, system)
         }
@@ -126,12 +135,12 @@ module.exports = function() {
 
     function getDependencies(name, system, cb) {
         async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
-            if (!has(system, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
+            if (!hasProp(system, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
                               : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
-            var component = get(system, dependency.component)
-            set(accumulator, dependency.destination, dependency.source ? get(component, dependency.source) : component)
+            var component = getProp(system, dependency.component)
+            setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component)
             cb(null, accumulator)
         }, cb)
     }
@@ -158,6 +167,7 @@ module.exports = function() {
     var api = {
         configure: configure,
         add: add,
+        set: set,
         merge: merge,
         dependsOn: dependsOn,
         start: start,
