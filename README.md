@@ -150,6 +150,18 @@ before((done) => {
 })
 ```
 
+#### Removing Components
+You can also remove components, which can be useful when testing.
+
+```js
+const system = require('../lib/system')
+
+before((done) => {
+    system.remove('production-only-component')
+    system.start(done)
+})
+```
+
 #### Merging Systems
 In addition to overriding individual components you can merge in components from another system. e.g.
 
