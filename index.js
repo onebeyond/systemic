@@ -33,6 +33,12 @@ module.exports = function() {
         return _set(name, component, options)
     }
 
+    function remove(name) {
+        debug('Removing %s', name)
+        delete definitions[name]
+        return api
+    }
+
     function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
@@ -168,6 +174,7 @@ module.exports = function() {
         configure: configure,
         add: add,
         set: set,
+        remove: remove,
         merge: merge,
         dependsOn: dependsOn,
         start: start,

@@ -332,6 +332,16 @@ describe('System', function() {
              })
     })
 
+    it('should remove existing components', function(done) {
+       system.set('foo', 1)
+             .remove('foo')
+             .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo, undefined)
+                  done()
+             })
+    })
+
     function Component() {
 
         var state = { counter: 0, started: true, stopped: true, dependencies: [] }
