@@ -75,6 +75,20 @@ describe('System', function() {
             })
     })
 
+    it('should not stop components that werent started', function(done) {
+        var bar = new Component()
+        system.add('foo', new ErrorComponent())
+              .add('bar', bar).dependsOn('foo')
+              .start(function(err, components) {
+                    assert.ok(err)
+                    system.stop(function(err) {
+                        assert.ifError(err)
+                        assert(!bar.stopped, 'Component was stopped')
+                        done()
+                    })
+            })
+    })
+
     it('should pass through components without start methods', function(done) {
         system.add('foo', { ok: true })
             .start(function(err, components) {
@@ -355,6 +369,12 @@ describe('System', function() {
         this.stop = function(cb) {
             state.stopped = true
             cb()
+        }
+    }
+
+    function ErrorComponent() {
+        this.start = function(dependencies, cb) {
+            cb(new Error('Oh Noes!'))
         }
     }
 

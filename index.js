@@ -17,6 +17,7 @@ module.exports = function() {
     var definitions = {}
     var currentDefinition
     var running = false
+    var started
 
     function configure(component) {
         return add('config', component, { scoped: true })
@@ -68,6 +69,7 @@ module.exports = function() {
 
     function start(cb) {
         debug('Starting system')
+        started = []
         async.seq(sortComponents, ensureComponents, function(components, cb) {
             debug('System started')
             running = components
@@ -90,12 +92,15 @@ module.exports = function() {
 
     function startComponent(dependencies, name, system, cb) {
         debug('Starting component %s', name)
+        started.push(name)
         var component = definitions[name].component
         var onStarted = function(err, started) {
             if (err) return cb(err)
             setProp(system, name, started)
             debug('Component %s started', name)
-            cb(null, system)
+            setImmediate(function() {
+                cb(null, system)
+            })
         }
         var args = component.start.length === 1 ? [onStarted] : [dependencies, onStarted]
         component.start.apply(component, args)
@@ -103,7 +108,7 @@ module.exports = function() {
 
     function stop(cb) {
         debug('Stopping system')
-        async.seq(sortComponents, stopComponents, function(cb) {
+        async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
             debug('System stopped')
             running = false
             cb()
@@ -121,7 +126,7 @@ module.exports = function() {
         stop(function(err, started) {
             if (err) return cb(err)
             debug('Component %s stopped', name)
-            cb(null)
+            setImmediate(cb)
         })
     }
 
@@ -137,6 +142,10 @@ module.exports = function() {
             return cb(err)
         }
         return cb(null, result)
+    }
+
+    function removeUnstarted(components, cb) {
+        cb(null, intersection(components, started))
     }
 
     function getDependencies(name, system, cb) {
