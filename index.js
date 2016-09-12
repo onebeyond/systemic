@@ -117,7 +117,7 @@ module.exports = function() {
     }
 
     function stopComponents(components, cb) {
-        async.each(components, stopComponent, cb)
+        async.eachSeries(components, stopComponent, cb)
     }
 
     function stopComponent(name, cb) {
