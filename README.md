@@ -162,14 +162,15 @@ before((done) => {
 })
 ```
 
-#### Merging Systems
-In addition to overriding individual components you can merge in components from another system. e.g.
+#### Including components from another system
+In addition to overriding individual components you can include all components from another system.
+This can be used to divide the system definition into logical chunks or when writing tests e.g.
 
 ```js
 const master = require('../lib/master-system')
 const stubs = require('./stubs')
 
 before((done) => {
-    master.merge(stubs).start(done)
+    master.include(stubs).start(done)
 })
 ```

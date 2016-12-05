@@ -185,6 +185,7 @@ module.exports = function() {
         set: set,
         remove: remove,
         merge: merge,
+        include: merge,
         dependsOn: dependsOn,
         start: start,
         stop: stop,

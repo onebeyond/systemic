@@ -28,6 +28,7 @@
   "dependencies": {
     "async": "^2.0.0-rc.6",
     "debug": "^2.2.0",
+    "eslint-plugin-imperative": "0.0.2",
     "lodash.assign": "^4.0.9",
     "lodash.defaults": "^4.0.1",
     "lodash.find": "^4.4.0",

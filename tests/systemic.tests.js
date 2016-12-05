@@ -288,8 +288,8 @@ describe('System', function() {
               })
     })
 
-    it('should merge components from other systems', function(done) {
-        system.merge(new System().add('foo', new Component()))
+    it('should include components from other systems', function(done) {
+        system.include(new System().add('foo', new Component()))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.ok(components.foo)
@@ -297,8 +297,8 @@ describe('System', function() {
               })
     })
 
-    it('should be able to depend on merged components', function(done) {
-        system.merge(new System().add('foo', new Component()))
+    it('should be able to depend on included components', function(done) {
+        system.include(new System().add('foo', new Component()))
               .add('bar', new Component()).dependsOn('foo')
               .start(function(err, components) {
                   assert.ifError(err)
@@ -307,9 +307,9 @@ describe('System', function() {
               })
     })
 
-    it('should configure components from merged systems', function(done) {
+    it('should configure components from included systems', function(done) {
         system.configure(new Config({ foo: { bar: 'baz'} }))
-              .merge(new System().add('foo', new Component()).dependsOn('config'))
+              .include(new System().add('foo', new Component()).dependsOn('config'))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.bar, 'baz')
@@ -319,7 +319,7 @@ describe('System', function() {
 
     it('should prefer components from other systems when merging', function(done) {
         system.add('foo', 1)
-              .merge(new System().add('foo', 2))
+              .include(new System().add('foo', 2))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.equal(components.foo, 2)
