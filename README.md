@@ -223,7 +223,9 @@ lib/
 
 ```js
 // system.js
-new System().bootstrap(path.join(__dirname, 'components'))
+const System = require('system')
+const path = require('path')
+module.exports = new System().bootstrap(path.join(__dirname, 'components'))
 ```
 
 ```js
