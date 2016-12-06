@@ -174,3 +174,28 @@ before((done) => {
     master.include(stubs).start(done)
 })
 ```
+
+#### Grouping components
+Sometimes you need to depend on a set of components as a single unit. You *could* achieve this by writing a custom component that depends on the individual components and exposes them in a map - but there's no need. Systemic will do this for you if you omit the component. See '''routes.all''' in the following example...
+
+```js
+const app = require('systemic-express').app
+const server = require('systemic-express').server
+
+new System()
+    .add('app', app())
+    .add('routes.admin', adminRoutes()).dependsOn('app')
+    .add('routes.api', apiRoutes()).dependsOn('app')
+    .add('routes.all').dependsOn('routes.admin', 'routes.api')
+    .add('server').dependsOn('app', 'routes.all')
+```
+The above example will create a component '''routes.all''' which will yield
+```js
+   {
+      routes: {
+          admin: adminRoutes,
+          api: apiRoutes
+      }
+   }
+```
+postponing the server start until all routes have been initialised.

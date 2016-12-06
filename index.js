@@ -18,6 +18,11 @@ module.exports = function() {
     var currentDefinition
     var running = false
     var started
+    const defaultComponent = {
+        start: function(dependencies, cb) {
+            cb(null, dependencies)
+        }
+    }
 
     function configure(component) {
         return add('config', component, { scoped: true })
@@ -26,6 +31,7 @@ module.exports = function() {
     function add(name, component, options) {
         debug('Adding %s', name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
+        if (arguments.length === 1) return add(name, defaultComponent)
         return _set(name, component, options)
     }
 
@@ -47,8 +53,8 @@ module.exports = function() {
         return api
     }
 
-    function merge(subSystem) {
-        debug('Merging sub system definitions')
+    function include(subSystem) {
+        debug('Including definitions from sub system')
         definitions = assign({}, definitions, subSystem._definitions)
         return api
     }
@@ -150,7 +156,7 @@ module.exports = function() {
 
     function getDependencies(name, system, cb) {
         async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
-            if (!hasProp(system, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
+            if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
                               : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
@@ -184,8 +190,8 @@ module.exports = function() {
         add: add,
         set: set,
         remove: remove,
-        merge: merge,
-        include: merge,
+        merge: include,
+        include: include,
         dependsOn: dependsOn,
         start: start,
         stop: stop,

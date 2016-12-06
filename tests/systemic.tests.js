@@ -356,6 +356,20 @@ describe('System', function() {
              })
     })
 
+    it('should group components', function(done) {
+       system.add('foo.one', 1)
+             .add('foo.two', 2)
+             .add('foo.all').dependsOn('foo.one', 'foo.two')
+             .start(function(err, components) {
+                  assert.ifError(err)
+                  assert.equal(components.foo.one, 1)
+                  assert.equal(components.foo.two, 2)
+                  assert.equal(components.foo.all.foo.one, 1)
+                  assert.equal(components.foo.all.foo.two, 2)
+                  done()
+             })
+    })
+
     function Component() {
 
         var state = { counter: 0, started: true, stopped: true, dependencies: [] }
