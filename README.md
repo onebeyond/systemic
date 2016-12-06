@@ -22,7 +22,7 @@ new System()
     })
 ```
 
-See [svc-example](https://github.com/guidesmiths/svc-example) for a full example
+See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic.
 
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and "flatter" than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discoraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double). Alternative (but not necessarily better) approaches suchs as [Rewire](https://www.npmjs.com/package/rewire) exist too.
@@ -203,7 +203,7 @@ The above example will create a component '''routes.all''' which will yield
 postponing the server start until all routes have been initialised.
 
 #### Bootstraping components from the file system
-The dependency graph for a medium size project can grow to tens of components leading to questions of how to large system definitions and questions of how best to organise your components. You can avoid this by bootstraping components from a specified directory, where each folder in the directory defines an index.js which defines a sub system. e.g.
+The dependency graph for a medium size project can grow to tens of components leading large system definitions and questions of how best to organise your components. You can avoid this by bootstraping components from a specified directory, where each folder in the directory defines an index.js which defines a sub system. e.g.
 
 ```
 lib/
