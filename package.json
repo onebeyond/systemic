@@ -38,6 +38,7 @@
     "lodash.map": "^4.4.0",
     "lodash.set": "^4.2.0",
     "lodash.toarray": "^4.2.4",
+    "require-all": "^2.0.0",
     "toposort-class": "^1.0.1"
   },
   "directories": {

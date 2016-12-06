@@ -22,6 +22,8 @@ new System()
     })
 ```
 
+See [svc-example](https://github.com/guidesmiths/svc-example) for a full example
+
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and "flatter" than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discoraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double). Alternative (but not necessarily better) approaches suchs as [Rewire](https://www.npmjs.com/package/rewire) exist too.
 
@@ -199,3 +201,38 @@ The above example will create a component '''routes.all''' which will yield
    }
 ```
 postponing the server start until all routes have been initialised.
+
+#### Bootstraping components from the file system
+The dependency graph for a medium size project can grow to tens of components leading to questions of how to large system definitions and questions of how best to organise your components. You can avoid this by bootstraping components from a specified directory, where each folder in the directory defines an index.js which defines a sub system. e.g.
+
+```
+lib/
+  |- system.js
+  |- components/
+      |- config/
+         |- index.js
+      |- logging/
+         |- index.js
+      |- express/
+         |- index.js
+      |- routes/
+         |- admin-routes.js
+         |- api-routes.js
+         |- index.js
+```
+
+```js
+// system.js
+new System().bootstrap(path.join(__dirname, 'components'))
+```
+
+```js
+// components/routes/index.js
+const System = require('systemic')
+const adminRoutes = require('./admin-routes')
+const apiRoutes = require('./api-routes')
+
+module.exports = new System()
+    .add('routes.admin', adminRoutes()).dependsOn('app')
+    .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
+    .add('routes').dependsOn('routes.admin', 'routes.api')

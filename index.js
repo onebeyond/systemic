@@ -11,6 +11,7 @@ var toArray = require('lodash.toarray')
 var defaults = require('lodash.defaults')
 var assign = require('lodash.assign')
 var intersection = require('lodash.intersection')
+var requireAll = require('require-all')
 
 module.exports = function() {
 
@@ -22,6 +23,17 @@ module.exports = function() {
         start: function(dependencies, cb) {
             cb(null, dependencies)
         }
+    }
+
+    function bootstrap(path) {
+        requireAll({
+            dirname:  path,
+            filter:  /^index.js$/,
+            resolve: function(component) {
+                api.include(component)
+            }
+        })
+        return api
     }
 
     function configure(component) {
@@ -186,6 +198,7 @@ module.exports = function() {
     }
 
     var api = {
+        bootstrap: bootstrap,
         configure: configure,
         add: add,
         set: set,
