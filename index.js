@@ -28,7 +28,7 @@ module.exports = function() {
     function bootstrap(path) {
         requireAll({
             dirname:  path,
-            filter:  /^index.js$/,
+            filter:  /^(index.js)$/,
             resolve: function(component) {
                 api.include(component)
             }
