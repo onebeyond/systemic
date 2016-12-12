@@ -19,7 +19,7 @@ module.exports = function() {
     var currentDefinition
     var running = false
     var started
-    const defaultComponent = {
+    var defaultComponent = {
         start: function(dependencies, cb) {
             cb(null, dependencies)
         }
