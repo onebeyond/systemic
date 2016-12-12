@@ -60,6 +60,7 @@ module.exports = function() {
 
     function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
+        if (component.start && component.start.length === 0) throw new Error(format('Component %s\'s start function is not asynchronous', name))
         definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
         return api
@@ -73,7 +74,7 @@ module.exports = function() {
 
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
-        if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s has no dependencies', currentDefinition.name))
+        if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s\'s start function takes no dependencies', currentDefinition.name))
         currentDefinition.dependencies = toArray(arguments).reduce(toDependencyDefinitions, currentDefinition.dependencies)
         return api
     }
@@ -186,7 +187,7 @@ module.exports = function() {
 
     function wrap(component) {
         return {
-            start: function(cb) {
+            start: function(dependencies, cb) {
                 return cb(null, component)
             }
         }

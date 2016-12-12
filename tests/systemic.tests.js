@@ -1,4 +1,5 @@
 var assert = require('chai').assert
+var path = require('path')
 var System = require('..')
 
 describe('System', function() {
@@ -110,6 +111,12 @@ describe('System', function() {
             })
     })
 
+    it('should reject components with synchronous start functions', function() {
+        assert.throws(function() {
+            system.add('foo', { start: function() {} })
+        }, 'Component foo\'s start function is not asynchronous')
+    })
+
     it('should reject duplicate components', function() {
         assert.throws(function() {
             system.add('foo', new Component()).add('foo', new Component())
@@ -128,10 +135,10 @@ describe('System', function() {
         }, 'You must add a component before calling dependsOn')
     })
 
-    it('should reject dependsOn called for components without start methods', function() {
+    it('should reject dependsOn called for components whos start method does not accept dependencies', function() {
         assert.throws(function() {
-            system.add('foo', { ok: true }).dependsOn('foo')
-        }, 'Component foo has no dependencies')
+            system.add('foo', { start: function(cb) {} }).dependsOn('foo')
+        }, 'Component foo\'s start function takes no dependencies')
     })
 
     it('should report missing dependencies', function(done) {
@@ -368,6 +375,16 @@ describe('System', function() {
                   assert.equal(components.foo.all.foo.two, 2)
                   done()
              })
+    })
+
+    it('should bootstrap components from the file system', function(done) {
+        system.bootstrap(path.join(__dirname, 'components'))
+              .start(function(err, components) {
+                  assert.ifError(err)
+                  assert(components.foo)
+                  assert(components.bar)
+                  done()
+              })
     })
 
     function Component() {
