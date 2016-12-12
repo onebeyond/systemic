@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",
+    "chance": "^1.0.4",
     "debug": "^2.2.0",
     "eslint-plugin-imperative": "0.0.2",
     "lodash.assign": "^4.0.9",
@@ -39,6 +40,7 @@
     "lodash.set": "^4.2.0",
     "lodash.toarray": "^4.2.4",
     "mocha": "^3.2.0",
+    "node-uuid": "^1.4.7",
     "require-all": "^2.1.0",
     "toposort-class": "^1.0.1"
   },

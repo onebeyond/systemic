@@ -12,9 +12,11 @@ var defaults = require('lodash.defaults')
 var assign = require('lodash.assign')
 var intersection = require('lodash.intersection')
 var requireAll = require('require-all')
+var Chance = require('chance')
 
-module.exports = function() {
+module.exports = function(_params) {
 
+    var params = assign({}, { name: new Chance().first() }, _params)
     var definitions = {}
     var currentDefinition
     var running = false
@@ -41,19 +43,19 @@ module.exports = function() {
     }
 
     function add(name, component, options) {
-        debug('Adding %s', name)
+        debug('Adding component %s to system %s', name, params.name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (arguments.length === 1) return add(name, defaultComponent)
         return _set(name, component, options)
     }
 
     function set(name, component, options) {
-        debug('Setting %s', name)
+        debug('Setting component %s on system %s', name, params.name)
         return _set(name, component, options)
     }
 
     function remove(name) {
-        debug('Removing %s', name)
+        debug('Removing component %s from system %s', name, params.name)
         delete definitions[name]
         return api
     }
@@ -67,7 +69,7 @@ module.exports = function() {
     }
 
     function include(subSystem) {
-        debug('Including definitions from sub system')
+        debug('Including definitions from sub system %s into system %s', subSystem.name, params.name)
         definitions = assign({}, definitions, subSystem._definitions)
         return api
     }
@@ -87,10 +89,10 @@ module.exports = function() {
     }
 
     function start(cb) {
-        debug('Starting system')
+        debug('Starting system %s', params.name)
         started = []
         async.seq(sortComponents, ensureComponents, function(components, cb) {
-            debug('System started')
+            debug('System %s started', params.name)
             running = components
             cb(null, components)
         })(cb)
@@ -126,9 +128,9 @@ module.exports = function() {
     }
 
     function stop(cb) {
-        debug('Stopping system')
+        debug('Stopping system %s', params.name)
         async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
-            debug('System stopped')
+            debug('System %s stopped', params.name)
             running = false
             cb()
         })(cb || noop)
@@ -199,6 +201,7 @@ module.exports = function() {
     }
 
     var api = {
+        name: params.name,
         bootstrap: bootstrap,
         configure: configure,
         add: add,
