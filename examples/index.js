@@ -2,7 +2,7 @@ const System = require('..')
 const config = require('./components/config')
 const logger = require('./components/logger')
 const mongo = require('./components/mongo')
-const system = new System()
+const system = System()
 
 system.configure(config())
       .add('logger', logger()).dependsOn('config')

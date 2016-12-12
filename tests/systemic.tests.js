@@ -7,7 +7,7 @@ describe('System', function() {
     var system
 
     beforeEach(function() {
-        system = new System()
+        system = System()
     })
 
     it('should start without components', function(done) {
@@ -222,11 +222,11 @@ describe('System', function() {
 
     it('should reject invalid dependencies', function() {
         assert.throws(function() {
-          new System().add('foo', new Component()).dependsOn(1)
+          System().add('foo', new Component()).dependsOn(1)
         }, 'Component foo has an invalid dependency 1')
 
         assert.throws(function() {
-          new System().add('foo', new Component()).dependsOn({})
+          System().add('foo', new Component()).dependsOn({})
         }, 'Component foo has an invalid dependency {}')
     })
 
@@ -296,7 +296,7 @@ describe('System', function() {
     })
 
     it('should include components from other systems', function(done) {
-        system.include(new System().add('foo', new Component()))
+        system.include(System().add('foo', new Component()))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.ok(components.foo)
@@ -305,7 +305,7 @@ describe('System', function() {
     })
 
     it('should be able to depend on included components', function(done) {
-        system.include(new System().add('foo', new Component()))
+        system.include(System().add('foo', new Component()))
               .add('bar', new Component()).dependsOn('foo')
               .start(function(err, components) {
                   assert.ifError(err)
@@ -316,7 +316,7 @@ describe('System', function() {
 
     it('should configure components from included systems', function(done) {
         system.configure(new Config({ foo: { bar: 'baz'} }))
-              .include(new System().add('foo', new Component()).dependsOn('config'))
+              .include(System().add('foo', new Component()).dependsOn('config'))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.bar, 'baz')
@@ -326,7 +326,7 @@ describe('System', function() {
 
     it('should prefer components from other systems when merging', function(done) {
         system.add('foo', 1)
-              .include(new System().add('foo', 2))
+              .include(System().add('foo', 2))
               .start(function(err, components) {
                   assert.ifError(err)
                   assert.equal(components.foo, 2)

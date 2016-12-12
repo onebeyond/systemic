@@ -44,7 +44,7 @@ You add components to a system (which is in itself a component).
 const System = require('systemic')
 const mongo = require('./components/mongo')
 
-new System()
+System()
     .add('mongo', mongo())
     .start((err, { mongo }) => {
         if (err) throw err
@@ -84,7 +84,7 @@ const System = require('systemic')
 const config = require('./components/config')
 const mongo = require('./components/mongo')
 
-new System()
+System()
     .add('config', config())
     .add('mongo', mongo()).dependsOn('config')
     .start((err, { mongo }) => {
@@ -105,7 +105,7 @@ and the components start method (now mandatory), must specifiy an argument for t
 #### Mapping dependencies
 You can customise the depencency attribute passed to your component by creating a mapping object instead of a simple string
 ```js
-new System()
+System()
     .add('logger', logger())
     .add('mongo', mongo())
         .dependsOn({ component: 'logger', destination: 'log' })
@@ -116,7 +116,7 @@ new System()
 ```
 and if you only want to inject a nested property of the dependency instead of the entire thing you can also express this with a dependency mapping
 ```js
-new System()
+System()
     .add('config', config())
     .add('mongo', mongo())
         .dependsOn({ component: 'config', source: 'mongo' })
@@ -130,7 +130,7 @@ Now ```config.mongo``` will be injected as ```config``` instead of the entire co
 #### Configuration Shorthand
 Configuration *can* work just like any other component, but because it is so common to want to inject nested sub-documents, e.g. ```config.logger``` or ```config.mongo``` into your components, there's a shorthand for doing this...
 ```js
-new System()
+System()
     .configure(config())
     .add('mongo', mongo()).dependsOn('config')
     .start((err, { mongo }) => {
@@ -184,7 +184,7 @@ Sometimes you need to depend on a set of components as a single unit. You *could
 const app = require('systemic-express').app
 const server = require('systemic-express').server
 
-new System()
+System()
     .add('app', app())
     .add('routes.admin', adminRoutes()).dependsOn('app')
     .add('routes.api', apiRoutes()).dependsOn('app')
@@ -226,7 +226,7 @@ lib/
 const System = require('system')
 const path = require('path')
 
-module.exports = new System().bootstrap(path.join(__dirname, 'components'))
+module.exports = System().bootstrap(path.join(__dirname, 'components'))
 ```
 
 ```js
@@ -235,7 +235,7 @@ const System = require('systemic')
 const adminRoutes = require('./admin-routes')
 const apiRoutes = require('./api-routes')
 
-module.exports = new System()
+module.exports = System()
     .add('routes.admin', adminRoutes()).dependsOn('app')
     .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
     .add('routes').dependsOn('routes.admin', 'routes.api')
