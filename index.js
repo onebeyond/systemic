@@ -62,7 +62,6 @@ module.exports = function(_params) {
 
     function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        if (component.start && component.start.length === 0) throw new Error(format('Component %s\'s start function is not asynchronous', name))
         definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
         return api

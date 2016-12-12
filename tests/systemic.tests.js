@@ -111,12 +111,6 @@ describe('System', function() {
             })
     })
 
-    it('should reject components with synchronous start functions', function() {
-        assert.throws(function() {
-            system.add('foo', { start: function() {} })
-        }, 'Component foo\'s start function is not asynchronous')
-    })
-
     it('should reject duplicate components', function() {
         assert.throws(function() {
             system.add('foo', new Component()).add('foo', new Component())
