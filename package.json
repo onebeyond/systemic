@@ -4,8 +4,9 @@
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive tests",
+    "test": "mocha test",
     "lint": "eslint .",
+    "istanbul": "istanbul cover --report html _mocha",
     "prepush": "npm run lint && npm test"
   },
   "keywords": [
@@ -21,9 +22,10 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^0.23.0",
-    "eslint-plugin-imperative": "0.0.2",
     "eslint-config-imperative": "0.0.6",
+    "eslint-plugin-imperative": "0.0.2",
     "husky": "^0.11.4",
+    "istanbul": "^0.4.5",
     "mocha": "^2.5.3"
   },
   "dependencies": {
