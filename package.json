@@ -21,6 +21,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^0.23.0",
+    "eslint-plugin-imperative": "0.0.2",
     "eslint-config-imperative": "0.0.6",
     "husky": "^0.11.4",
     "mocha": "^2.5.3"
@@ -29,7 +30,6 @@
     "async": "^2.0.0-rc.6",
     "chance": "^1.0.4",
     "debug": "^2.2.0",
-    "eslint-plugin-imperative": "0.0.2",
     "lodash.assign": "^4.0.9",
     "lodash.defaults": "^4.0.1",
     "lodash.find": "^4.4.0",
