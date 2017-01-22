@@ -9,4 +9,5 @@ engines:
 
 ratings:
   paths:
+  - index.js
   - lib/**
