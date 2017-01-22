@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.2.3]
 ### Added
 - Node 7 build
 
