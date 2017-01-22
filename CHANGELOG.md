@@ -1,6 +1,7 @@
 # Change Log
 
-## [Unreleased]
+## [1.2.1]
+# .npmignore
 
 ## [1.2.0]
 ### Added
