@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+### Changed
+- Fixed coverage badges
+
 ## [1.2.3]
 ### Added
 - Node 7 build
