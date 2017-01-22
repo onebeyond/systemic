@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+### Added
+- Node 7 build
+
 ## [1.2.2]
 ### Added
 - More badges

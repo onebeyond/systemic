@@ -7,6 +7,7 @@
     "test": "mocha test",
     "lint": "eslint .",
     "istanbul": "istanbul cover --report html _mocha",
+    "codeclimate": "codeclimate-test-reporter < coverage/lcov.info",
     "prepush": "npm run lint && npm test"
   },
   "keywords": [
