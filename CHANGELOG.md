@@ -1,7 +1,12 @@
 # Change Log
 
+## [Unreleased]
+### Added
+- More badges
+
 ## [1.2.1]
-# .npmignore
+### Added
+- .npmignore
 
 ## [1.2.0]
 ### Added
