@@ -1,8 +1,12 @@
-[![Build Status](https://img.shields.io/travis/guidesmiths/systemic/master.svg)](https://travis-ci.org/guidesmiths/systemic)
-[![Code Style](https://img.shields.io/badge/code%20style-imperative-brightgreen.svg)](https://github.com/guidesmiths/eslint-config-imperative)
-
 # Systemic
 A minimal dependency injection library
+
+[![NPM version](https://img.shields.io/npm/v/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
+[![NPM downloads](https://img.shields.io/npm/dm/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
+[![Build Status](https://img.shields.io/travis/guidesmiths/systemic/master.svg)](https://travis-ci.org/guidesmiths/systemic)
+[![Code Style](https://img.shields.io/badge/code%20style-imperative-brightgreen.svg)](https://github.com/guidesmiths/eslint-config-imperative)
+[![Dependency Status](https://david-dm.org/guidesmiths/systemic.svg)](https://david-dm.org/guidesmiths/systemic)
+[![devDependencies Status](https://david-dm.org/guidesmiths/systemic/dev-status.svg)](https://david-dm.org/guidesmiths/systemic?type=dev)
 
 ## tl;dr
 ```js
@@ -239,3 +243,4 @@ module.exports = System()
     .add('routes.admin', adminRoutes()).dependsOn('app')
     .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
     .add('routes').dependsOn('routes.admin', 'routes.api')
+```
