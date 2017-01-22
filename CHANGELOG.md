@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.3.0]
 ### Changed
 - Fixed coverage badges
 - Configuring code climate
