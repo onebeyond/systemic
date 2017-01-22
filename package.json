@@ -27,7 +27,7 @@
     "eslint": "^3.12.2",
     "eslint-config-imperative": "^1.0.0",
     "eslint-plugin-imperative": "^1.0.0",
-    "husky": "^0.11.4",
+    "husky": "^0.13.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
   },
