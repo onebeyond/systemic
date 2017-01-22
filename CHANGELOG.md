@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Fixed coverage badges
+- Configuring code climate
 
 ## [1.2.3]
 ### Added
