@@ -7,8 +7,8 @@
     "test": "mocha test",
     "lint": "eslint .",
     "istanbul": "istanbul cover --report html --report lcov _mocha",
-    "codeclimate": "codeclimate-test-reporter < coverage/lcov.info",
-    "prepush": "npm run lint && npm test"
+    "codeclimate": "(test -e .codeclimate && npm run istanbul && source .codeclimate && codeclimate-test-reporter < coverage/lcov.info) || echo skipping codeclimate",
+    "prepush": "npm run lint && npm test && npm run codeclimate"
   },
   "keywords": [
     "dependency",
@@ -26,9 +26,9 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.4.0",
-    "eslint": "^3.12.2",
-    "eslint-config-imperative": "^1.0.0",
-    "eslint-plugin-imperative": "^1.0.0",
+    "eslint": "^4.1.1",
+    "eslint-config-imperative": "^2.0.0",
+    "eslint-plugin-imperative": "^2.0.0",
     "husky": "^0.13.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
