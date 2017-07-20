@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.3.2]
+### Changed
+- Updated dev dependencies
+
 ## [1.3.1]
 ### Added
 - Codeclimate automatically runs on push
