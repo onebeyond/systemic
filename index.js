@@ -116,7 +116,6 @@ module.exports = function(_params) {
         started.push(name)
         var component = definitions[name].component
         var onStarted = function(err, started) {
-            if (err) console.log('Error starting', name)
             if (err) return cb(err)
             setProp(system, name, started)
             debug('Component %s started', name)
