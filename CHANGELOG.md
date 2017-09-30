@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.3.3]
+### Changed
+- Removed accidental console.log
+- Updated dependencies
+
 ## [1.3.2]
 ### Changed
 - Updated dev dependencies
