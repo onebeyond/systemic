@@ -1,8 +1,8 @@
 # Systemic
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/guidesmiths/systemic.svg)](https://greenkeeper.io/)
 A minimal dependency injection library
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/guidesmiths/systemic.svg)](https://greenkeeper.io/)
 [![NPM version](https://img.shields.io/npm/v/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
 [![NPM downloads](https://img.shields.io/npm/dm/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
 [![Build Status](https://img.shields.io/travis/guidesmiths/systemic/master.svg)](https://travis-ci.org/guidesmiths/systemic)
