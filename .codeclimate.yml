@@ -1,3 +1,4 @@
+version: "2"
 engines:
   eslint:
     enabled: false
@@ -6,8 +7,11 @@ engines:
     config:
       languages:
       - javascript
-
+checks:
+  method-complexity:
+    enabled: false
+  method-lines:
+    enabled: false
 ratings:
   paths:
   - index.js
-  - lib/**
