@@ -52,12 +52,8 @@ You add components to a system (which is in itself a component).
 const System = require('systemic')
 const mongo = require('./components/mongo')
 
-System()
-    .add('mongo', mongo())
-    .start((err, { mongo }) => {
-        if (err) throw err
-        // Do something useful with mongo
-    })
+const system = System().add('mongo', mongo())
+const { mongo } = await system.start()
 ```
 When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
 
@@ -92,15 +88,13 @@ const System = require('systemic')
 const config = require('./components/config')
 const mongo = require('./components/mongo')
 
-System()
+const system = System()
     .add('config', config())
     .add('mongo', mongo()).dependsOn('config')
-    .start((err, { mongo }) => {
-        if (err) throw err
-        // Do something useful with mongo
-    })
+
+const { mongo } = await system.start()
 ```
-and the components start method (now mandatory), must specifiy an argument for the dependencies
+and the components start method (now mandatory), must specify an argument for the dependencies
 ```js
     function start({ config }, cb) {
         MongoClient.connect(config.url, config.options, (err, _db) => {
@@ -111,40 +105,34 @@ and the components start method (now mandatory), must specifiy an argument for t
 ```
 
 #### Mapping dependencies
-You can customise the depencency attribute passed to your component by creating a mapping object instead of a simple string
+You can customise the dependency attribute passed to your component by creating a mapping object instead of a simple string
 ```js
-System()
+const system = System()
     .add('logger', logger())
     .add('mongo', mongo())
         .dependsOn({ component: 'logger', destination: 'log' })
-    .start((err, { mongo }) => {
-        if (err) throw err
-        mongo.find({ name: 'fred' })
-    })
+
+const { mongo, log } = await system.start()
 ```
 and if you only want to inject a nested property of the dependency instead of the entire thing you can also express this with a dependency mapping
 ```js
-System()
+const system = System()
     .add('config', config())
     .add('mongo', mongo())
         .dependsOn({ component: 'config', source: 'mongo' })
-    .start((err, { mongo }) => {
-        if (err) throw err
-        mongo.find({ name: 'fred' })
-    })
+
+const { mongo } = await system.start()        
 ```
 Now ```config.mongo``` will be injected as ```config``` instead of the entire configuration object
 
 #### Configuration Shorthand
 Configuration *can* work just like any other component, but because it is so common to want to inject nested sub-documents, e.g. ```config.logger``` or ```config.mongo``` into your components, there's a shorthand for doing this...
 ```js
-System()
+const system = System()
     .configure(config())
     .add('mongo', mongo()).dependsOn('config')
-    .start((err, { mongo }) => {
-        if (err) throw err
-        mongo.find({ name: 'fred' })
-    })
+
+const { mongo } = await system.start()
 ```
 The ```configure``` method creates a *scoped* dependency which will default the ```source``` attribute when a component depends on it.
 
@@ -155,8 +143,8 @@ Attempting to add the same component twice will result in an error, but sometime
 const master = require('../lib/master-system')
 const store = require('./stubs/store')
 
-before((done) => {
-    master.set('store', store).start(done)
+before(async () => {
+    await master.set('store', store).start(done)
 })
 ```
 

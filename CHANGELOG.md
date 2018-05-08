@@ -1,8 +1,8 @@
 # Change Log
 
-## [Unrelased]
+## [2.0.0]
 ### Added
-- Greenkeeper
+- System lifecycle methods (start, stop, restart) return promises
 
 ### Updated
 - Readme

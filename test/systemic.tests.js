@@ -381,6 +381,32 @@ describe('System', function() {
               })
     })
 
+    it('should support promises', function(done) {
+      system.add('foo', new Component())
+          .start()
+          .then(function(components) {
+              assert(components.foo.started, 'Component was not started')
+              assert(components.foo.counter, 1)
+              return components
+          })
+          .then(function(components) {
+            return system.stop().then(function() {
+              assert(components.foo.stopped, 'Component was not stopped')
+              assert(components.foo.counter, 1)
+              return components
+            }).catch(done)
+          })
+          .then(function(components) {
+            system.restart().then(function() {
+              assert(components.foo.counter, 2)
+            }).catch(done)
+          })
+          .then(done)
+          .catch(done)
+    })
+
+
+
     function Component() {
 
         var state = { counter: 0, started: true, stopped: true, dependencies: [] }

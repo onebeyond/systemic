@@ -90,12 +90,25 @@ module.exports = function(_params) {
     function start(cb) {
         debug('Starting system %s', params.name)
         started = []
-        async.seq(sortComponents, ensureComponents, function(components, cb) {
+        var p = new Promise(function(resolve, reject) {
+          async.seq(sortComponents, ensureComponents, function(components, cb) {
             debug('System %s started', params.name)
             running = components
             cb(null, components)
-        })(cb)
-        return api
+          })(function(err, components) {
+            if (err) return reject(err)
+            resolve(components)
+          })
+        })
+        return cb ? p.then(function(components) {
+          setImmediate(function() {
+            cb(null, components)
+          })
+        }).catch(function(err) {
+          setImmediate(function() {
+            cb(err)
+          })
+        }) : p
     }
 
     function ensureComponents(components, cb) {
@@ -129,13 +142,26 @@ module.exports = function(_params) {
 
     function stop(cb) {
         debug('Stopping system %s', params.name)
-        async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
-            debug('System %s stopped', params.name)
-            running = false
+        var p = new Promise(function(resolve, reject) {
+          async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
+              debug('System %s stopped', params.name)
+              running = false
+              cb()
+          })(function(err) {
+            if (err) return reject(err)
+            resolve();
+          })
+        })
+        return cb ? p.then(function() {
+          setImmediate(function() {
             cb()
-        })(cb || noop)
-        return api
-    }
+          })
+        }).catch(function(err) {
+          setImmediate(function() {
+            cb(err)
+          })
+        }) : p
+      }
 
     function stopComponents(components, cb) {
         async.eachSeries(components, stopComponent, cb)
@@ -196,9 +222,21 @@ module.exports = function(_params) {
     }
 
     function restart(cb) {
-        async.seq(api.stop, api.start)(cb)
-        return api
-    }
+        var p = new Promise(function(resolve, reject) {
+          async.seq(api.stop, api.start)(function(err, components) {
+            if (err) return reject(err)
+            resolve(components)
+          })
+        })
+        return cb ? p.then(function(components) {
+          setImmediate(function() {
+            cb(null, components)
+          })
+        }).catch(function(err) {
+          setImmediate(function() {
+            cb(err)
+          })
+        }) : p    }
 
     var api = {
         name: params.name,
