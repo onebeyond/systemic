@@ -3,6 +3,10 @@
 ## [2.0.0]
 ### Added
 - System lifecycle methods (start, stop, restart) return promises
+### Updated
+- All dependencies to latest compatible versions
+### Removed
+- codeclimate-test-report (install globally if needed)
 
 ### Updated
 - Readme
