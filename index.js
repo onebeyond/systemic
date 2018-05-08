@@ -100,15 +100,7 @@ module.exports = function(_params) {
             resolve(components)
           })
         })
-        return cb ? p.then(function(components) {
-          setImmediate(function() {
-            cb(null, components)
-          })
-        }).catch(function(err) {
-          setImmediate(function() {
-            cb(err)
-          })
-        }) : p
+        return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
     }
 
     function ensureComponents(components, cb) {
@@ -152,15 +144,7 @@ module.exports = function(_params) {
             resolve();
           })
         })
-        return cb ? p.then(function() {
-          setImmediate(function() {
-            cb()
-          })
-        }).catch(function(err) {
-          setImmediate(function() {
-            cb(err)
-          })
-        }) : p
+        return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
       }
 
     function stopComponents(components, cb) {
@@ -222,21 +206,28 @@ module.exports = function(_params) {
     }
 
     function restart(cb) {
-        var p = new Promise(function(resolve, reject) {
-          async.seq(api.stop, api.start)(function(err, components) {
-            if (err) return reject(err)
-            resolve(components)
-          })
+      var p = api.stop().then(function() {
+        return api.start()
+      })
+
+      return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
+    }
+
+    function immediateCallback(cb) {
+      return function(resolved) {
+        setImmediate(function() {
+          cb(null, resolved);
         })
-        return cb ? p.then(function(components) {
-          setImmediate(function() {
-            cb(null, components)
-          })
-        }).catch(function(err) {
-          setImmediate(function() {
-            cb(err)
-          })
-        }) : p    }
+      }
+    }
+
+    function immediateError(cb) {
+      return function(err) {
+        setImmediate(function() {
+          cb(err);
+        })
+      }
+    }
 
     var api = {
         name: params.name,

@@ -415,11 +415,15 @@ describe('System', function() {
             state.started = true
             state.counter++
             state.dependencies = dependencies
-            cb(null, state)
+            setTimeout(function() {
+              cb(null, state)
+            }, 100)
         }
         this.stop = function(cb) {
             state.stopped = true
-            cb()
+            setTimeout(function() {
+              cb()
+            }, 100)
         }
     }
 
