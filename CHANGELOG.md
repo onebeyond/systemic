@@ -3,6 +3,7 @@
 ## [2.1.0]
 ### Added
 - Fix bug where if you destructured components in the system start callback and a component errored you received a "Cannot destructure property" error
+- Improve README
 
 ## [2.0.0]
 ### Added

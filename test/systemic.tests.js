@@ -416,8 +416,6 @@ describe('System', function() {
           .catch(done)
     })
 
-
-
     function Component() {
 
         var state = { counter: 0, started: true, stopped: true, dependencies: [] }
