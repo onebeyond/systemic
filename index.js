@@ -96,11 +96,11 @@ module.exports = function(_params) {
             running = components
             cb(null, components)
           })(function(err, components) {
-            if (err) return reject(err)
+            if (err) return reject(err, {})
             resolve(components)
           })
         })
-        return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
+        return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb, {})) : p
     }
 
     function ensureComponents(components, cb) {
@@ -221,10 +221,10 @@ module.exports = function(_params) {
       }
     }
 
-    function immediateError(cb) {
+    function immediateError(cb, resolved) {
       return function(err) {
         setImmediate(function() {
-          cb(err);
+          resolved ? cb(err, resolved) : cb(err);
         })
       }
     }

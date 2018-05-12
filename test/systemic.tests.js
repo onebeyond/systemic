@@ -90,6 +90,17 @@ describe('System', function() {
             })
     })
 
+    it('should support destructuring when a component errors', function(done) {
+        var bar = new Component()
+        system.add('foo', new ErrorComponent())
+              .add('bar', bar).dependsOn('foo')
+              .start(function(err, components) {
+                    assert.ok(err)
+                    assert.deepEqual(components, {})
+                    done()
+            })
+    })
+
     it('should pass through components without start methods', function(done) {
         system.add('foo', { ok: true })
             .start(function(err, components) {
