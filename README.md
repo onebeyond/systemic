@@ -34,7 +34,7 @@ const events = { SIGTERM: 0, SIGINT: 0, unhandledRejection: 1, error: 1 }
 
 async function start() {
   const system = System()
-  const { config, mongo, logger } = await System().start()
+  const { config, mongo, logger } = await system.start()
 
   logger.info('System has started')
 
