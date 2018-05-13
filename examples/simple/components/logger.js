@@ -1,7 +1,7 @@
 module.exports = function(options) {
 
-    function start(dependencies, cb) {
-        console.log('Logging at level', dependencies.config.level)
+    function start({ config }, cb) {
+        console.log('Logging at level', config.level)
         cb(null, console)
     }
 

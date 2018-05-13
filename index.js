@@ -7,6 +7,7 @@ var setProp = require('lodash.set')
 var hasProp = require('lodash.has')
 var map = require('lodash.map')
 var find = require('lodash.find')
+var isFunction = require('lodash.isfunction')
 var toArray = require('lodash.toarray')
 var defaults = require('lodash.defaults')
 var assign = require('lodash.assign')
@@ -32,7 +33,7 @@ module.exports = function(_params) {
             dirname:  path,
             filter:  /^(index.js)$/,
             resolve: function(component) {
-                api.include(component)
+                api.include(isFunction(component) ? component() : component)
             }
         })
         return api

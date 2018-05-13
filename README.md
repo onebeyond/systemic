@@ -15,20 +15,21 @@ A minimal dependency injection library
 ## tl;dr
 ### Define the system
 ```js
-import Systemic from 'systemic'
-import Config from './components/config'
-import Logger from './components/logger'
-import Mongo from './components/mongo'
+const Systemic = require('systemic')
+const Config = require('./components/config')
+const Logger = require('./components/logger')
+const Mongo = require('./components/mongo')
 
-export default () => Systemic()
-  .add('config', Config())
+module.exports = () => Systemic()
+  .add('config', Config(), { scoped: true })
   .add('logger', Logger()).dependsOn('config')
-  .add('mongo', Mongo()).dependsOn('config', 'logger')
+  .add('mongo.primary', Mongo()).dependsOn('config', 'logger')
+  .add('mongo.secondary', Mongo()).dependsOn('config', 'logger')
 ```
 
 ### Run the system
 ```js
-import System from './system'
+const System = require('./system')
 
 const events = { SIGTERM: 0, SIGINT: 0, unhandledRejection: 1, error: 1 }
 
@@ -36,11 +37,12 @@ async function start() {
   const system = System()
   const { config, mongo, logger } = await system.start()
 
-  logger.info('System has started')
+  console.log('System has started. Press CTRL+C to stop')
 
   Object.keys(events).forEach(name => {
     process.on(name, async () => {
       await system.stop()
+      console.log('System has stopped')
       process.exit(events[name])
     })
   })
@@ -49,7 +51,7 @@ async function start() {
 start()
 ```
 
-See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
+See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
 
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and have few layers than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double).
@@ -70,82 +72,67 @@ Systemic has 4 main concepts
 You add components and their dependencies to a system. When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
 
 ```js
-import Systemic from 'systemic'
-import Config from './components/config'
-import Logger from './components/logger'
-import Mongo from './components/mongo'
+const Systemic = require('systemic')
+const Config = require('./components/config')
+const Logger = require('./components/logger')
+const Mongo = require('./components/mongo')
 
-const system = Systemic()
-  .add('config', Config())
-  .add('logger', Logger()).dependsOn('config')
-  .add('mongo', Mongo()).dependsOn('config', 'logger')
+async function init() {
+  const system = Systemic()
+    .add('config', Config(), { scoped: true })
+    .add('logger', Logger()).dependsOn('config')
+    .add('mongo.primary', Mongo()).dependsOn('config', 'logger')
+    .add('mongo.secondary', Mongo()).dependsOn('config', 'logger')
 
-const { config, logger, mongo } = await system.start()
-logger.info('System has started')
+  const { config, mongo, logger } = await system.start()
 
-// Do stuff with mongo
+  console.log('System has started. Press CTRL+C to stop')
 
-await system.stop()
-logger.info('System has stopped')
-```
-
-System life cycle functions (start, stop, restart) return a promise, but can also take callbacks
-
-```js
-const system = Systemic()
-  .add('config', Config())
-  .add('logger', Logger()).dependsOn('config')
-  .add('mongo', Mongo()).dependsOn('config', 'logger')
-
-system.start((err, { config, logger, mongo }) => {
-  if (err) throw err
-  logger.info('System has started')
-
-  // Do stuff with mongo
-
-  logger.stop((err) => {
-    if (err) throw err
-    logger.info('System has stopped')
+  Object.keys(events).forEach(name => {
+    process.on(name, async () => {
+      await system.stop()
+      console.log('System has stopped')
+      process.exit(events[name])
+    })
   })
-})
+}
+
+init()
 ```
+System life cycle functions (start, stop, restart) return a promise, but can also take callbacks.
 
 ### Runners
 While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you ofen want to make changes to the system definition (e.g. replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
 
 ```js
 // system.js
-export default () => Systemic()
+module.exports = () => Systemic()
   .add('config', Config())
   .add('logger', Logger()).dependsOn('config')
   .add('mongo', Mongo()).dependsOn('config', 'logger')
 ```
 ```js
-// runner.js
-import System from './system'
+// index.js
+const System = require('./system')
 
-const system = System()
+const events = { SIGTERM: 0, SIGINT: 0, unhandledRejection: 1, error: 1 }
 
-system.start()
-  .then({ config, logger, mongo } => {
-    process.on('SIGINT', shutdown)
-    process.on('SIGTERM', shutdown)
-  }).catch(err => {
-    console.error('System failed to start')
-    process.exit(1)
+async function start() {
+  const system = System()
+  const { config, mongo, logger } = await system.start()
+
+  console.log('System has started. Press CTRL+C to stop')
+
+  Object.keys(events).forEach(name => {
+    process.on(name, async () => {
+      await system.stop()
+      console.log('System has stopped')
+      process.exit(events[name])
+    })
   })
-
-function shutdown() => {
-  system.stop()
-    .then(() => {
-      console.log('System stopped')
-      process.exit(0)
-    })
-    .catch(err => {
-      console.error('System failed to stop')
-      process.exit(1)
-    })
 }
+
+start()
 ```
 There are some out of the box runners we can be used in your applications or as a reference for your own custom runner
 1. [Service Runner](https://github.com/guidesmiths/systemic-service-runner)
@@ -154,7 +141,7 @@ There are some out of the box runners we can be used in your applications or as 
 #### Components
 A component is an object with optional asynchronous start and stop functions. The start function should yield the underlying resource after it has been started. e.g.
 ```js
-export default () => {
+module.exports = () => {
 
   let db
 
@@ -182,52 +169,48 @@ There are out of the box components for [express](https://github.com/guidesmiths
 
 
 #### Dependencies
-A components dependencies must be registered with the system
+A component's dependencies must be registered with the system
 ```js
-import Systemic from 'systemic'
-import Config from './components/config'
-import Mongo from './components/mongo'
+const Systemic = require('systemic')
+const Config = require('./components/config')
+const Logger = require('./components/logger')
+const Mongo = require('./components/mongo')
 
-const system = Systemic()
+module.exports = () => Systemic()
   .add('config', Config())
-  .add('mongo', Mongo()).dependsOn('config')
-
-const { mongo } = await system.start()
+  .add('logger', Logger()).dependsOn('config')
+  .add('mongo', Mongo()).dependsOn('config', 'logger')
 ```
 The components dependencies are injected via it's start function
 ```js
-  function start({ config }, cb) {
-    MongoClient.connect(config.url, (err, _db) => {
-      if (err) return cb(err)
-      db = _db
-      cb(null, db)
-    })
-  }
+function start({ config }, cb) {
+  MongoClient.connect(config.url, (err, _db) => {
+    if (err) return cb(err)
+    db = _db
+    cb(null, db)
+  })
+}
 ```
 
 #### Mapping dependencies
 You can rename dependencies passed to a components start function by specifying a mapping object instead of a simple string
 ```js
-const system = Systemic()
+module.exports = () => Systemic()
   .add('config', Config())
   .add('mongo', Mongo()).dependsOn({ component: 'config', destination: 'options' })
-
-const { options, mongo } = await system.start()
 ```
 If you want to inject a property or subdocument of the dependency thing you can also express this with a dependency mapping
 ```js
-const system = Systemic()
+module.exports = () => Systemic()
   .add('config', Config())
   .add('mongo', Mongo()).dependsOn({ component: 'config', source: 'config.mongo' })
-
-const { config, mongo } = await system.start()
 ```
 Now ```config.mongo``` will be injected as ```config``` instead of the entire configuration object
 
 #### Scoped Dependencies
 Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
 ```js
-const system = Systemic()
+module.exports = () => Systemic()
   .add('config', Config(), { scoped: true })
   .add('mongo', Mongo()).dependsOn('config')
 ```
@@ -236,8 +219,8 @@ const system = Systemic()
 Attempting to add the same component twice will result in an error, but sometimes you need to replace existing components with test doubles. Under such circumstances use ```set``` instead of ```add```
 
 ```js
-import System from '../lib/system'
-import stub from './stubs/store'
+const System = require('../lib/system')
+const stub = require('./stubs/store')
 
 let testSystem
 
@@ -255,7 +238,7 @@ after(async () => {
 Removing components during tests can decrease startup time
 
 ```js
-import System from '../lib/system'
+const System = require('../lib/system')
 
 let testSystem
 
@@ -273,12 +256,22 @@ after(async () => {
 You can simplfiy large systems by breaking them up into smaller ones, then including their component definitions into the main system.
 
 ```js
-import Systemic from 'systemic'
-import UtilSystem from './lib/util/system'
-import WebSystem from './lib/web/system'
-import DbSystem from './lib/db/system'
+// db-system.js
+const Systemic = require('systemic')
+const Mongo = require('./components/mongo')
 
-default export () => Systemic()
+module.exports = () => Systemic()
+  .add('mongo', Mongo()).dependsOn('config', 'logger')
+```
+
+```js
+// system.js
+const Systemic = require('systemic')
+const UtilSystem = require('./lib/util/system')
+const WebSystem = require('./lib/web/system')
+const DbSystem = require('./lib/db/system')
+
+module.exports = () => Systemic()
   .include(UtilSystem())
   .include(WebSystem())
   .include(DbSystem())
@@ -288,7 +281,7 @@ default export () => Systemic()
 Sometimes it's convenient to depend on a group of components. e.g.
 
 ```js
-System()
+module.exports = () => Systemic()
   .add('app', app())
   .add('routes.admin', adminRoutes()).dependsOn('app')
   .add('routes.api', apiRoutes()).dependsOn('app')
@@ -327,23 +320,23 @@ lib/
 
 ```js
 // system.js
-import System from 'system'
-import path from 'path'
+const Systemic = require('systemic')
+const path = require('path')
 
-export default () => Systemic()
+module.exports = () => Systemic()
   .bootstrap(path.join(__dirname, 'components'))
 ```
 
 ```js
 // components/routes/index.js
-import Systemic from 'systemic'
-import adminRoutes from './admin-routes'
-import apiRoutes from './api-routes'
+const Systemic = require('systemic')
+const adminRoutes = require('./admin-routes')
+const apiRoutes = require('./api-routes')
 
-export default () => Systemic()
-    .add('routes.admin', adminRoutes()).dependsOn('app')
-    .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
-    .add('routes').dependsOn('routes.admin', 'routes.api')
+module.exports = () => Systemic()
+  .add('routes.admin', adminRoutes()).dependsOn('app')
+  .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
+  .add('routes').dependsOn('routes.admin', 'routes.api')
 ```
 
 
@@ -352,10 +345,10 @@ You can debug systemic by setting the DEBUG environment variable to `systemic:*`
 
 ```js
 // system.js
-import System from 'system'
-import path from 'path'
+const Systemic = require('systemic')
+const path = require('path')
 
-export default () => System({ name: 'server' })
+module.exports = () => Systemic({ name: 'server' })
   .bootstrap(path.join(__dirname, 'components'))
 ```
 
@@ -365,7 +358,7 @@ import Systemic from 'systemic'
 import adminRoutes from './admin-routes'
 import apiRoutes from './api-routes'
 
-export default System({ name: 'routes' })
+export default Systemic({ name: 'routes' })
     .add('routes.admin', adminRoutes())
     .add('routes.api', apiRoutes())
     .add('routes').dependsOn('routes.admin', 'routes.api')
