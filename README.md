@@ -178,6 +178,15 @@ export default () => {
 ```
 The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. At time of writing the start and stop functions must use callbacks. This is a breaking change, but will be fixed in systemic 3.0.0
 
+There are out of the box components for:
+
+1. [express](https://github.com/guidesmiths/systemic-express)
+1. [mongodb](https://github.com/guidesmiths/systemic-mongodb)
+1. [redis](https://github.com/guidesmiths/systemic-redis)
+1. [mysql](https://github.com/guidesmiths/systemic-mysql)
+1. [rabbitmq](https://github.com/guidesmiths/systemic-rabbitmq)
+
+
 #### Dependencies
 A components dependencies must be registered with the system
 ```js
