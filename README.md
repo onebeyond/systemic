@@ -146,7 +146,7 @@ module.exports = () => {
   let db
 
   async function start(dependencies) {
-    db = await MongoClient.connect('mongo://localhost/example') => {
+    db = await MongoClient.connect('mongo://localhost/example')
     return db
   }
 
@@ -379,6 +379,3 @@ systemic:index Component routes started +15ms
 systemic:index Injecting dependency routes as routes into server +1ms
 systemic:index System server started +15ms
 ```
-
-
-
