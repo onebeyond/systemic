@@ -3,7 +3,7 @@
 ## [3.0.0]
 ### Breaking Changes
 - Component start and stop functions can return promises instead of taking callbacks.
-  To support this change callback based compnents start functions are no longer varardic, and must always specify both the dependencies and callback arguments, i.e. function ```start(dependencies, cb) { ... }```.
+  To support this change callback based compnents start functions are no longer varardic, and must always specify both the dependencies and callback arguments, i.e. ``function start(dependencies, cb) { ... }`.
 
 ### Added
 - Bootstrapped systems support export default syntax
