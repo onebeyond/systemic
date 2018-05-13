@@ -1,3 +1,3 @@
-var System = require('../../..')
+var Systemic = require('../../..')
 
-module.exports = new System().add('foo')
+module.exports = () => Systemic().add('foo')
