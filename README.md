@@ -33,14 +33,14 @@ logger.info('System has started')
 See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic.
 
 ### Why Use Dependency Injection With Node.js?
-Node.js applications tend to be small and "flatter" than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double). Alternative (but not necessarily better) approaches suchs as [Rewire](https://www.npmjs.com/package/rewire) exist too.
+Node.js applications tend to be small and have few layers than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double).
 
-However we've found that when writing microservices the life cycle of an application and its dependencies is a nuisance to manage over and over again. We wanted a way to consistently express that our service should establish database connections before listening for http requests, and shutdown those connections only after it had stopped listening. We found that before doing anything we need to load config from remote sources, and configure loggers. This is why we use DI.
+We've found that when writing microservices the life cycle of an application and its dependencies is a nuisance to manage over and over again. We wanted a way to consistently express that our service should establish database connections before listening for http requests, and shutdown those connections only after it had stopped listening. We found that before doing anything we need to load config from remote sources, and configure loggers. This is why we use DI.
 
-Our first attempt at a dependency injection framework was [Electrician](https://www.npmjs.com/package/electrician). It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library. This is it.
+Our first attempt at a dependency injection framework was [Electrician](https://www.npmjs.com/package/electrician). It served it's purpose well, but the API had a couple of limitations that we wanted to fix. This would have required a backwards incompatible change, so instead we decided to write a new DI library - Systemic.
 
 ### Concepts
-Systemic has 3 main concepts
+Systemic has 4 main concepts
 
 1. Systems
 1. Runners
@@ -48,7 +48,7 @@ Systemic has 3 main concepts
 1. Dependencies
 
 #### Systems
-You add components to a system (which is in itself a component). When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
+You add components and their dependencies to a system. When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
 
 ```js
 import Systemic from 'systemic'
@@ -62,15 +62,15 @@ const system = Systemic()
   .add('mongo', Mongo()).dependsOn('config', 'logger')
 
 const { config, logger, mongo } = await system.start()
-
 logger.info('System has started')
 
-await system.stop()
+// Do stuff with mongo
 
+await system.stop()
 logger.info('System has stopped')
 ```
 
-System lifecycle functions (start, stop, restart) return a promise, but can also take callbacks
+System life cycle functions (start, stop, restart) return a promise, but can also take callbacks
 
 ```js
 const system = Systemic()
@@ -82,6 +82,8 @@ system.start((err, { config, logger, mongo }) => {
   if (err) throw err
   logger.info('System has started')
 
+  // Do stuff with mongo
+
   logger.stop((err) => {
     if (err) throw err
     logger.info('System has stopped')
@@ -90,17 +92,16 @@ system.start((err, { config, logger, mongo }) => {
 ```
 
 ### Runners
-While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you ofen want to make changes to the system definition (replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
+While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you ofen want to make changes to the system definition (e.g. replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
 
-```
-import Systemic from 'systemic'
-
+```js
 // system.js
 export default () => Systemic()
   .add('config', Config())
   .add('logger', Logger()).dependsOn('config')
   .add('mongo', Mongo()).dependsOn('config', 'logger')
-
+```
+```js
 // index.js
 import System from './system'
 
