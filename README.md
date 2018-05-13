@@ -30,12 +30,7 @@ export default () => Systemic()
 ```js
 import System from './system'
 
-const events = {
-  SIGTERM: 0,
-  SIGINT: 0,
-  unhandledRejection: 1,
-  error: 1,
-}
+const events = { SIGTERM: 0, SIGINT: 0, unhandledRejection: 1, error: 1 }
 
 async function start() {
   const system = System()
