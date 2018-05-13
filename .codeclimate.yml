@@ -15,3 +15,5 @@ checks:
 ratings:
   paths:
   - index.js
+exclude_patterns:
+- "examples/"
