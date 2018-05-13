@@ -328,7 +328,7 @@ export default () => Systemic()
 ### Debugging
 You can debug systemic by setting the DEBUG environment variable to `systemic:*`. Naming your systems will make reading the debug output easier when you have more than one.
 
-```
+```js
 // system.js
 import System from 'system'
 import path from 'path'
@@ -350,7 +350,6 @@ export default System({ name: 'routes' })
 ```
 
 ```
-...
 DEBUG='systemic:*' node system
 systemic:index Adding component routes.admin to system routes +0ms
 systemic:index Adding component routes.api to system auth +2ms
