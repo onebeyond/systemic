@@ -102,14 +102,13 @@ export default () => Systemic()
   .add('mongo', Mongo()).dependsOn('config', 'logger')
 ```
 ```js
-// index.js
+// runner.js
 import System from './system'
 
 const system = System()
 
 system.start()
-  .then(components => {
-    console.log('System started')
+  .then({ config, logger, mongo } => {
     process.on('SIGINT', shutdown)
     process.on('SIGTERM', shutdown)
   }).catch(err => {
@@ -125,6 +124,7 @@ function shutdown() => {
     })
     .catch(err => {
       console.error('System failed to stop')
+      process.exit(1)
     })
 }
 ```
@@ -133,42 +133,22 @@ There are some out of the box runners we can be used in your applications or as 
 1. [Domain Runner](https://github.com/guidesmiths/systemic-domain-runner)
 
 #### Components
-A component is an object with optional asynchronous start and stop functions, e.g.
+A component is an object with optional asynchronous start and stop functions. The start function should yield the underlying resource after it has been started. e.g.
 ```js
 export default () => {
 
   let db
 
-  async function start() {
-    db = await MongoClient.connect('mongo://localhost/example', {})
-  }
-
-  async function stop() {
-    return db.close()
-  }
-
-  return {
-    start: start,
-    stop: stop,
-  }
-}
-```
-Just like systems, components can use callbacks too
-```js
-export default () => {
-
-  let db
-
-  function start(cb) {
-    MongoClient.connect('mongo://localhost/example', {}, (err, _db) => {
+  function start(dependencies, cb) {
+    MongoClient.connect('mongo://localhost/example', (err, _db) => {
       if (err) return cb(err)
       db = _db
-      cb(db)
+      cb(null, db)
     })
   }
 
   function stop(cb) {
-    db.close(cb)
+    return db.close(cb)
   }
 
   return {
@@ -177,6 +157,7 @@ export default () => {
   }
 }
 ```
+The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. At time of writing the start and stop functions must use callbacks. This is a breaking change, but will be fixed in systemic 3.0.0
 
 #### Dependencies
 A components dependencies must be registered with the system
@@ -191,16 +172,14 @@ const system = Systemic()
 
 const { mongo } = await system.start()
 ```
-The components start function must specify an argument for the dependencies
+The components dependencies are injected via it's start function
 ```js
-  async function start({ config }) {
-    db = await MongoClient.connect(config.url, config.options)
-  }
-```
-The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource
-```js
-  async function stop() {
-    return db.close()
+  function start({ config }, cb) {
+    MongoClient.connect(config.url, (err, _db) => {
+      if (err) return cb(err)
+      db = _db
+      cb(null, db)
+    })
   }
 ```
 
@@ -213,7 +192,7 @@ const system = Systemic()
 
 const { options, mongo } = await system.start()
 ```
-If you only want to inject a property of the dependency instead of the entire thing you can also express this with a dependency mapping
+If you want to inject a property or subdocument of the dependency thing you can also express this with a dependency mapping
 ```js
 const system = Systemic()
   .add('config', Config())
@@ -224,7 +203,7 @@ const { config, mongo } = await system.start()
 Now ```config.mongo``` will be injected as ```config``` instead of the entire configuration object
 
 #### Scoped Dependencies
-Injecting a sub documents from a json configuration file is such a common use case enable this behaviour automatically. The following code is equivalent to that above
+Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
 ```js
 const system = Systemic()
   .add('config', Config(), { scoped: true })
@@ -232,16 +211,16 @@ const system = Systemic()
 ```
 
 #### Overriding Components
-Attempting to add the same component twice will result in an error, but sometimes you need to do this to introduce a test double. Under such circumstances use ```set``` instead of ```add```
+Attempting to add the same component twice will result in an error, but sometimes you need to replace existing components with test doubles. Under such circumstances use ```set``` instead of ```add```
 
 ```js
-import realSystem from '../lib/system'
+import System from '../lib/system'
 import stub from './stubs/store'
 
 let testSystem
 
 before(async () => {
-  testSystem = realSystem().set('store', stub)
+  testSystem = System().set('store', stub)
   await testSystem.start()
 })
 
@@ -254,12 +233,12 @@ after(async () => {
 Removing components during tests can decrease startup time
 
 ```js
-import realSystem from '../lib/system'
+import System from '../lib/system'
 
 let testSystem
 
 before(async () => {
-  testSystem = realSystem().remove('server')
+  testSystem = System().remove('server')
   await testSystem.start()
 })
 
@@ -269,19 +248,18 @@ after(async () => {
 ```
 
 #### Including components from another system
-In addition to overriding individual components you can include all components from another system.
-This can be used to divide the system definition into logical chunks or when writing tests e.g.
+You can simplfiy large systems by breaking them up into smaller ones, then including their component definitions into the main system.
 
 ```js
-import realSystem from '../lib/system'
-import testSystem from './test-system'
+import Systemic from 'systemic'
+import UtilSystem from './lib/util/system'
+import WebSystem from './lib/web/system'
+import DbSystem from './lib/db/system'
 
-let system
-
-before(() => {
-  systmem realSystem().include(testSystem())
-  await system.start()
-})
+default export () => Systemic()
+  .include(UtilSystem())
+  .include(WebSystem())
+  .include(DbSystem())
 ```
 
 #### Grouping components
@@ -292,33 +270,17 @@ System()
   .add('app', app())
   .add('routes.admin', adminRoutes()).dependsOn('app')
   .add('routes.api', apiRoutes()).dependsOn('app')
-  .add('routes.all').dependsOn('routes.admin', 'routes.api')
-  .add('server').dependsOn('app', 'routes.all')
-```
-
-The above example will create a component 'routes.all',  which will depend on routes.admin and routes.apiwill, and be injected as
-```js
- {
-  routes: {
-    admin: { ... },
-    api: { ... }
-  }
- }
-```
-You can make children of the group private by masking their component names. e.g.
-```js
-System()
-  .add('app', app())
-  .add('routes.admin', adminRoutes()).dependsOn('app')
-  .add('routes.api', apiRoutes()).dependsOn('app')
   .add('routes').dependsOn('routes.admin', 'routes.api')
   .add('server').dependsOn('app', 'routes')
 ```
 
-The above example will create a component 'routes',  which will depend on routes.admin and routes.apiwill, and be injected as
+The above example will create a component 'routes',  which will depend on routes.admin and routes.api and be injected as
 ```js
  {
-  routes: {}
+  routes: {
+    admin: { ... },
+    adpi: { ... }
+  }
  }
 ```
 
