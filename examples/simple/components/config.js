@@ -1,7 +1,7 @@
 module.exports = function(options) {
 
-    function start(dependencies, cb) {
-        return cb(null, {
+    async function start(dependencies) {
+        return {
             logger: {
                 level: 'warn'
             },
@@ -13,7 +13,7 @@ module.exports = function(options) {
                     url: 'mongo://secondary'
                 }
             }
-        })
+        }
     }
 
     return {

@@ -32,7 +32,8 @@ module.exports = function(_params) {
         requireAll({
             dirname:  path,
             filter:  /^(index.js)$/,
-            resolve: function(component) {
+            resolve: function(exported) {
+                var component = exported.default || exported
                 api.include(isFunction(component) ? component() : component)
             }
         })
@@ -76,7 +77,6 @@ module.exports = function(_params) {
 
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
-        if (currentDefinition.component.start.length === 1) throw new Error(format('Component %s\'s start function takes no dependencies', currentDefinition.name))
         currentDefinition.dependencies = toArray(arguments).reduce(toDependencyDefinitions, currentDefinition.dependencies)
         return api
     }
@@ -129,8 +129,10 @@ module.exports = function(_params) {
                 cb(null, system)
             })
         }
-        var args = component.start.length === 1 ? [onStarted] : [dependencies, onStarted]
-        component.start.apply(component, args)
+        const p = component.start(dependencies, onStarted)
+        if (p && p.then) {
+          p.then(immediateCallback(onStarted)).catch(immediateError(cb))
+        }
     }
 
     function stop(cb) {
@@ -155,11 +157,15 @@ module.exports = function(_params) {
     function stopComponent(name, cb) {
         debug('Stopping component %s', name)
         var stop = definitions[name].component.stop || noop
-        stop(function(err, started) {
+        var onStopped = function(err) {
             if (err) return cb(err)
             debug('Component %s stopped', name)
             setImmediate(cb)
-        })
+        }
+        var p = stop(onStopped)
+        if (p && p.then) {
+          p.then(immediateCallback(onStopped)).catch(immediateError(cb))
+        }
     }
 
     function sortComponents(cb) {

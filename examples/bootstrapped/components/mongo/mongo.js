@@ -1,8 +1,8 @@
 module.exports = function(options) {
 
-    function start({ logger, config }, cb) {
+    async function start({ logger, config }) {
         logger.info('Connecting to', config.url)
-        cb(null, {})
+        return {}
     }
 
     return {

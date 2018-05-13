@@ -1,8 +1,8 @@
 module.exports = function(options) {
 
-    function start({ config }, cb) {
+    async function start({ config }) {
         console.log('Logging at level', config.level)
-        cb(null, console)
+        return console
     }
 
     return {

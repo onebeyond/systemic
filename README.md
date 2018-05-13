@@ -145,16 +145,13 @@ module.exports = () => {
 
   let db
 
-  function start(dependencies, cb) {
-    MongoClient.connect('mongo://localhost/example', (err, _db) => {
-      if (err) return cb(err)
-      db = _db
-      cb(null, db)
-    })
+  async function start(dependencies) {
+    db = await MongoClient.connect('mongo://localhost/example') => {
+    return db
   }
 
-  function stop(cb) {
-    return db.close(cb)
+  async function stop() {
+    return db.close()
   }
 
   return {
@@ -163,7 +160,7 @@ module.exports = () => {
   }
 }
 ```
-The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. At time of writing the start and stop functions must use callbacks. This is a breaking change, but will be fixed in systemic 3.0.0
+The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. The start and stop functions support both promises and callbacks (not shown)
 
 There are out of the box components for [express](https://github.com/guidesmiths/systemic-express), [mongodb](https://github.com/guidesmiths/systemic-mongodb), [redis](https://github.com/guidesmiths/systemic-redis), [postgres](https://github.com/guidesmiths/systemic-pg) and [rabbitmq](https://github.com/guidesmiths/systemic-rabbitmq).
 
@@ -183,12 +180,9 @@ module.exports = () => Systemic()
 ```
 The components dependencies are injected via it's start function
 ```js
-function start({ config }, cb) {
-  MongoClient.connect(config.url, (err, _db) => {
-    if (err) return cb(err)
-    db = _db
-    cb(null, db)
-  })
+async function start({ config }) {
+  db = await MongoClient.connect(config.url)
+  return db
 }
 ```
 
