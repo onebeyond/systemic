@@ -26,10 +26,32 @@ export default () => Systemic()
   .add('mongo', Mongo()).dependsOn('config', 'logger')
 ```
 
-### Start the system
+### Run the system
 ```js
-const { config, mongo, logger } = await system.start()
-logger.info('System has started')
+import System from './system'
+
+const events = {
+  SIGTERM: 0,
+  SIGINT: 0,
+  unhandledRejection: 1,
+  error: 1,
+}
+
+async function start() {
+  const system = System()
+  const { config, mongo, logger } = await System().start()
+
+  logger.info('System has started')
+
+  Object.keys(events).forEach(name => {
+    process.on(name, async () => {
+      await system.stop()
+      process.exit(events[name])
+    })
+  })
+}
+
+start()
 ```
 
 See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
