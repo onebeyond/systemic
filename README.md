@@ -13,24 +13,26 @@ A minimal dependency injection library
 [![devDependencies Status](https://david-dm.org/guidesmiths/systemic/dev-status.svg)](https://david-dm.org/guidesmiths/systemic?type=dev)
 
 ## tl;dr
+### Define the system
 ```js
 import Systemic from 'systemic'
 import Config from './components/config'
 import Logger from './components/logger'
 import Mongo from './components/mongo'
 
-const system =  Systemic()
+export default () => Systemic()
   .add('config', Config())
   .add('logger', Logger()).dependsOn('config')
   .add('mongo', Mongo()).dependsOn('config', 'logger')
-
-const { config, mongo, logger } = await system.start()
-
-logger.info('System has started')
-// ...
 ```
 
-See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic.
+### Start the system
+```js
+const { config, mongo, logger } = await system.start()
+logger.info('System has started')
+```
+
+See [svc-example](https://github.com/guidesmiths/svc-example) for an full node application that uses systemic and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
 
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and have few layers than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double).
@@ -284,7 +286,7 @@ The above example will create a component 'routes',  which will depend on routes
  }
 ```
 
-#### Bootstraping components from the file system
+#### Bootstraping components
 The dependency graph for a medium size project can grow quickly leading to a large system definition. To simplify this you can bootstrap components from a specified directory, where each folder in the directory includes an index.js which defines a sub system. e.g.
 
 ```
