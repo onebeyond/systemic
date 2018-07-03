@@ -48,7 +48,7 @@
     "lodash.map": "^4.6.0",
     "lodash.set": "^4.3.2",
     "lodash.toarray": "^4.4.0",
-    "require-all": "^2.1.0",
+    "require-all": "^3.0.0",
     "toposort-class": "^1.0.1",
     "uuid": "^3.2.1"
   },
