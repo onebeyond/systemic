@@ -1,5 +1,10 @@
 # Change Log
 
+## [3.1.0]
+### Changed
+- Updated dependencies
+- Dropped node 4 and 5 support
+
 ## [3.0.0]
 ### Breaking Changes
 - Component start and stop functions can return promises instead of taking callbacks.

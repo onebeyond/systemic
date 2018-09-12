@@ -27,9 +27,9 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.1.2",
-    "eslint": "^4.19.1",
-    "eslint-config-imperative": "^2.0.0",
-    "eslint-plugin-imperative": "^2.0.0",
+    "eslint": "^5.5.0",
+    "eslint-config-imperative": "^2.1.0",
+    "eslint-plugin-imperative": "^2.1.0",
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
     "mocha": "^5.1.1"
@@ -55,6 +55,9 @@
   "directories": {
     "example": "examples",
     "test": "tests"
+  },
+  "engines": {
+    "node": ">6.0.0"
   },
   "repository": {
     "type": "git",
