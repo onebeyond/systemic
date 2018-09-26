@@ -30,7 +30,7 @@
     "eslint": "^5.5.0",
     "eslint-config-imperative": "^2.1.0",
     "eslint-plugin-imperative": "^2.1.0",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.1.1"
   },
