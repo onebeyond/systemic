@@ -6,11 +6,10 @@
   "scripts": {
     "test": "mocha test",
     "lint": "eslint .",
-    "istanbul": "istanbul cover --report html --report lcov _mocha",
-    "codeclimate": "(test -e .codeclimate && npm run istanbul && source .codeclimate) || echo skipping codeclimate",
-    "nsp": "nsp check",
+    "coverage": "nyc --report html --reporter lcov --reporter text-summary mocha test",
+    "codeclimate": "(test -e .codeclimate && npm run coverage && source .codeclimate) || echo skipping codeclimate",
     "precommit": "npm run lint && npm test",
-    "prepush": "npm run codeclimate && npm run nsp"
+    "prepush": "npm run codeclimate"
   },
   "keywords": [
     "dependency",
@@ -26,18 +25,18 @@
   "author": "GuideSmiths Ltd",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^5.5.0",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
     "eslint-config-imperative": "^2.1.0",
     "eslint-plugin-imperative": "^2.1.0",
-    "husky": "^1.0.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.1.1"
+    "husky": "^1.3.1",
+    "mocha": "^6.1.0",
+    "nyc": "^13.3.0"
   },
   "dependencies": {
-    "async": "^2.6.0",
-    "chance": "^1.0.16",
-    "debug": "^4.0.0",
+    "async": "^2.6.2",
+    "chance": "^1.0.18",
+    "debug": "^4.1.1",
     "lodash.assign": "^4.2.0",
     "lodash.defaults": "^4.2.0",
     "lodash.find": "^4.6.0",
@@ -48,9 +47,9 @@
     "lodash.map": "^4.6.0",
     "lodash.set": "^4.3.2",
     "lodash.toarray": "^4.4.0",
-    "require-all": "^2.1.0",
+    "require-all": "^3.0.0",
     "toposort-class": "^1.0.1",
-    "uuid": "^3.2.1"
+    "uuid": "^3.3.2"
   },
   "directories": {
     "example": "examples",
