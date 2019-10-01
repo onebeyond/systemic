@@ -1,5 +1,9 @@
 # Change Log
 
+## [3.3.0]
+### Changed
+- Updated dependencies
+
 ## [3.2.0]
 ### Changed
 - Updated dependencies
