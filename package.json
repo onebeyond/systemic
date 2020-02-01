@@ -24,16 +24,16 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^6.5.1",
+    "eslint": "^6.8.0",
     "eslint-config-imperative": "^3.0.0",
     "eslint-plugin-imperative": "^3.0.0",
-    "husky": "^3.0.7",
-    "mocha": "^6.2.1",
-    "nyc": "^14.1.1"
+    "husky": "^4.2.1",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0"
   },
   "dependencies": {
-    "async": "^3.1.0",
-    "chance": "^1.0.18",
+    "async": "^3.1.1",
+    "chance": "^1.1.4",
     "debug": "^4.1.1",
     "lodash.assign": "^4.2.0",
     "lodash.defaults": "^4.2.0",
@@ -47,7 +47,7 @@
     "lodash.toarray": "^4.4.0",
     "require-all": "^3.0.0",
     "toposort-class": "^1.0.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.4.0"
   },
   "directories": {
     "example": "examples",

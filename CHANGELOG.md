@@ -1,5 +1,9 @@
 # Change Log
 
+## [3.3.1]
+### Changed
+- Housekeeping
+
 ## [3.3.0]
 ### Changed
 - Updated dependencies
