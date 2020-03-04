@@ -47,7 +47,7 @@
     "lodash.toarray": "^4.4.0",
     "require-all": "^3.0.0",
     "toposort-class": "^1.0.1",
-    "uuid": "^3.4.0"
+    "uuid": "^7.0.2"
   },
   "directories": {
     "example": "examples",
