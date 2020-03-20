@@ -10,3 +10,16 @@ after_script: greenkeeper-lockfile-upload
 node_js:
   - "10"
   - "12"
+  - "13"
+
+jobs:
+  include:
+  - stage: npm Deployment
+    deploy:
+      edge: true
+      provider: npm
+      skip_cleanup: true
+      email: "$NPM_EMAIL"
+      api_key: "$NPM_TOKEN"
+      on:
+        tags: true
