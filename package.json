@@ -64,7 +64,7 @@
   "homepage": "https://guidesmiths.github.io/systemic/",
   "husky": {
     "hooks": {
-      "pre-commit": "qa"
+      "pre-commit": "npm run qa"
     }
   }
 }
