@@ -4,10 +4,9 @@
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test",
+    "ci": "npm run lint && npm run test",
     "lint": "eslint .",
-    "coverage": "nyc --report html --reporter lcov --reporter text-summary mocha test",
-    "codeclimate": "(test -e .codeclimate && npm run coverage && source .codeclimate) || echo skipping codeclimate"
+    "test": "nyc --report html --reporter lcov --reporter text-summary mocha test"
   },
   "keywords": [
     "dependency",
@@ -65,8 +64,7 @@
   "homepage": "https://guidesmiths.github.io/systemic/",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm test",
-      "pre-push": "npm run codeclimate"
+      "pre-commit": "npm run lint && npm run test"
     }
   }
 }

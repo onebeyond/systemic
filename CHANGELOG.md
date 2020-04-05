@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+### Changed
+- Automate codeclimate reporting
+
 ## [3.3.1]
 ### Changed
 - Housekeeping
