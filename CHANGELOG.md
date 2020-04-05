@@ -1,18 +1,21 @@
 # Change Log
 
-## [3.1.3]
+## [3.3.3]
 ### Changed
-- Tweaking deployment
+- Automate codeclimate
+- Tweak deployment
 
-## [3.1.2]
+## [3.3.1]
 ### Changed
-- Tweaking deployment
-
-## [3.1.1]
-### Changed
-- Automate codeclimate reporting
-- Updated dependencies
 - Housekeeping
+
+## [3.3.0]
+### Changed
+- Updated dependencies
+
+## [3.2.0]
+### Changed
+- Updated dependencies
 
 ## [3.1.0]
 ### Changed
