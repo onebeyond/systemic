@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Automate codeclimate reporting
+- Updated dependencies
 
 ## [3.3.1]
 ### Changed
