@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [3.3.2]
 ### Changed
 - Automate codeclimate reporting
 - Updated dependencies
