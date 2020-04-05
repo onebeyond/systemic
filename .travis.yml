@@ -14,6 +14,9 @@ after_script:
 - greenkeeper-lockfile-upload
 - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
+script:
+- npm run qa
+
 jobs:
   include:
   - stage: npm Deployment

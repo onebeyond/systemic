@@ -4,7 +4,7 @@
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "scripts": {
-    "ci": "npm run lint && npm run test",
+    "qa": "npm run lint && npm run test",
     "lint": "eslint .",
     "test": "nyc --report html --reporter lcov --reporter text-summary mocha test"
   },
@@ -64,7 +64,7 @@
   "homepage": "https://guidesmiths.github.io/systemic/",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run test"
+      "pre-commit": "qa"
     }
   }
 }
