@@ -1,5 +1,9 @@
 # Change Log
 
+## [3.1.2]
+### Changed
+- Tweaking deployment
+
 ## [3.1.1]
 ### Changed
 - Automate codeclimate reporting
