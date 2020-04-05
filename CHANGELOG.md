@@ -1,21 +1,10 @@
 # Change Log
 
-## [3.3.2]
+## [3.1.1]
 ### Changed
 - Automate codeclimate reporting
 - Updated dependencies
-
-## [3.3.1]
-### Changed
 - Housekeeping
-
-## [3.3.0]
-### Changed
-- Updated dependencies
-
-## [3.2.0]
-### Changed
-- Updated dependencies
 
 ## [3.1.0]
 ### Changed
