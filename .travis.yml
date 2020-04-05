@@ -24,7 +24,7 @@ deploy:
   on:
     tags: true
     node_js: '12'
-    condition: $TRAVIS_TAG =~ ^v3\.3\.6$
+    condition: $TRAVIS_TAG =~ ^v3\.3\.([0-9]+)$
 
 node_js:
 - "8"

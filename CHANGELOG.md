@@ -1,5 +1,9 @@
 # Change Log
 
+## [3.3.7]
+### Changed
+- Tweak deployment
+
 ## [3.3.6]
 ### Changed
 - Tweak deployment
