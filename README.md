@@ -51,7 +51,7 @@ async function start() {
 start()
 ```
 
-See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
+See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organize large projects.
 
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and have few layers than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double).
@@ -102,7 +102,7 @@ init()
 System life cycle functions (start, stop, restart) return a promise, but can also take callbacks.
 
 ### Runners
-While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you ofen want to make changes to the system definition (e.g. replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
+While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you often want to make changes to the system definition (e.g. replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
 
 ```js
 // system.js
@@ -202,7 +202,7 @@ module.exports = () => Systemic()
 Now ```config.mongo``` will be injected as ```config``` instead of the entire configuration object
 
 #### Scoped Dependencies
-Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
+Injecting a sub document from a json configuration file is such a common use case, you can enable this behavior automatically by 'scoping' the component. The following code is equivalent to that above
 ```js
 module.exports = () => Systemic()
   .add('config', Config(), { scoped: true })
@@ -247,7 +247,7 @@ after(async () => {
 ```
 
 #### Including components from another system
-You can simplfiy large systems by breaking them up into smaller ones, then including their component definitions into the main system.
+You can simplify large systems by breaking them up into smaller ones, then including their component definitions into the main system.
 
 ```js
 // db-system.js
@@ -293,7 +293,7 @@ The above example will create a component 'routes',  which will depend on routes
  }
 ```
 
-#### Bootstraping components
+#### Bootstrapping components
 The dependency graph for a medium size project can grow quickly leading to a large system definition. To simplify this you can bootstrap components from a specified directory, where each folder in the directory includes an index.js which defines a sub system. e.g.
 
 ```
@@ -365,13 +365,13 @@ systemic:index Adding component routes.api to system auth +2ms
 systemic:index Adding component routes to system auth +1ms
 systemic:index Including definitions from sub system routes into system server +0ms
 systemic:index Starting system server +0ms
-systemic:index Inspecting compontent routes.admin +0ms
+systemic:index Inspecting component routes.admin +0ms
 systemic:index Starting component routes.admin +0ms
 systemic:index Component routes.admin started +15ms
-systemic:index Inspecting compontent routes.api +0ms
+systemic:index Inspecting component routes.api +0ms
 systemic:index Starting component routes.api +0ms
 systemic:index Component routes.api started +15ms
-systemic:index Inspecting compontent routes +0ms
+systemic:index Inspecting component routes +0ms
 systemic:index Injecting dependency routes.admin as routes.admin into routes +0ms
 systemic:index Injecting dependency routes.api as routes.api into routes +0ms
 systemic:index Starting component routes +0ms
