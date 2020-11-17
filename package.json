@@ -62,6 +62,9 @@
     "url": "https://github.com/guidesmiths/systemic/issues"
   },
   "homepage": "https://guidesmiths.github.io/systemic/",
+  "files": [
+    "index.js", "CHANGELOG.md", "examples", "LICENSE.txt"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "npm run qa"
