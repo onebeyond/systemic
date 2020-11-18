@@ -8,3 +8,4 @@ test
 docs
 .eslintrc
 .eslintignore
+.codeclimate
