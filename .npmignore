@@ -1,0 +1,10 @@
+node_modules
+coverage
+*.log
+*.yml
+mocharc.json
+.nyc_output
+test
+docs
+.eslintrc
+.eslintignore
