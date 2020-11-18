@@ -51,7 +51,7 @@ async function start() {
 start()
 ```
 
-See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organize large projects.
+See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
 
 ### Why Use Dependency Injection With Node.js?
 Node.js applications tend to be small and have few layers than applications developed in other languages such as Java. This reduces the benefit of dependency injection, which encouraged [the Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), discouraged [God Objects](https://en.wikipedia.org/wiki/God_object) and facilitated unit testing through [test doubles](https://en.wikipedia.org/wiki/Test_double).
@@ -202,7 +202,7 @@ module.exports = () => Systemic()
 Now ```config.mongo``` will be injected as ```config``` instead of the entire configuration object
 
 #### Scoped Dependencies
-Injecting a sub document from a json configuration file is such a common use case, you can enable this behavior automatically by 'scoping' the component. The following code is equivalent to that above
+Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
 ```js
 module.exports = () => Systemic()
   .add('config', Config(), { scoped: true })
