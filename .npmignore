@@ -1,5 +1,11 @@
 node_modules
 coverage
 *.log
-.codeclimate
+*.yml
+mocharc.json
 .nyc_output
+test
+docs
+.eslintrc
+.eslintignore
+.codeclimate
