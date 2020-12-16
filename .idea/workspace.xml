@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="54c9a80c-3276-4715-b674-5a7e3714168a" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1ljXuycFNIutbV452agBjT11J90" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.16.1" />
+    <property name="javascript.nodejs.core.library.typings.version" value="12.19.9" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs.mocha.mocha_node_package_dir" value="$PROJECT_DIR$/node_modules/mocha" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RunManager" selected="Mocha.System.should not stop components that werent started">
+    <configuration name="test" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="System.should not stop components that werent started" type="mocha-javascript-test-runner" temporary="true" nameIsGenerated="true">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
+      <working-directory>$PROJECT_DIR$</working-directory>
+      <pass-parent-env>true</pass-parent-env>
+      <ui>bdd</ui>
+      <extra-mocha-options />
+      <test-kind>TEST</test-kind>
+      <test-file>$PROJECT_DIR$/test/systemic.test.js</test-file>
+      <test-names>
+        <name value="System" />
+        <name value="should not stop components that werent started" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="npm.test" />
+      <item itemvalue="Mocha.System.should not stop components that werent started" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Mocha.System.should not stop components that werent started" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="54c9a80c-3276-4715-b674-5a7e3714168a" name="Default Changelist" comment="" />
+      <created>1608111702520</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608111702520</updated>
+      <workItem from="1608111704404" duration="19000" />
+      <workItem from="1608111756859" duration="1382000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1864" y="-393" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1608112440521">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state x="1864" y="-393" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608112440521" />
+    <state x="2088" y="-312" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1608111715621">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state x="2088" y="-312" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608111715621" />
+    <state width="392" height="466" key="DebuggerActiveHint" timestamp="1608112895951">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="392" height="466" key="DebuggerActiveHint/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608112895951" />
+    <state width="1878" height="358" key="GridCell.Tab.0.bottom" timestamp="1608113080089">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.0.bottom/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080089" />
+    <state width="1878" height="358" key="GridCell.Tab.0.center" timestamp="1608113080088">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.0.center/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080088" />
+    <state width="1878" height="358" key="GridCell.Tab.0.left" timestamp="1608113080087">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.0.left/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080087" />
+    <state width="1878" height="358" key="GridCell.Tab.0.right" timestamp="1608113080089">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.0.right/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080089" />
+    <state width="1878" height="358" key="GridCell.Tab.1.bottom" timestamp="1608113080091">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.1.bottom/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080091" />
+    <state width="1878" height="358" key="GridCell.Tab.1.center" timestamp="1608113080090">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.1.center/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080090" />
+    <state width="1878" height="358" key="GridCell.Tab.1.left" timestamp="1608113080090">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.1.left/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080090" />
+    <state width="1878" height="358" key="GridCell.Tab.1.right" timestamp="1608113080091">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.1.right/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080091" />
+    <state width="1878" height="358" key="GridCell.Tab.2.bottom" timestamp="1608113080098">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.2.bottom/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080098" />
+    <state width="1878" height="358" key="GridCell.Tab.2.center" timestamp="1608113080092">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.2.center/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080092" />
+    <state width="1878" height="358" key="GridCell.Tab.2.left" timestamp="1608113080091">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.2.left/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080091" />
+    <state width="1878" height="358" key="GridCell.Tab.2.right" timestamp="1608113080098">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.2.right/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080098" />
+    <state width="1878" height="358" key="GridCell.Tab.3.bottom" timestamp="1608113080128">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.3.bottom/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080128" />
+    <state width="1878" height="358" key="GridCell.Tab.3.center" timestamp="1608113080109">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.3.center/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080109" />
+    <state width="1878" height="358" key="GridCell.Tab.3.left" timestamp="1608113080100">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.3.left/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080100" />
+    <state width="1878" height="358" key="GridCell.Tab.3.right" timestamp="1608113080123">
+      <screen x="1440" y="-583" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="358" key="GridCell.Tab.3.right/0.23.1440.830/1440.-583.1920.1057@1440.-583.1920.1057" timestamp="1608113080123" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>137</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/systemic.test.js</url>
+          <line>100</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/systemic.test.js</url>
+          <line>104</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>77</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/systemic.test.js</url>
+          <line>106</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>144</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>148</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>222</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>230</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>224</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>232</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/index.js</url>
+          <line>140</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
