@@ -2,16 +2,18 @@ const async = require('async')
 const debug = require('debug')('systemic:index')
 const format = require('util').format
 const Toposort = require('toposort-class')
-const getProp = require('lodash.get')
-const setProp = require('lodash.set')
-const hasProp = require('lodash.has')
-const { isFunction, arraysIntersection } = require('./utils')
-const defaults = require('lodash.defaults')
+const {
+    randomName,
+    isFunction,
+    arraysIntersection,
+    hasProp,
+    getProp,
+    setProp
+} = require('./utils')
 const requireAll = require('require-all')
-const Chance = require('chance')
 
-module.exports = function(_params) {
-    const params = Object.assign({}, { name: new Chance().first() }, _params)
+module.exports = function (_params) {
+    const params = Object.assign({}, {name: randomName()}, _params)
     let definitions = {}
     let currentDefinition
     let running = false
@@ -24,8 +26,8 @@ module.exports = function(_params) {
 
     const bootstrap = (path) => {
         requireAll({
-            dirname:  path,
-            filter:  /^(index.js)$/,
+            dirname: path,
+            filter: /^(index.js)$/,
             resolve: (exported) => {
                 const component = exported.default || exported
                 api.include(isFunction(component) ? component() : component)
@@ -35,7 +37,7 @@ module.exports = function(_params) {
     }
 
     const configure = (component) => {
-        return add('config', component, { scoped: true })
+        return add('config', component, {scoped: true})
     }
 
     function add(name, component, options) {
@@ -58,7 +60,11 @@ module.exports = function(_params) {
 
     function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        definitions[name] = Object.assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
+        definitions[name] = Object.assign({}, options, {
+            name: name,
+            component: component.start ? component : wrap(component),
+            dependencies: []
+        })
         currentDefinition = definitions[name]
         return api
     }
@@ -79,9 +85,9 @@ module.exports = function(_params) {
         const record = typeof arg === 'string' ? {
             component: arg,
             destination: arg
-        } : defaults({}, arg, {destination: arg.component});
+        } : Object.assign({},{destination: arg.component}, arg);
         if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)))
-        if(currentDefinition.dependencies.find(dep => dep.destination === record.destination)){
+        if (currentDefinition.dependencies.find(dep => dep.destination === record.destination)) {
             throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
         }
         return accumulator.concat(record)
@@ -91,15 +97,15 @@ module.exports = function(_params) {
     const start = (cb) => {
         debug('Starting system %s', params.name)
         started = []
-        var p = new Promise(function(resolve, reject) {
-          async.seq(sortComponents, ensureComponents, (components, cb) => {
-            debug('System %s started', params.name)
-            running = components
-            cb(null, components)
-          })(function(err, components) {
-            if (err) return reject(err, {})
-            resolve(components)
-          })
+        var p = new Promise(function (resolve, reject) {
+            async.seq(sortComponents, ensureComponents, (components, cb) => {
+                debug('System %s started', params.name)
+                running = components
+                cb(null, components)
+            })(function (err, components) {
+                if (err) return reject(err, {})
+                resolve(components)
+            })
         })
         return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb, {})) : p
     }
@@ -131,18 +137,18 @@ module.exports = function(_params) {
         }
         const p = component.start(dependencies, onStarted)
         if (p && p.then) {
-          p.then(immediateCallback(onStarted)).catch(immediateError(cb))
+            p.then(immediateCallback(onStarted)).catch(immediateError(cb))
         }
     }
 
     function stop(cb) {
         debug('Stopping system %s', params.name)
-        var p = new Promise(function(resolve, reject) {
-            async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
+        var p = new Promise(function (resolve, reject) {
+            async.seq(sortComponents, removeUnstarted, stopComponents, function (cb) {
                 debug('System %s stopped', params.name)
                 running = false
                 cb()
-            })(function(err) {
+            })(function (err) {
                 if (err) return reject(err)
                 resolve();
             })
@@ -164,7 +170,7 @@ module.exports = function(_params) {
         }
         const p = stop(onStopped)
         if (p && p.then) {
-          p.then(immediateCallback(onStopped)).catch(immediateError(cb))
+            p.then(immediateCallback(onStopped)).catch(immediateError(cb))
         }
     }
 
@@ -172,7 +178,7 @@ module.exports = function(_params) {
         var result = []
         try {
             var graph = new Toposort()
-            Object.keys(definitions).forEach(function(name) {
+            Object.keys(definitions).forEach(function (name) {
                 graph.add(name, definitions[name].dependencies.map(dep => dep.component))
             })
             result = arraysIntersection(graph.sort(), Object.keys(definitions))
@@ -187,7 +193,7 @@ module.exports = function(_params) {
     }
 
     function getDependencies(name, system, cb) {
-        async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
+        async.reduce(definitions[name].dependencies, {}, function (accumulator, dependency, cb) {
             if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
@@ -213,27 +219,27 @@ module.exports = function(_params) {
     }
 
     const restart = (cb) => {
-      var p = api.stop().then(() => {
-        return api.start()
-      })
+        var p = api.stop().then(() => {
+            return api.start()
+        })
 
-      return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
+        return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
     }
 
     const immediateCallback = (cb) => {
-      return (resolved) => {
-        setImmediate(() => {
-          cb(null, resolved);
-        })
-      }
+        return (resolved) => {
+            setImmediate(() => {
+                cb(null, resolved);
+            })
+        }
     }
 
     const immediateError = (cb, resolved) => {
-      return (err) => {
-        setImmediate(() => {
-          resolved ? cb(err, resolved) : cb(err);
-        })
-      }
+        return (err) => {
+            setImmediate(() => {
+                resolved ? cb(err, resolved) : cb(err);
+            })
+        }
     }
 
     const api = {
