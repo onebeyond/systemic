@@ -5,10 +5,9 @@ const Toposort = require('toposort-class')
 const getProp = require('lodash.get')
 const setProp = require('lodash.set')
 const hasProp = require('lodash.has')
-const { isFunction } = require('./utils')
+const { isFunction, arraysIntersection } = require('./utils')
 const defaults = require('lodash.defaults')
 const assign = require('lodash.assign')
-const intersection = require('lodash.intersection')
 const requireAll = require('require-all')
 const Chance = require('chance')
 
@@ -177,7 +176,7 @@ module.exports = function(_params) {
             Object.keys(definitions).forEach(function(name) {
                 graph.add(name, definitions[name].dependencies.map(dep => dep.component))
             })
-            result = intersection(graph.sort(), Object.keys(definitions))
+            result = arraysIntersection(graph.sort(), Object.keys(definitions))
         } catch (err) {
             return cb(err)
         }
@@ -185,7 +184,7 @@ module.exports = function(_params) {
     }
 
     function removeUnstarted(components, cb) {
-        cb(null, intersection(components, started))
+        cb(null, arraysIntersection(components, started))
     }
 
     function getDependencies(name, system, cb) {
