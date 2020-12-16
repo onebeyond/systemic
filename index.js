@@ -99,7 +99,7 @@ module.exports = (_params) => {
     const start = (cb) => {
         debug('Starting system %s', params.name)
         started = []
-        var p = new Promise(function (resolve, reject) {
+        const p = new Promise(function (resolve, reject) {
             async.seq(sortComponents, ensureComponents, (components, cb) => {
                 debug('System %s started', params.name)
                 running = components
@@ -128,8 +128,8 @@ module.exports = (_params) => {
     const startComponent = (dependencies, name, system, cb) => {
         debug('Starting component %s', name)
         started.push(name)
-        var component = definitions[name].component
-        var onStarted = (err, started) => {
+        const component = definitions[name].component
+        const onStarted = (err, started) => {
             if (err) return cb(err)
             setProp(system, name, started)
             debug('Component %s started', name)
@@ -145,7 +145,7 @@ module.exports = (_params) => {
 
     const stop = (cb) => {
         debug('Stopping system %s', params.name)
-        var p = new Promise(function (resolve, reject) {
+        const p = new Promise(function (resolve, reject) {
             async.seq(sortComponents, removeUnstarted, stopComponents, function (cb) {
                 debug('System %s stopped', params.name)
                 running = false
@@ -177,9 +177,9 @@ module.exports = (_params) => {
     }
 
     const sortComponents = (cb) => {
-        var result = []
+        let result = []
         try {
-            var graph = new Toposort()
+            const graph = new Toposort()
             Object.keys(definitions).forEach(function (name) {
                 graph.add(name, definitions[name].dependencies.map(dep => dep.component))
             })
@@ -200,7 +200,7 @@ module.exports = (_params) => {
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
                 : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
-            var component = getProp(system, dependency.component)
+            const component = getProp(system, dependency.component)
             setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component)
             cb(null, accumulator)
         }, cb)
@@ -222,7 +222,7 @@ module.exports = (_params) => {
     }
 
     const restart = (cb) => {
-        var p = api.stop().then(() => {
+        const p = api.stop().then(() => {
             return api.start()
         })
 

@@ -98,7 +98,7 @@ describe('System', () => {
     })
 
     it('should not stop components that werent started', (done) => {
-        var bar = CallbackComponent()
+        const bar = CallbackComponent()
         system.add('foo', ErrorCallbackComponent())
               .add('bar', bar).dependsOn('foo')
               .start((err, components) => {
@@ -112,7 +112,7 @@ describe('System', () => {
     })
 
     it('should tolerate when a callback component errors', (done) => {
-        var bar = CallbackComponent()
+        const bar = CallbackComponent()
         system.add('foo', ErrorCallbackComponent())
               .add('bar', bar).dependsOn('foo')
               .start((err, components) => {
@@ -123,7 +123,7 @@ describe('System', () => {
     })
 
     it('should tolerate when a promise component errors', (done) => {
-        var bar = PromiseComponent()
+        const bar = PromiseComponent()
         system.add('foo', ErrorPromiseComponent())
               .add('bar', bar).dependsOn('foo')
               .start((err, components) => {
