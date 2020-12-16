@@ -5,8 +5,7 @@ const Toposort = require('toposort-class')
 const getProp = require('lodash.get')
 const setProp = require('lodash.set')
 const hasProp = require('lodash.has')
-const isFunction = require('lodash.isfunction')
-const toArray = require('lodash.toarray')
+const { isFunction } = require('./utils')
 const defaults = require('lodash.defaults')
 const assign = require('lodash.assign')
 const intersection = require('lodash.intersection')
@@ -74,7 +73,7 @@ module.exports = function(_params) {
 
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
-        currentDefinition.dependencies = toArray(arguments).reduce(toDependencyDefinitions, currentDefinition.dependencies)
+        currentDefinition.dependencies = [...arguments].reduce(toDependencyDefinitions, currentDefinition.dependencies)
         return api
     }
 
@@ -202,7 +201,7 @@ module.exports = function(_params) {
     }
 
     function noop() {
-        const args = toArray(arguments)
+        const args = [...arguments]
         const cb = args.pop()
         cb && cb.apply(null, [null].concat(args)) //FIXME: there is some issue with implicit 'this' usage
     }
