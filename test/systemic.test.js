@@ -1,40 +1,40 @@
-var assert = require('chai').assert
-var path = require('path')
-var System = require('..')
+const assert = require('chai').assert
+const path = require('path')
+const System = require('..')
 
-describe('System', function() {
+describe('System', () => {
 
-    var system
+    let system
 
-    beforeEach(function() {
+    beforeEach(() => {
         system = System()
     })
 
-    it('should start without components', function(done) {
-        system.start(function(err, components) {
+    it('should start without components', (done) => {
+        system.start((err, components) => {
             assert.ifError(err)
             assert.equal(Object.keys(components).length, 0)
             done()
         })
     })
 
-    it('should stop without components', function(done) {
-        system.start(function(err, components) {
+    it('should stop without components', (done) => {
+        system.start((err, components) => {
             assert.ifError(err)
             system.stop(done)
         })
     })
 
-    it('should tolerate being stopped without being started', function(done) {
+    it('should tolerate being stopped without being started', (done) => {
         system.stop(done)
     })
 
-    it('should tolerate being started wthout being stopped', function(done) {
-        system.add('foo', new CallbackComponent())
-        system.start(function(err, components) {
+    it('should tolerate being started wthout being stopped', (done) => {
+        system.add('foo', CallbackComponent())
+        system.start((err, components) => {
             assert.ifError(err)
             assert.equal(components.foo.counter, 1)
-            system.start(function(err, components) {
+            system.start((err, components) => {
                 assert.ifError(err)
                 assert.equal(components.foo.counter, 1)
                 done()
@@ -42,12 +42,12 @@ describe('System', function() {
         })
     })
 
-    it('should restart', function(done) {
-        system.add('foo', new CallbackComponent())
-        system.start(function(err, components) {
+    it('should restart', (done) => {
+        system.add('foo', CallbackComponent())
+        system.start((err, components) => {
             assert.ifError(err)
             assert.equal(components.foo.counter, 1)
-            system.restart(function(err, components) {
+            system.restart((err, components) => {
                 assert.ifError(err)
                 assert.equal(components.foo.counter, 2)
                 done()
@@ -55,20 +55,20 @@ describe('System', function() {
         })
     })
 
-    it('should start callback components', function(done) {
-        system.add('foo', new CallbackComponent())
-            .start(function(err, components) {
+    it('should start callback components', (done) => {
+        system.add('foo', CallbackComponent())
+            .start((err, components) => {
                 assert.ifError(err)
                 assert(components.foo.started, 'Component was not started')
                 done()
             })
     })
 
-    it('should stop callback components', function(done) {
-        system.add('foo', new CallbackComponent())
-            .start(function(err, components) {
+    it('should stop callback components', (done) => {
+        system.add('foo', CallbackComponent())
+            .start((err, components) => {
                 assert.ifError(err)
-                system.stop(function(err) {
+                system.stop((err) => {
                     assert.ifError(err)
                     assert(components.foo.stopped, 'Component was not stopped')
                     done()
@@ -76,20 +76,20 @@ describe('System', function() {
             })
     })
 
-    it('should start promise components', function(done) {
-        system.add('foo', new PromiseComponent())
-            .start(function(err, components) {
+    it('should start promise components', (done) => {
+        system.add('foo', PromiseComponent())
+            .start((err, components) => {
                 assert.ifError(err)
                 assert(components.foo.started, 'Component was not started')
                 done()
             })
     })
 
-    it('should stop promise components', function(done) {
-        system.add('foo', new PromiseComponent())
-            .start(function(err, components) {
+    it('should stop promise components', (done) => {
+        system.add('foo', PromiseComponent())
+            .start((err, components) => {
                 assert.ifError(err)
-                system.stop(function(err) {
+                system.stop((err) => {
                     assert.ifError(err)
                     assert(components.foo.stopped, 'Component was not stopped')
                     done()
@@ -97,13 +97,13 @@ describe('System', function() {
             })
     })
 
-    it('should not stop components that werent started', function(done) {
-        var bar = new CallbackComponent()
-        system.add('foo', new ErrorCallbackComponent())
+    it('should not stop components that werent started', (done) => {
+        var bar = CallbackComponent()
+        system.add('foo', ErrorCallbackComponent())
               .add('bar', bar).dependsOn('foo')
-              .start(function(err, components) {
+              .start((err, components) => {
                     assert.ok(err)
-                    system.stop(function(err) {
+                    system.stop((err) => {
                         assert.ifError(err)
                         assert(!bar.stopped, 'Component was stopped')
                         done()
@@ -111,42 +111,42 @@ describe('System', function() {
             })
     })
 
-    it('should tolerate when a callback component errors', function(done) {
-        var bar = new CallbackComponent()
-        system.add('foo', new ErrorCallbackComponent())
+    it('should tolerate when a callback component errors', (done) => {
+        var bar = CallbackComponent()
+        system.add('foo', ErrorCallbackComponent())
               .add('bar', bar).dependsOn('foo')
-              .start(function(err, components) {
+              .start((err, components) => {
                     assert.ok(err)
                     assert.deepEqual(components, {})
                     done()
             })
     })
 
-    it('should tolerate when a promise component errors', function(done) {
-        var bar = new PromiseComponent()
-        system.add('foo', new ErrorPromiseComponent())
+    it('should tolerate when a promise component errors', (done) => {
+        var bar = PromiseComponent()
+        system.add('foo', ErrorPromiseComponent())
               .add('bar', bar).dependsOn('foo')
-              .start(function(err, components) {
+              .start((err, components) => {
                     assert.ok(err)
                     assert.deepEqual(components, {})
                     done()
             })
     })
 
-    it('should pass through components without start methods', function(done) {
+    it('should pass through components without start methods', (done) => {
         system.add('foo', { ok: true })
-            .start(function(err, components) {
+            .start((err, components) => {
                 assert.ifError(err)
                 assert.equal(components.foo.ok, true)
                 done()
             })
     })
 
-    it('should tolerate components without stop methods', function(done) {
-        system.add('foo', new Unstoppable())
-            .start(function(err, components) {
+    it('should tolerate components without stop methods', (done) => {
+        system.add('foo', Unstoppable())
+            .start((err, components) => {
                 assert.ifError(err)
-                system.stop(function(err) {
+                system.stop((err) => {
                     assert.ifError(err)
                     assert(components.foo.stopped, 'Component was not stopped')
                     done()
@@ -154,39 +154,39 @@ describe('System', function() {
             })
     })
 
-    it('should reject duplicate components', function() {
-        assert.throws(function() {
-            system.add('foo', new CallbackComponent()).add('foo', new CallbackComponent())
+    it('should reject duplicate components', () => {
+        assert.throws(() => {
+            system.add('foo', CallbackComponent()).add('foo', CallbackComponent())
         }, 'Duplicate component: foo')
     })
 
-    it('should reject attempts to add an undefined component', function() {
-        assert.throws(function() {
+    it('should reject attempts to add an undefined component', () => {
+        assert.throws(() => {
             system.add('foo', undefined)
         }, 'Component foo is null or undefined')
     })
 
-    it('should reject dependsOn called before adding components', function() {
-        assert.throws(function() {
+    it('should reject dependsOn called before adding components', () => {
+        assert.throws(() => {
             system.dependsOn('foo')
         }, 'You must add a component before calling dependsOn')
     })
 
-    it('should report missing dependencies', function(done) {
-        system.add('foo', new CallbackComponent()).dependsOn('bar').start(function(err) {
+    it('should report missing dependencies', (done) => {
+        system.add('foo', CallbackComponent()).dependsOn('bar').start((err) => {
             assert(err)
             assert.equal(err.message, 'Component foo has an unsatisfied dependency on bar')
             done()
         })
     })
 
-    it('should inject dependencies', function(done) {
-        system.add('bar', new CallbackComponent())
-              .add('baz', new CallbackComponent())
-              .add('foo', new CallbackComponent())
+    it('should inject dependencies', (done) => {
+        system.add('bar', CallbackComponent())
+              .add('baz', CallbackComponent())
+              .add('foo', CallbackComponent())
                   .dependsOn('bar')
                   .dependsOn('baz')
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.dependencies.bar)
                   assert(components.foo.dependencies.baz)
@@ -194,12 +194,12 @@ describe('System', function() {
               })
     })
 
-    it('should inject multiple dependencies expressed in a single dependsOn', function(done) {
-        system.add('bar', new CallbackComponent())
-              .add('baz', new CallbackComponent())
-              .add('foo', new CallbackComponent())
+    it('should inject multiple dependencies expressed in a single dependsOn', (done) => {
+        system.add('bar', CallbackComponent())
+              .add('baz', CallbackComponent())
+              .add('foo', CallbackComponent())
                   .dependsOn('bar', 'baz')
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.dependencies.bar)
                   assert(components.foo.dependencies.baz)
@@ -207,11 +207,11 @@ describe('System', function() {
               })
     })
 
-    it('should map dependencies to a new name', function(done) {
-        system.add('bar', new CallbackComponent())
-              .add('foo', new CallbackComponent())
+    it('should map dependencies to a new name', (done) => {
+        system.add('bar', CallbackComponent())
+              .add('foo', CallbackComponent())
                   .dependsOn({ component: 'bar', destination: 'baz' })
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(!components.foo.dependencies.bar)
                   assert(components.foo.dependencies.baz)
@@ -219,21 +219,21 @@ describe('System', function() {
               })
     })
 
-    it('should inject dependencies defined out of order', function(done) {
-        system.add('foo', new CallbackComponent()).dependsOn('bar')
-              .add('bar', new CallbackComponent())
-              .start(function(err, components) {
+    it('should inject dependencies defined out of order', (done) => {
+        system.add('foo', CallbackComponent()).dependsOn('bar')
+              .add('bar', CallbackComponent())
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.dependencies.bar)
                   done()
               })
     })
 
-    it('should support nested component names', function(done) {
-        system.add('foo.bar', new CallbackComponent())
-              .add('baz', new CallbackComponent())
+    it('should support nested component names', (done) => {
+        system.add('foo.bar', CallbackComponent())
+              .add('baz', CallbackComponent())
                   .dependsOn('foo.bar')
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.bar.started)
                   assert(components.baz.dependencies.foo.bar)
@@ -241,52 +241,52 @@ describe('System', function() {
               })
     })
 
-    it('should inject dependency sub documents', function(done) {
-        system.add('config', new Config({ foo: { bar: 'baz' }}))
-              .add('foo', new CallbackComponent()).dependsOn({ component: 'config', source: 'foo', destination: 'config' })
-              .start(function(err, components) {
+    it('should inject dependency sub documents', (done) => {
+        system.add('config', Config({ foo: { bar: 'baz' }}))
+              .add('foo', CallbackComponent()).dependsOn({ component: 'config', source: 'foo', destination: 'config' })
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.dependencies.config.bar, 'baz')
                   done()
               })
     })
 
-    it('should reject invalid dependencies', function() {
-        assert.throws(function() {
-          System().add('foo', new CallbackComponent()).dependsOn(1)
+    it('should reject invalid dependencies', () => {
+        assert.throws(() => {
+          System().add('foo', CallbackComponent()).dependsOn(1)
         }, 'Component foo has an invalid dependency 1')
 
-        assert.throws(function() {
-          System().add('foo', new CallbackComponent()).dependsOn({})
+        assert.throws(() => {
+          System().add('foo', CallbackComponent()).dependsOn({})
         }, 'Component foo has an invalid dependency {}')
     })
 
-    it('should reject direct cyclic dependencies', function(done) {
-        system.add('foo', new CallbackComponent())
+    it('should reject direct cyclic dependencies', (done) => {
+        system.add('foo', CallbackComponent())
               .dependsOn('foo')
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert(err)
                   assert(/Cyclic dependency found/.test(err.message), err.message)
                   done()
               })
     })
 
-    it('should reject indirect cyclic dependencies', function(done) {
-        system.add('foo', new CallbackComponent()).dependsOn('bar')
-              .add('bar', new CallbackComponent()).dependsOn('foo')
-              .start(function(err, components) {
+    it('should reject indirect cyclic dependencies', (done) => {
+        system.add('foo', CallbackComponent()).dependsOn('bar')
+              .add('bar', CallbackComponent()).dependsOn('foo')
+              .start((err, components) => {
                   assert(err)
                   assert(/Cyclic dependency found/.test(err.message), err.message)
                   done()
               })
     })
 
-    it('should tolerate duplicate dependencies with different destinations', function(done) {
-        system.add('foo', new CallbackComponent())
+    it('should tolerate duplicate dependencies with different destinations', (done) => {
+        system.add('foo', CallbackComponent())
               .dependsOn({ component: 'bar', destination: 'a'})
               .dependsOn({ component: 'bar', destination: 'b'})
-              .add('bar', new CallbackComponent())
-              .start(function(err, components) {
+              .add('bar', CallbackComponent())
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo.dependencies.a)
                   assert(components.foo.dependencies.b)
@@ -294,111 +294,111 @@ describe('System', function() {
               })
     })
 
-    it('should reject duplicate dependency implicit destinations', function() {
-        assert.throws(function() {
-            system.add('foo', new CallbackComponent()).dependsOn('bar').dependsOn('bar')
+    it('should reject duplicate dependency implicit destinations', () => {
+        assert.throws(() => {
+            system.add('foo', CallbackComponent()).dependsOn('bar').dependsOn('bar')
         }, 'Component foo has a duplicate dependency bar')
     })
 
-    it('should reject duplicate dependency explicit destinations', function() {
-        assert.throws(function() {
-            system.add('foo', new CallbackComponent()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' })
+    it('should reject duplicate dependency explicit destinations', () => {
+        assert.throws(() => {
+            system.add('foo', CallbackComponent()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' })
         }, 'Component foo has a duplicate dependency baz')
     })
 
-    it('should provide a shorthand for scoped dependencies such as config', function(done) {
-        system.configure(new Config({ foo: { bar: 'baz'} }))
-              .add('foo', new CallbackComponent()).dependsOn('config')
-              .start(function(err, components) {
+    it('should provide a shorthand for scoped dependencies such as config', (done) => {
+        system.configure(Config({ foo: { bar: 'baz'} }))
+              .add('foo', CallbackComponent()).dependsOn('config')
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.bar, 'baz')
                   done()
               })
     })
 
-    it('should allow shorthand to be overriden', function(done) {
-        system.configure(new Config({ foo: { bar: 'baz'} }))
-              .add('foo', new CallbackComponent()).dependsOn({ component: 'config', source: '' })
-              .start(function(err, components) {
+    it('should allow shorthand to be overriden', (done) => {
+        system.configure(Config({ foo: { bar: 'baz'} }))
+              .add('foo', CallbackComponent()).dependsOn({ component: 'config', source: '' })
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.foo.bar, 'baz')
                   done()
               })
     })
 
-    it('should include components from other systems', function(done) {
-        system.include(System().add('foo', new CallbackComponent()))
-              .start(function(err, components) {
+    it('should include components from other systems', (done) => {
+        system.include(System().add('foo', CallbackComponent()))
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.ok(components.foo)
                   done()
               })
     })
 
-    it('should be able to depend on included components', function(done) {
-        system.include(System().add('foo', new CallbackComponent()))
-              .add('bar', new CallbackComponent()).dependsOn('foo')
-              .start(function(err, components) {
+    it('should be able to depend on included components', (done) => {
+        system.include(System().add('foo', CallbackComponent()))
+              .add('bar', CallbackComponent()).dependsOn('foo')
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.ok(components.bar.dependencies.foo)
                   done()
               })
     })
 
-    it('should configure components from included systems', function(done) {
-        system.configure(new Config({ foo: { bar: 'baz'} }))
-              .include(System().add('foo', new CallbackComponent()).dependsOn('config'))
-              .start(function(err, components) {
+    it('should configure components from included systems', (done) => {
+        system.configure(Config({ foo: { bar: 'baz'} }))
+              .include(System().add('foo', CallbackComponent()).dependsOn('config'))
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo.dependencies.config.bar, 'baz')
                   done()
               })
     })
 
-    it('should prefer components from other systems when merging', function(done) {
+    it('should prefer components from other systems when merging', (done) => {
         system.add('foo', 1)
               .include(System().add('foo', 2))
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo, 2)
                   done()
               })
     })
 
-    it('should set components for the first time', function(done) {
+    it('should set components for the first time', (done) => {
        system.set('foo', 1)
-             .start(function(err, components) {
+             .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo, 1)
                   done()
              })
     })
 
-    it('should replace existing components with set', function(done) {
+    it('should replace existing components with set', (done) => {
        system.set('foo', 1)
              .set('foo', 2)
-             .start(function(err, components) {
+             .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo, 2)
                   done()
              })
     })
 
-    it('should remove existing components', function(done) {
+    it('should remove existing components', (done) => {
        system.set('foo', 1)
              .remove('foo')
-             .start(function(err, components) {
+             .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo, undefined)
                   done()
              })
     })
 
-    it('should group components', function(done) {
+    it('should group components', (done) => {
        system.add('foo.one', 1)
              .add('foo.two', 2)
              .add('foo.all').dependsOn('foo.one', 'foo.two')
-             .start(function(err, components) {
+             .start((err, components) => {
                   assert.ifError(err)
                   assert.equal(components.foo.one, 1)
                   assert.equal(components.foo.two, 2)
@@ -408,9 +408,9 @@ describe('System', function() {
              })
     })
 
-    it('should bootstrap components from the file system', function(done) {
+    it('should bootstrap components from the file system', (done) => {
         system.bootstrap(path.join(__dirname, 'components'))
-              .start(function(err, components) {
+              .start((err, components) => {
                   assert.ifError(err)
                   assert(components.foo)
                   assert(components.bar)
@@ -418,23 +418,23 @@ describe('System', function() {
               })
     })
 
-    it('should support promises', function(done) {
-      system.add('foo', new CallbackComponent())
+    it('should support promises', (done) => {
+      system.add('foo', CallbackComponent())
           .start()
-          .then(function(components) {
+          .then((components) => {
               assert(components.foo.started, 'Component was not started')
               assert(components.foo.counter, 1)
               return components
           })
-          .then(function(components) {
-            return system.stop().then(function() {
+          .then((components) => {
+            return system.stop().then(() => {
               assert(components.foo.stopped, 'Component was not stopped')
               assert(components.foo.counter, 1)
               return components
             }).catch(done)
           })
-          .then(function(components) {
-            system.restart().then(function() {
+          .then((components) => {
+            system.restart().then(() => {
               assert(components.foo.counter, 2)
             }).catch(done)
           })
@@ -442,78 +442,84 @@ describe('System', function() {
           .catch(done)
     })
 
-    function CallbackComponent() {
-
-        var state = { counter: 0, started: true, stopped: true, dependencies: [] }
-
-        this.start = function(dependencies, cb) {
-            state.started = true
-            state.counter++
-            state.dependencies = dependencies
-            setTimeout(function() {
-              cb(null, state)
-            }, 100)
-        }
-        this.stop = function(cb) {
-            state.stopped = true
-            setTimeout(function() {
-              cb()
-            }, 100)
-        }
-    }
-
-    function PromiseComponent() {
-
-        var state = { counter: 0, started: true, stopped: true, dependencies: [] }
-
-        this.start = function(dependencies) {
-            state.started = true
-            state.counter++
-            state.dependencies = dependencies
-            return new Promise(resolve => {
-                setTimeout(function() {
-                    resolve(state)
+    const CallbackComponent = () => {
+        const state = {counter: 0, started: true, stopped: true, dependencies: []}
+        return {
+            start: (dependencies, cb) => {
+                state.started = true
+                state.counter++
+                state.dependencies = dependencies
+                setTimeout(() => {
+                    cb(null, state)
                 }, 100)
-            })
-        }
-        this.stop = function() {
-            state.stopped = true
-            return new Promise(resolve => {
-                setTimeout(function() {
-                    resolve()
+            },
+            stop: (cb) => {
+                state.stopped = true
+                setTimeout(() => {
+                    cb()
                 }, 100)
-            })
+            }
         }
     }
 
-    function ErrorCallbackComponent() {
-        this.start = function(dependencies, cb) {
-            cb(new Error('Oh Noes!'))
+    const PromiseComponent = () => {
+        const state = { counter: 0, started: true, stopped: true, dependencies: [] }
+        return {
+            start: (dependencies) => {
+                state.started = true
+                state.counter++
+                state.dependencies = dependencies
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve(state)
+                    }, 100)
+                })
+            },
+            stop: () => {
+                state.stopped = true
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve()
+                    }, 100)
+                })
+            }
         }
     }
 
-    function ErrorPromiseComponent() {
-        this.start = function(dependencies) {
-            return new Promise((resolve, reject) => {
-                reject(new Error('Oh Noes!'))
-            })
+    const ErrorCallbackComponent = () => {
+        return {
+            start: (dependencies, cb) => {
+                cb(new Error('Oh Noes!'))
+            }
         }
     }
 
-    function Unstoppable() {
-
-        var state = { started: true, stopped: true, dependencies:[] }
-
-        this.start = function(dependencies, cb) {
-            state.started = true
-            state.dependencies = dependencies
-            cb(null, state)
+    const ErrorPromiseComponent = () => {
+        return {
+            start: (dependencies) => {
+                return new Promise((resolve, reject) => {
+                    reject(new Error('Oh Noes!'))
+                })
+            }
         }
     }
 
-    function Config(config) {
-        this.start = function(dependencies, cb) {
-            cb(null, config)
+    const Unstoppable = () => {
+        const state = { started: true, stopped: true, dependencies:[] }
+        return {
+            start: (dependencies, cb) => {
+                state.started = true
+                state.dependencies = dependencies
+                cb(null, state)
+            }
+        }
+    }
+
+    const Config = (config) => {
+        return {
+            start: (dependencies, cb) => {
+                cb(null, config)
+            }
         }
     }
 })

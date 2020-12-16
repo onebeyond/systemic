@@ -12,7 +12,7 @@ const {
 } = require('./utils')
 const requireAll = require('require-all')
 
-module.exports = function (_params) {
+module.exports = (_params) => {
     const params = Object.assign({}, {name: randomName()}, _params)
     let definitions = {}
     let currentDefinition
@@ -40,6 +40,7 @@ module.exports = function (_params) {
         return add('config', component, {scoped: true})
     }
 
+    //FIXME: there is some issue with implicit 'this' usage
     function add(name, component, options) {
         debug('Adding component %s to system %s', name, params.name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
@@ -58,7 +59,7 @@ module.exports = function (_params) {
         return api
     }
 
-    function _set(name, component, options) {
+    const _set = (name, component, options) => {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         definitions[name] = Object.assign({}, options, {
             name: name,
@@ -75,6 +76,7 @@ module.exports = function (_params) {
         return api
     }
 
+    //FIXME: there is some issue with implicit 'this' usage
     function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
         currentDefinition.dependencies = [...arguments].reduce(toDependencyDefinitions, currentDefinition.dependencies)
@@ -141,7 +143,7 @@ module.exports = function (_params) {
         }
     }
 
-    function stop(cb) {
+    const stop = (cb) => {
         debug('Stopping system %s', params.name)
         var p = new Promise(function (resolve, reject) {
             async.seq(sortComponents, removeUnstarted, stopComponents, function (cb) {
@@ -188,11 +190,11 @@ module.exports = function (_params) {
         return cb(null, result)
     }
 
-    function removeUnstarted(components, cb) {
+    const removeUnstarted = (components, cb) => {
         cb(null, arraysIntersection(components, started))
     }
 
-    function getDependencies(name, system, cb) {
+    const getDependencies = (name, system, cb) => {
         async.reduce(definitions[name].dependencies, {}, function (accumulator, dependency, cb) {
             if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
@@ -204,10 +206,11 @@ module.exports = function (_params) {
         }, cb)
     }
 
+    //FIXME: there is some issue with implicit 'this' usage
     function noop() {
         const args = [...arguments]
         const cb = args.pop()
-        cb && cb.apply(null, [null].concat(args)) //FIXME: there is some issue with implicit 'this' usage
+        cb && cb.apply(null, [null].concat(args))
     }
 
     const wrap = (component) => {
