@@ -5,8 +5,6 @@ const Toposort = require('toposort-class')
 const getProp = require('lodash.get')
 const setProp = require('lodash.set')
 const hasProp = require('lodash.has')
-const map = require('lodash.map')
-const find = require('lodash.find')
 const isFunction = require('lodash.isfunction')
 const toArray = require('lodash.toarray')
 const defaults = require('lodash.defaults')
@@ -86,8 +84,11 @@ module.exports = function(_params) {
             destination: arg
         } : defaults({}, arg, {destination: arg.component});
         if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)))
-        if (find(currentDefinition.dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
+        if(currentDefinition.dependencies.find(dep => dep.destination === record.destination)){
+            throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
+        }
         return accumulator.concat(record)
+
     }
 
     const start = (cb) => {
@@ -137,20 +138,20 @@ module.exports = function(_params) {
         }
     }
 
-    const stop = (cb) => {
+    function stop(cb) {
         debug('Stopping system %s', params.name)
-        const p = new Promise((resolve, reject) => {
-          async.seq(sortComponents, removeUnstarted, stopComponents, (cb) => {
-              debug('System %s stopped', params.name)
-              running = false
-              cb()
-          })((err) => {
-            if (err) return reject(err)
-            resolve();
-          })
+        var p = new Promise(function(resolve, reject) {
+            async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
+                debug('System %s stopped', params.name)
+                running = false
+                cb()
+            })(function(err) {
+                if (err) return reject(err)
+                resolve();
+            })
         })
         return cb ? p.then(immediateCallback(cb)).catch(immediateError(cb)) : p
-      }
+    }
 
     const stopComponents = (components, cb) => {
         async.eachSeries(components, stopComponent, cb)
@@ -175,7 +176,7 @@ module.exports = function(_params) {
         try {
             var graph = new Toposort()
             Object.keys(definitions).forEach(function(name) {
-                graph.add(name, map(definitions[name].dependencies, 'component'))
+                graph.add(name, definitions[name].dependencies.map(dep => dep.component))
             })
             result = intersection(graph.sort(), Object.keys(definitions))
         } catch (err) {
@@ -184,26 +185,26 @@ module.exports = function(_params) {
         return cb(null, result)
     }
 
-    const removeUnstarted = (components, cb) => {
+    function removeUnstarted(components, cb) {
         cb(null, intersection(components, started))
     }
 
-    const getDependencies = (name, system, cb) => {
-        async.reduce(definitions[name].dependencies, {}, (accumulator, dependency, cb) => {
+    function getDependencies(name, system, cb) {
+        async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
             if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
-                              : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
+                : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name)
             var component = getProp(system, dependency.component)
             setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component)
             cb(null, accumulator)
         }, cb)
     }
 
-    const noop = () => {
-        var args = toArray(arguments)
-        var cb = args.pop()
-        cb && cb.apply(null, [null].concat(args))
+    function noop() {
+        const args = toArray(arguments)
+        const cb = args.pop()
+        cb && cb.apply(null, [null].concat(args)) //FIXME: there is some issue with implicit 'this' usage
     }
 
     const wrap = (component) => {
