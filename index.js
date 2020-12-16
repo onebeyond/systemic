@@ -7,12 +7,11 @@ const setProp = require('lodash.set')
 const hasProp = require('lodash.has')
 const { isFunction, arraysIntersection } = require('./utils')
 const defaults = require('lodash.defaults')
-const assign = require('lodash.assign')
 const requireAll = require('require-all')
 const Chance = require('chance')
 
 module.exports = function(_params) {
-    const params = assign({}, { name: new Chance().first() }, _params)
+    const params = Object.assign({}, { name: new Chance().first() }, _params)
     let definitions = {}
     let currentDefinition
     let running = false
@@ -59,14 +58,14 @@ module.exports = function(_params) {
 
     function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
-        definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
+        definitions[name] = Object.assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
         return api
     }
 
     const include = (subSystem) => {
         debug('Including definitions from sub system %s into system %s', subSystem.name, params.name)
-        definitions = assign({}, definitions, subSystem._definitions)
+        definitions = Object.assign({}, definitions, subSystem._definitions)
         return api
     }
 
