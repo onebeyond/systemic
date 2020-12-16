@@ -4,7 +4,7 @@ var System = require('..')
 
 describe('System', function() {
 
-    let system
+    var system
 
     beforeEach(function() {
         system = System()
@@ -97,13 +97,13 @@ describe('System', function() {
             })
     })
 
-    it('should not stop components that werent started', (done) => {
-        const bar = new CallbackComponent()
+    it('should not stop components that werent started', function(done) {
+        var bar = new CallbackComponent()
         system.add('foo', new ErrorCallbackComponent())
               .add('bar', bar).dependsOn('foo')
-              .start((err, components) => {
+              .start(function(err, components) {
                     assert.ok(err)
-                    system.stop((err) => {
+                    system.stop(function(err) {
                         assert.ifError(err)
                         assert(!bar.stopped, 'Component was stopped')
                         done()

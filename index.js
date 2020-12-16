@@ -21,7 +21,7 @@ module.exports = function(_params) {
     let currentDefinition
     let running = false
     let started
-    const defaultComponent = {
+    let defaultComponent = {
         start: (dependencies, cb) => {
             cb(null, dependencies)
         }
@@ -43,7 +43,7 @@ module.exports = function(_params) {
         return add('config', component, { scoped: true })
     }
 
-    const add = (name, component, options) =>  {
+    function add(name, component, options) {
         debug('Adding component %s to system %s', name, params.name)
         if (definitions.hasOwnProperty(name)) throw new Error(format('Duplicate component: %s', name))
         if (arguments.length === 1) return add(name, defaultComponent)
@@ -61,7 +61,7 @@ module.exports = function(_params) {
         return api
     }
 
-    const _set = (name, component, options) => {
+    function _set(name, component, options) {
         if (!component) throw new Error(format('Component %s is null or undefined', name))
         definitions[name] = assign({}, options, { name: name, component: component.start ? component : wrap(component), dependencies: [] })
         currentDefinition = definitions[name]
@@ -74,14 +74,17 @@ module.exports = function(_params) {
         return api
     }
 
-    const dependsOn = () => {
+    function dependsOn() {
         if (!currentDefinition) throw new Error('You must add a component before calling dependsOn')
         currentDefinition.dependencies = toArray(arguments).reduce(toDependencyDefinitions, currentDefinition.dependencies)
         return api
     }
 
     const toDependencyDefinitions = (accumulator, arg) => {
-        var record = typeof arg === 'string' ? { component: arg, destination: arg } : defaults({}, arg, { destination: arg.component })
+        const record = typeof arg === 'string' ? {
+            component: arg,
+            destination: arg
+        } : defaults({}, arg, {destination: arg.component});
         if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)))
         if (find(currentDefinition.dependencies, { destination: record.destination })) throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination))
         return accumulator.concat(record)
@@ -237,17 +240,17 @@ module.exports = function(_params) {
 
     const api = {
         name: params.name,
-        bootstrap: bootstrap,
-        configure: configure,
-        add: add,
-        set: set,
-        remove: remove,
+        bootstrap,
+        configure,
+        add,
+        set,
+        remove,
         merge: include,
-        include: include,
-        dependsOn: dependsOn,
-        start: start,
-        stop: stop,
-        restart: restart,
+        include,
+        dependsOn,
+        start,
+        stop,
+        restart,
         _definitions: definitions
     }
 
