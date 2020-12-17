@@ -12,7 +12,7 @@ var {
 } = require('./utils')
 var requireAll = require('require-all')
 
-module.exports = function (_params) {
+module.exports = function(_params) {
 
     var params = Object.assign({}, {name: randomName()}, _params)
     var definitions = {}
@@ -20,7 +20,7 @@ module.exports = function (_params) {
     var running = false
     var started
     var defaultComponent = {
-        start: function (dependencies, cb) {
+        start: function(dependencies, cb) {
             cb(null, dependencies)
         }
     }
@@ -29,7 +29,7 @@ module.exports = function (_params) {
         requireAll({
             dirname: path,
             filter: /^(index.js)$/,
-            resolve: function (exported) {
+            resolve: function(exported) {
                 var component = exported.default || exported
                 api.include(isFunction(component) ? component() : component)
             }
@@ -38,7 +38,7 @@ module.exports = function (_params) {
     }
 
     function configure(component) {
-        return add('config', component, {scoped: true})
+        return add('config', component, { scoped: true })
     }
 
     function add(name, component, options) {
@@ -99,8 +99,8 @@ module.exports = function (_params) {
     function start(cb) {
         debug('Starting system %s', params.name)
         started = []
-        var p = new Promise(function (resolve, reject) {
-            async.seq(sortComponents, ensureComponents, function (components, cb) {
+        var p = new Promise(function(resolve, reject) {
+            async.seq(sortComponents, ensureComponents, function(components, cb) {
                 debug('System %s started', params.name)
                 running = components
                 cb(null, components)
@@ -119,7 +119,7 @@ module.exports = function (_params) {
 
     function toSystem(system, name, cb) {
         debug('Inspecting compontent %s', name)
-        getDependencies(name, system, function (err, dependencies) {
+        getDependencies(name, system, function(err, dependencies) {
             if (err) return cb(err)
             startComponent(dependencies, name, system, cb)
         })
@@ -133,7 +133,7 @@ module.exports = function (_params) {
             if (err) return cb(err)
             setProp(system, name, started)
             debug('Component %s started', name)
-            setImmediate(function () {
+            setImmediate(function() {
                 cb(null, system)
             })
         }
@@ -145,12 +145,12 @@ module.exports = function (_params) {
 
     function stop(cb) {
         debug('Stopping system %s', params.name)
-        var p = new Promise(function (resolve, reject) {
-            async.seq(sortComponents, removeUnstarted, stopComponents, function (cb) {
+        var p = new Promise(function(resolve, reject) {
+            async.seq(sortComponents, removeUnstarted, stopComponents, function(cb) {
                 debug('System %s stopped', params.name)
                 running = false
                 cb()
-            })(function (err) {
+            })(function(err) {
                 if (err) return reject(err)
                 resolve();
             })
@@ -180,8 +180,8 @@ module.exports = function (_params) {
         var result = []
         try {
             var graph = new Toposort()
-            Object.keys(definitions).forEach(function (name) {
-                graph.add(name, definitions[name].dependencies.map(function (dep) {
+            Object.keys(definitions).forEach(function(name) {
+                graph.add(name, definitions[name].dependencies.map(function(dep) {
                     return dep.component
                 }))
             })
@@ -197,7 +197,7 @@ module.exports = function (_params) {
     }
 
     function getDependencies(name, system, cb) {
-        async.reduce(definitions[name].dependencies, {}, function (accumulator, dependency, cb) {
+        async.reduce(definitions[name].dependencies, {}, function(accumulator, dependency, cb) {
             if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)))
             if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name
             dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
@@ -216,14 +216,14 @@ module.exports = function (_params) {
 
     function wrap(component) {
         return {
-            start: function (dependencies, cb) {
+            start: function(dependencies, cb) {
                 return cb(null, component)
             }
         }
     }
 
     function restart(cb) {
-        var p = api.stop().then(function () {
+        var p = api.stop().then(function() {
             return api.start()
         })
 
@@ -232,7 +232,7 @@ module.exports = function (_params) {
 
     function immediateCallback(cb) {
         return function (resolved) {
-            setImmediate(function () {
+            setImmediate(function() {
                 cb(null, resolved);
             })
         }
@@ -240,7 +240,7 @@ module.exports = function (_params) {
 
     function immediateError(cb, resolved) {
         return function (err) {
-            setImmediate(function () {
+            setImmediate(function() {
                 resolved ? cb(err, resolved) : cb(err);
             })
         }
