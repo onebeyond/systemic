@@ -3,3 +3,7 @@ coverage
 *.log
 .codeclimate
 .nyc_output/
+
+
+## IDE
+.idea
