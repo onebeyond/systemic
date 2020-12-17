@@ -129,7 +129,7 @@ module.exports = function(_params) {
         debug('Starting component %s', name)
         started.push(name)
         var component = definitions[name].component
-        var onStarted = function (err, started) {
+        var onStarted = function(err, started) {
             if (err) return cb(err)
             setProp(system, name, started)
             debug('Component %s started', name)
@@ -165,7 +165,7 @@ module.exports = function(_params) {
     function stopComponent(name, cb) {
         debug('Stopping component %s', name)
         var stop = definitions[name].component.stop || noop
-        var onStopped = function (err) {
+        var onStopped = function(err) {
             if (err) return cb(err)
             debug('Component %s stopped', name)
             setImmediate(cb)
