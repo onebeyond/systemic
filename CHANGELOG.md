@@ -6,6 +6,7 @@
 - Update nyc
 - Replace travis with github actions
 - Replace eslint imperative with ESNext and updated syntax
+- Bump dependencies
 
 ## [3.3.7]
 ### Changed

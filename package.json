@@ -26,14 +26,14 @@
     "chai": "^4.2.0",
     "eslint": "^7.17.0",
     "eslint-config-esnext": "^4.1.0",
-    "husky": "^4.2.3",
+    "husky": "^4.3.6",
     "nyc": "^15.1.0",
     "zunit": "^3.0.0"
   },
   "dependencies": {
     "async": "^3.2.0",
-    "chance": "^1.1.4",
-    "debug": "^4.1.1",
+    "chance": "^1.1.7",
+    "debug": "^4.3.1",
     "require-all": "^3.0.0",
     "toposort-class": "^1.0.1"
   },
@@ -41,7 +41,7 @@
     "example": "examples"
   },
   "engines": {
-    "node": ">6.0.0"
+    "node": ">=10.0.0"
   },
   "repository": {
     "type": "git",
