@@ -1,6 +1,0 @@
-{
-  "extends": "imperative",
-  "rules": {
-    "accessor-pairs": 0
-  }
-}

@@ -5,6 +5,7 @@
 - Replace mocha with zunit
 - Update nyc
 - Replace travis with github actions
+- Replace eslint imperative with ESNext and updated syntax
 
 ## [3.3.7]
 ### Changed
