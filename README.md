@@ -7,7 +7,6 @@ A minimal dependency injection library
 [![Node.js CI](https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg)](https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22)
 [![Code Climate](https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg)](https://codeclimate.com/github/guidesmiths/systemic)
 [![Test Coverage](https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg)](https://codeclimate.com/github/guidesmiths/systemic/coverage)
-[![Code Style](https://img.shields.io/badge/code%20style-imperative-brightgreen.svg)](https://github.com/guidesmiths/eslint-config-imperative)
 [![Dependency Status](https://david-dm.org/guidesmiths/systemic.svg)](https://david-dm.org/guidesmiths/systemic)
 [![devDependencies Status](https://david-dm.org/guidesmiths/systemic/dev-status.svg)](https://david-dm.org/guidesmiths/systemic?type=dev)
 
