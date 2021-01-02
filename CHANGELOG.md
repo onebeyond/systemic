@@ -1,5 +1,9 @@
 # Change Log
 
+## [3.3.8]
+- Remove lodash
+- Replace mocha with zunit
+
 ## [3.3.7]
 ### Changed
 - Tweak deployment

@@ -6,7 +6,7 @@
   "scripts": {
     "qa": "npm run lint && npm run test",
     "lint": "eslint .",
-    "test": "nyc --report html --reporter lcov --reporter text-summary mocha test"
+    "test": "nyc --report html --reporter lcov --reporter text-summary node test"
   },
   "keywords": [
     "dependency",
@@ -27,8 +27,8 @@
     "eslint-config-imperative": "^3.0.0",
     "eslint-plugin-imperative": "^3.0.0",
     "husky": "^4.2.3",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.0"
+    "nyc": "^15.0.0",
+    "zunit": "^3.0.0"
   },
   "dependencies": {
     "async": "^3.2.0",
@@ -38,8 +38,7 @@
     "toposort-class": "^1.0.1"
   },
   "directories": {
-    "example": "examples",
-    "test": "tests"
+    "example": "examples"
   },
   "engines": {
     "node": ">6.0.0"
