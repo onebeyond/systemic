@@ -4,9 +4,10 @@
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "scripts": {
-    "qa": "npm run lint && npm run test",
+    "qa": "npm run lint && npm test",
     "lint": "eslint .",
-    "test": "nyc --report html --reporter lcov --reporter text-summary node test"
+    "test": "node test",
+    "coverage": "nyc --report html --reporter lcov --reporter text-summary node test"
   },
   "keywords": [
     "dependency",
