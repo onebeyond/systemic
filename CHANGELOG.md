@@ -4,6 +4,7 @@
 - Remove lodash
 - Replace mocha with zunit
 - Update nyc
+- Replace travis with github actions
 
 ## [3.3.7]
 ### Changed
