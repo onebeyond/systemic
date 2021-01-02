@@ -3,6 +3,7 @@
 ## [3.3.8]
 - Remove lodash
 - Replace mocha with zunit
+- Update nyc
 
 ## [3.3.7]
 ### Changed

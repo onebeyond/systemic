@@ -27,7 +27,7 @@
     "eslint-config-imperative": "^3.0.0",
     "eslint-plugin-imperative": "^3.0.0",
     "husky": "^4.2.3",
-    "nyc": "^15.0.0",
+    "nyc": "^15.1.0",
     "zunit": "^3.0.0"
   },
   "dependencies": {
