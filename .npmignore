@@ -2,10 +2,12 @@ node_modules
 coverage
 *.log
 *.yml
-mocharc.json
 .nyc_output
 test
 docs
 .eslintrc
 .eslintignore
-.codeclimate
+.codeclimate.yml
+cc-test-reporter
+_config.yml
+docs

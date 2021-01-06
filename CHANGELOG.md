@@ -1,5 +1,8 @@
 # Change Log
 
+## [3.3.9]
+- Exclude various files (including the 12M cc-test-reporter binary) from the npm package.
+
 ## [3.3.8]
 - Remove lodash
 - Replace mocha with zunit
