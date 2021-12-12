@@ -1,9 +1,10 @@
 # Change Log
 
-## [3.3.11]
+## [4.0.0]
 
 - Introduce prettier
 - Updated dependendencies
+- Drop support for Node 10
 
 ## [3.3.10]
 
