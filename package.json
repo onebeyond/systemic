@@ -1,6 +1,6 @@
 {
   "name": "systemic",
-  "version": "3.3.11",
+  "version": "4.0.0",
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "typings": "index.d.ts",
