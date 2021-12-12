@@ -3,19 +3,11 @@ const debug = require('debug')('systemic:index');
 const format = require('util').format;
 const Toposort = require('toposort-class');
 const requireAll = require('require-all');
-const {
-  randomName,
-  isFunction,
-  arraysIntersection,
-  hasProp,
-  getProp,
-  setProp
-} = require('./utils');
+const { randomName, isFunction, arraysIntersection, hasProp, getProp, setProp } = require('./utils');
 
-module.exports = function(_params) {
-
+module.exports = function (_params) {
   const api = {};
-  const params = Object.assign({}, {name: randomName()}, _params);
+  const params = Object.assign({}, { name: randomName() }, _params);
   let definitions = {};
   let currentDefinition;
   let running = false;
@@ -23,7 +15,7 @@ module.exports = function(_params) {
   const defaultComponent = {
     start(dependencies, cb) {
       cb(null, dependencies);
-    }
+    },
   };
 
   function bootstrap(path) {
@@ -33,7 +25,7 @@ module.exports = function(_params) {
       resolve(exported) {
         const component = exported.default || exported;
         api.include(isFunction(component) ? component() : component);
-      }
+      },
     });
     return api;
   }
@@ -66,7 +58,7 @@ module.exports = function(_params) {
     definitions[name] = Object.assign({}, options, {
       name,
       component: component.start ? component : wrap(component),
-      dependencies: []
+      dependencies: [],
     });
     currentDefinition = definitions[name];
     return api;
@@ -85,10 +77,13 @@ module.exports = function(_params) {
   }
 
   function toDependencyDefinitions(accumulator, arg) {
-    const record = typeof arg === 'string' ? {
-      component: arg,
-      destination: arg
-    } : Object.assign({}, {destination: arg.component}, arg);
+    const record =
+      typeof arg === 'string'
+        ? {
+            component: arg,
+            destination: arg,
+          }
+        : Object.assign({}, { destination: arg.component }, arg);
     if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)));
     if (currentDefinition.dependencies.find((dep) => dep.destination === record.destination)) {
       throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination));
@@ -129,7 +124,7 @@ module.exports = function(_params) {
     debug('Starting component %s', name);
     started.push(name);
     const component = definitions[name].component;
-    const onStarted = function(err, started) {
+    const onStarted = function (err, started) {
       if (err) return cb(err);
       setProp(system, name, started);
       debug('Component %s started', name);
@@ -165,7 +160,7 @@ module.exports = function(_params) {
   function stopComponent(name, cb) {
     debug('Stopping component %s', name);
     const stop = definitions[name].component.stop || noop;
-    const onStopped = function(err) {
+    const onStopped = function (err) {
       if (err) return cb(err);
       debug('Component %s stopped', name);
       setImmediate(cb);
@@ -181,7 +176,10 @@ module.exports = function(_params) {
     try {
       const graph = new Toposort();
       Object.keys(definitions).forEach((name) => {
-        graph.add(name, definitions[name].dependencies.map((dep) => dep.component));
+        graph.add(
+          name,
+          definitions[name].dependencies.map((dep) => dep.component)
+        );
       });
       result = arraysIntersection(graph.sort(), Object.keys(definitions));
     } catch (err) {
@@ -195,15 +193,19 @@ module.exports = function(_params) {
   }
 
   function getDependencies(name, system, cb) {
-    async.reduce(definitions[name].dependencies, {}, (accumulator, dependency, cb) => {
-      if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
-      if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name;
-      dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name)
-        : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
-      const component = getProp(system, dependency.component);
-      setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component);
-      cb(null, accumulator);
-    }, cb);
+    async.reduce(
+      definitions[name].dependencies,
+      {},
+      (accumulator, dependency, cb) => {
+        if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name;
+        dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name) : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
+        const component = getProp(system, dependency.component);
+        setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component);
+        cb(null, accumulator);
+      },
+      cb
+    );
   }
 
   function noop(...args) {
@@ -215,7 +217,7 @@ module.exports = function(_params) {
     return {
       start(dependencies, cb) {
         return cb(null, component);
-      }
+      },
     };
   }
 
@@ -254,7 +256,7 @@ module.exports = function(_params) {
     start,
     stop,
     restart,
-    _definitions: definitions
+    _definitions: definitions,
   });
 
   return api;

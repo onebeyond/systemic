@@ -1,10 +1,9 @@
-module.exports = function(options) {
+module.exports = function (options) {
+  async function start({ logger, config }) {
+    return logger.info('Connecting to', config.url);
+  }
 
-    async function start({ logger, config }) {
-        return logger.info('Connecting to', config.url)
-    }
-
-    return {
-        start: start
-    }
-}
+  return {
+    start: start,
+  };
+};

@@ -1,11 +1,10 @@
-module.exports = function(options) {
+module.exports = function (options) {
+  async function start({ config }) {
+    console.log('Logging at level', config.level);
+    return console;
+  }
 
-    async function start({ config }) {
-        console.log('Logging at level', config.level)
-        return console
-    }
-
-    return {
-        start: start
-    }
-}
+  return {
+    start: start,
+  };
+};

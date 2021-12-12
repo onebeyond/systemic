@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 engines:
   eslint:
     enabled: false
@@ -6,7 +6,7 @@ engines:
     enabled: true
     config:
       languages:
-      - javascript
+        - javascript
 checks:
   method-complexity:
     enabled: false
@@ -14,7 +14,7 @@ checks:
     enabled: false
 ratings:
   paths:
-  - index.js
+    - index.js
 exclude_patterns:
-- "examples/"
-- "test/"
+  - 'examples/'
+  - 'test/'
