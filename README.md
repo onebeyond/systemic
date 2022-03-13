@@ -5,6 +5,7 @@ A minimal dependency injection library
 [![NPM version](https://img.shields.io/npm/v/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
 [![NPM downloads](https://img.shields.io/npm/dm/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
 [![Node.js CI](https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg)](https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22)
+[![Systemic](https://snyk.io/advisor/npm-package/systemic/badge.svg)](https://snyk.io/advisor/npm-package/rascal)
 [![Code Climate](https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg)](https://codeclimate.com/github/guidesmiths/systemic)
 [![Test Coverage](https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg)](https://codeclimate.com/github/guidesmiths/systemic/coverage)
 

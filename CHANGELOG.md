@@ -6,6 +6,7 @@
 - Remove chance
 - Update dependencies
 - Tweak GitHub actions
+- Improve readme
 
 ## [4.0.0]
 
