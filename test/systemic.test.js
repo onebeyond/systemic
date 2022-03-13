@@ -1,4 +1,4 @@
-const assert = require('chai').assert;
+const assert = require('assert');
 const path = require('path');
 const System = require('..');
 
@@ -154,21 +154,30 @@ describe('System', () => {
   });
 
   it('should reject duplicate components', () => {
-    assert.throws(() => {
-      system.add('foo', new CallbackComponent()).add('foo', new CallbackComponent());
-    }, 'Duplicate component: foo');
+    assert.throws(
+      () => {
+        system.add('foo', new CallbackComponent()).add('foo', new CallbackComponent());
+      },
+      { message: 'Duplicate component: foo' }
+    );
   });
 
   it('should reject attempts to add an undefined component', () => {
-    assert.throws(() => {
-      system.add('foo', undefined);
-    }, 'Component foo is null or undefined');
+    assert.throws(
+      () => {
+        system.add('foo', undefined);
+      },
+      { message: 'Component foo is null or undefined' }
+    );
   });
 
   it('should reject dependsOn called before adding components', () => {
-    assert.throws(() => {
-      system.dependsOn('foo');
-    }, 'You must add a component before calling dependsOn');
+    assert.throws(
+      () => {
+        system.dependsOn('foo');
+      },
+      { message: 'You must add a component before calling dependsOn' }
+    );
   });
 
   it('should report missing dependencies', (test, done) => {
@@ -262,13 +271,19 @@ describe('System', () => {
   });
 
   it('should reject invalid dependencies', () => {
-    assert.throws(() => {
-      System().add('foo', new CallbackComponent()).dependsOn(1);
-    }, 'Component foo has an invalid dependency 1');
+    assert.throws(
+      () => {
+        System().add('foo', new CallbackComponent()).dependsOn(1);
+      },
+      { message: 'Component foo has an invalid dependency 1' }
+    );
 
-    assert.throws(() => {
-      System().add('foo', new CallbackComponent()).dependsOn({});
-    }, 'Component foo has an invalid dependency {}');
+    assert.throws(
+      () => {
+        System().add('foo', new CallbackComponent()).dependsOn({});
+      },
+      { message: 'Component foo has an invalid dependency {}' }
+    );
   });
 
   it('should reject direct cyclic dependencies', (test, done) => {
@@ -310,15 +325,21 @@ describe('System', () => {
   });
 
   it('should reject duplicate dependency implicit destinations', () => {
-    assert.throws(() => {
-      system.add('foo', new CallbackComponent()).dependsOn('bar').dependsOn('bar');
-    }, 'Component foo has a duplicate dependency bar');
+    assert.throws(
+      () => {
+        system.add('foo', new CallbackComponent()).dependsOn('bar').dependsOn('bar');
+      },
+      { message: 'Component foo has a duplicate dependency bar' }
+    );
   });
 
   it('should reject duplicate dependency explicit destinations', () => {
-    assert.throws(() => {
-      system.add('foo', new CallbackComponent()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' });
-    }, 'Component foo has a duplicate dependency baz');
+    assert.throws(
+      () => {
+        system.add('foo', new CallbackComponent()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' });
+      },
+      { message: 'Component foo has a duplicate dependency baz' }
+    );
   });
 
   it('should provide a shorthand for scoped dependencies such as config', (test, done) => {
