@@ -5,6 +5,7 @@
 - Remove chai
 - Remove chance
 - Update dependencies
+- Tweak GitHub actions
 
 ## [4.0.0]
 
