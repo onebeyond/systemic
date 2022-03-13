@@ -1,8 +1,5 @@
-/* eslint-disable no-implicit-globals */
-const Chance = require('chance');
-
 function randomName() {
-  return new Chance().first();
+  return `Z-${Math.floor(Math.random() * 100000000) + 1}`;
 }
 
 function isFunction(func) {

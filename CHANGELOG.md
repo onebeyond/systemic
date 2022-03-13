@@ -3,6 +3,7 @@
 ## [4.0.1]
 
 - Remove chai
+- Remove chance
 
 ## [4.0.0]
 
