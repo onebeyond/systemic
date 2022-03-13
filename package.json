@@ -8,7 +8,8 @@
     "qa": "npm run lint && npm test",
     "lint": "lint-staged .",
     "test": "node test",
-    "coverage": "nyc --report html --reporter lcov --reporter text-summary node test"
+    "coverage": "nyc --report html --reporter lcov --reporter text-summary node test",
+    "prepare": "husky install"
   },
   "keywords": [
     "dependency",
@@ -25,17 +26,17 @@
   "license": "ISC",
   "devDependencies": {
     "debug": "^4.3.3",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^4.3.8",
-    "lint-staged": "^12.1.2",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.5",
     "nyc": "^15.1.0",
     "prettier": "2.5.1",
     "zunit": "^3.2.1"
   },
   "dependencies": {
-    "async": "^3.2.2",
+    "async": "^3.2.3",
     "require-all": "^3.0.0",
     "toposort-class": "^1.0.1"
   },

@@ -4,6 +4,7 @@
 
 - Remove chai
 - Remove chance
+- Update dependencies
 
 ## [4.0.0]
 
