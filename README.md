@@ -1,13 +1,21 @@
-# Systemic
+<div style="display:flex; align-items:center; justify-content:center">
+  <img alt="logo" src="./assets/banner.svg" width="100%" />
+</div>
 
-A minimal dependency injection library
+<br />
 
-[![NPM version](https://img.shields.io/npm/v/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
-[![NPM downloads](https://img.shields.io/npm/dm/systemic.svg?style=flat-square)](https://www.npmjs.com/package/systemic)
-[![Node.js CI](https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg)](https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22)
-[![Systemic](https://snyk.io/advisor/npm-package/systemic/badge.svg)](https://snyk.io/advisor/npm-package/rascal)
-[![Code Climate](https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg)](https://codeclimate.com/github/guidesmiths/systemic)
-[![Test Coverage](https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg)](https://codeclimate.com/github/guidesmiths/systemic/coverage)
+<h2 align="center">📦 A minimal dependency injection library.</h2>
+
+<br />
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="NPM version" /></a>
+  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="NPM downloads" /></a>
+  <a href="https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
+  <a href="https://snyk.io/advisor/npm-package/rascal" target="_blank"><img src="https://snyk.io/advisor/npm-package/systemic/badge.svg" alt="Systemic" /></a>
+  <a href="https://codeclimate.com/github/guidesmiths/systemic" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg" alt="Code Climate" /></a>
+  <a href="https://codeclimate.com/github/guidesmiths/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg" alt="Test Coverage" /></a>
+</p>
 
 ## tl;dr
 
