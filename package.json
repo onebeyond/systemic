@@ -1,6 +1,6 @@
 {
   "name": "systemic",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "A minimal dependency injection library for node",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -9,7 +9,12 @@
     "lint": "lint-staged .",
     "test": "node test",
     "coverage": "nyc --report html --reporter lcov --reporter text-summary node test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "standard-version",
+    "release:major": "npm run release -- --release-as major",
+    "release:minor": "npm run release -- --release-as minor",
+    "release:patch": "npm run release -- --release-as patch",
+    "release:prerelease": "npm run release -- prerelease"
   },
   "keywords": [
     "dependency",
@@ -38,6 +43,7 @@
   "dependencies": {
     "async": "^3.2.3",
     "require-all": "^3.0.0",
+    "standard-version": "^9.5.0",
     "toposort-class": "^1.0.1"
   },
   "directories": {
