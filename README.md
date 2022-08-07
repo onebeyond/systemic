@@ -264,6 +264,19 @@ module.exports = () => Systemic()
 ```
 <!-- prettier-ignore-end -->
 
+#### Optional Dependencies
+
+By default an error is thrown if a dependency is not available on system start. Sometimes a component might have an optional dependency on a component they may or may not be available in the system, typically when using subsystems. In this situation a dependency can be marked as optional.
+
+<!-- prettier-ignore-start -->
+```js
+module.exports = () => Systemic()
+  .add('app', app())
+  .add('server', server())
+  .dependsOn('app', { component: 'routes', optional: true });
+```
+<!-- prettier-ignore-end -->
+
 #### Overriding Components
 
 Attempting to add the same component twice will result in an error, but sometimes you need to replace existing components with test doubles. Under such circumstances use `set` instead of `add`

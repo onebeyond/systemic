@@ -82,6 +82,7 @@ module.exports = function (_params) {
         ? {
             component: arg,
             destination: arg,
+            optional: false,
           }
         : Object.assign({}, { destination: arg.component }, arg);
     if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)));
@@ -197,7 +198,11 @@ module.exports = function (_params) {
       definitions[name].dependencies,
       {},
       (accumulator, dependency, cb) => {
-        if (!hasProp(definitions, dependency.component)) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!hasProp(definitions, dependency.component) && !dependency.optional) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!hasProp(definitions, dependency.component)) {
+          debug('Skipping unsatisfied optional dependency %s for component %s', dependency.component, name);
+          return cb(null, accumulator);
+        }
         if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name;
         dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name) : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
         const component = getProp(system, dependency.component);
