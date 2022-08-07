@@ -37,19 +37,21 @@ export type Component<TComponent, TDependencies extends Record<string, unknown> 
   stop?: () => Promise<void>;
 };
 
-type SimpleDependsOnOption<TDependencyKeys, TSystemic> = TDependencyKeys & keyof TSystemic;
+type SimpleDependsOnOption<TSystemic> = keyof TSystemic;
 type MappingDependsOnOption<TDependencyKeys, TSystemic> = TDependencyKeys extends keyof TSystemic
   ? {
       component: keyof TSystemic;
       destination?: TDependencyKeys;
+      optional?: boolean;
       source?: string;
     }
   : {
       component: keyof TSystemic;
       destination: TDependencyKeys;
+      optional?: boolean;
       source?: string;
     };
-type DependsOnOption<TDependencyKeys, TSystemic> = SimpleDependsOnOption<TDependencyKeys, TSystemic> | MappingDependsOnOption<TDependencyKeys, TSystemic>;
+type DependsOnOption<TDependencyKeys, TSystemic> = SimpleDependsOnOption<TSystemic> | MappingDependsOnOption<TDependencyKeys, TSystemic>;
 
 type DependsOn<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = {
   /**
@@ -60,9 +62,7 @@ type DependsOn<TSystemic extends Record<string, unknown>, TDependencies extends 
   dependsOn: <TNames extends DependsOnOption<keyof TDependencies, TSystemic>[]>(...names: TNames) => SystemicBuild<TSystemic, MissingDependencies<TDependencies, TNames>>;
 };
 
-type SystemicBuild<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = [RequiredKeys<TDependencies>] extends [never]
-  ? Systemic<TSystemic> & ([keyof TDependencies] extends [never] ? {} : DependsOn<TSystemic, TDependencies>)
-  : DependsOn<TSystemic, TDependencies>;
+type SystemicBuild<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = [RequiredKeys<TDependencies>] extends [never] ? Systemic<TSystemic> & DependsOn<TSystemic, TDependencies> : DependsOn<TSystemic, TDependencies>;
 
 /**
  * Systemic system.
@@ -158,6 +158,6 @@ export type Systemic<T extends Record<string, unknown>> = {
  * Creates a system to which components for dependency injection can be added
  * @returns An empty systemic system
  */
-declare function Systemic(options?: { name?: string }): Systemic<{}>;
+declare function Systemic<TMaster extends Record<string, unknown> = {}>(options?: { name?: string }): Systemic<TMaster>;
 
 export default Systemic;

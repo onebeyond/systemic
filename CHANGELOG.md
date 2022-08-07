@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.1.0
+
+- Added optional dependencies
+- Updated typescript definitions to better reflect all options of Systemic:
+  - optional type param on `Systemic` to set assumed components of master system when creating a subsystem
+  - allow setting a simple dependency on component that doesn't need it (to force the order in which dependencies are created)
+
 ## 4.0.3
 
 - Remove standard-version because it is deprecated and doesnt add much value
