@@ -462,7 +462,6 @@ export default Systemic({ name: 'routes' })
 <!-- prettier-ignore-end -->
 
 ```
-<!-- prettier-ignore-end -->
 DEBUG='systemic:*' node system
 systemic:index Adding component routes.admin to system routes +0ms
 systemic:index Adding component routes.api to system auth +2ms
@@ -483,5 +482,3 @@ systemic:index Component routes started +15ms
 systemic:index Injecting dependency routes as routes into server +1ms
 systemic:index System server started +15ms
 ```
-
-<!-- prettier-ignore-end -->
