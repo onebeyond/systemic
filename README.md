@@ -27,7 +27,11 @@ const Config = require('./components/config');
 const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('config', Config(), { scoped: true }).add('logger', Logger()).dependsOn('config').add('mongo.primary', Mongo()).dependsOn('config', 'logger').add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('config', Config(), { scoped: true })
+  .add('logger', Logger()).dependsOn('config')
+  .add('mongo.primary', Mongo()).dependsOn('config', 'logger')
+  .add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
 ```
 
 ### Run the system
@@ -85,7 +89,11 @@ const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
 async function init() {
-  const system = Systemic().add('config', Config(), { scoped: true }).add('logger', Logger()).dependsOn('config').add('mongo.primary', Mongo()).dependsOn('config', 'logger').add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
+  const system = Systemic()
+    .add('config', Config(), { scoped: true })
+    .add('logger', Logger()).dependsOn('config')
+    .add('mongo.primary', Mongo()).dependsOn('config', 'logger')
+    .add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
 
   const { config, mongo, logger } = await system.start();
 
@@ -111,7 +119,10 @@ While not shown in the above examples we usually separate the system definition 
 
 ```js
 // system.js
-module.exports = () => Systemic().add('config', Config()).add('logger', Logger()).dependsOn('config').add('mongo', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('logger', Logger()).dependsOn('config')
+  .add('mongo', Mongo()).dependsOn('config', 'logger');
 ```
 
 ```js
@@ -181,7 +192,10 @@ const Config = require('./components/config');
 const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('config', Config()).add('logger', Logger()).dependsOn('config').add('mongo', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('logger', Logger()).dependsOn('config')
+  .add('mongo', Mongo()).dependsOn('config', 'logger');
 ```
 
 The components dependencies are injected via it's start function
@@ -198,13 +212,17 @@ async function start({ config }) {
 You can rename dependencies passed to a components start function by specifying a mapping object instead of a simple string
 
 ```js
-module.exports = () => Systemic().add('config', Config()).add('mongo', Mongo()).dependsOn({ component: 'config', destination: 'options' });
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('mongo', Mongo()).dependsOn({ component: 'config', destination: 'options' });
 ```
 
 If you want to inject a property or subdocument of the dependency thing you can also express this with a dependency mapping
 
 ```js
-module.exports = () => Systemic().add('config', Config()).add('mongo', Mongo()).dependsOn({ component: 'config', source: 'config.mongo' });
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('mongo', Mongo()).dependsOn({ component: 'config', source: 'config.mongo' });
 ```
 
 Now `config.mongo` will be injected as `config` instead of the entire configuration object
@@ -214,7 +232,9 @@ Now `config.mongo` will be injected as `config` instead of the entire configurat
 Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
 
 ```js
-module.exports = () => Systemic().add('config', Config(), { scoped: true }).add('mongo', Mongo()).dependsOn('config');
+module.exports = () => Systemic()
+  .add('config', Config(), { scoped: true })
+  .add('mongo', Mongo()).dependsOn('config');
 ```
 
 #### Optional Dependencies
@@ -222,7 +242,9 @@ module.exports = () => Systemic().add('config', Config(), { scoped: true }).add(
 By default an error is thrown if a dependency is not available on system start. Sometimes a component might have an optional dependency on a component they may or may not be available in the system, typically when using subsystems. In this situation a dependency can be marked as optional.
 
 ```js
-module.exports = () => Systemic().add('app', app()).add('server', server()).dependsOn('app', { component: 'routes', optional: true });
+module.exports = () => Systemic()
+  .add('app', app())
+  .add('server', server()).dependsOn('app', { component: 'routes', optional: true });
 ```
 
 #### Overriding Components
@@ -273,7 +295,8 @@ You can simplify large systems by breaking them up into smaller ones, then inclu
 const Systemic = require('systemic');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('mongo', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('mongo', Mongo()).dependsOn('config', 'logger');
 ```
 
 ```js
@@ -283,7 +306,10 @@ const UtilSystem = require('./lib/util/system');
 const WebSystem = require('./lib/web/system');
 const DbSystem = require('./lib/db/system');
 
-module.exports = () => Systemic().include(UtilSystem()).include(WebSystem()).include(DbSystem());
+module.exports = () => Systemic()
+  .include(UtilSystem())
+  .include(WebSystem())
+  .include(DbSystem());
 ```
 
 #### Grouping components
@@ -291,7 +317,12 @@ module.exports = () => Systemic().include(UtilSystem()).include(WebSystem()).inc
 Sometimes it's convenient to depend on a group of components. e.g.
 
 ```js
-module.exports = () => Systemic().add('app', app()).add('routes.admin', adminRoutes()).dependsOn('app').add('routes.api', apiRoutes()).dependsOn('app').add('routes').dependsOn('routes.admin', 'routes.api').add('server').dependsOn('app', 'routes');
+module.exports = () => Systemic()
+  .add('app', app())
+  .add('routes.admin', adminRoutes()).dependsOn('app')
+  .add('routes.api', apiRoutes()).dependsOn('app')
+  .add('routes').dependsOn('routes.admin', 'routes.api')
+  .add('server').dependsOn('app', 'routes');
 ```
 
 The above example will create a component 'routes', which will depend on routes.admin and routes.api and be injected as
@@ -339,7 +370,10 @@ const Systemic = require('systemic');
 const adminRoutes = require('./admin-routes');
 const apiRoutes = require('./api-routes');
 
-module.exports = () => Systemic().add('routes.admin', adminRoutes()).dependsOn('app').add('routes.api', apiRoutes()).dependsOn('app', 'mongodb').add('routes').dependsOn('routes.admin', 'routes.api');
+module.exports = () => Systemic()
+  .add('routes.admin', adminRoutes()).dependsOn('app')
+  .add('routes.api', apiRoutes()).dependsOn('app', 'mongodb')
+  .add('routes').dependsOn('routes.admin', 'routes.api');
 ```
 
 ### Debugging
@@ -360,7 +394,10 @@ import Systemic from 'systemic';
 import adminRoutes from './admin-routes';
 import apiRoutes from './api-routes';
 
-export default Systemic({ name: 'routes' }).add('routes.admin', adminRoutes()).add('routes.api', apiRoutes()).add('routes').dependsOn('routes.admin', 'routes.api');
+export default Systemic({ name: 'routes' })
+  .add('routes.admin', adminRoutes())
+  .add('routes.api', apiRoutes())
+  .add('routes').dependsOn('routes.admin', 'routes.api');
 ```
 
 ```
