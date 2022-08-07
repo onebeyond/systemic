@@ -217,6 +217,14 @@ Injecting a sub document from a json configuration file is such a common use cas
 module.exports = () => Systemic().add('config', Config(), { scoped: true }).add('mongo', Mongo()).dependsOn('config');
 ```
 
+#### Optional Dependencies
+
+By default an error is thrown if a dependency is not available on system start. Sometimes a component might have an optional dependency on a component they may or may not be available in the system, typically when using subsystems. In this situation a dependency can be marked as optional.
+
+```js
+module.exports = () => Systemic().add('app', app()).add('server', server()).dependsOn('app', { component: 'routes', optional: true });
+```
+
 #### Overriding Components
 
 Attempting to add the same component twice will result in an error, but sometimes you need to replace existing components with test doubles. Under such circumstances use `set` instead of `add`

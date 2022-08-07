@@ -270,6 +270,19 @@ describe('System', () => {
       });
   });
 
+  it('should accept mssing optional dependency', (test, done) => {
+    system
+      .add('bar', new CallbackComponent())
+      .add('foo', new CallbackComponent())
+      .dependsOn({ component: 'bar', optional: true }, { component: 'baz', optional: true })
+      .start((err, components) => {
+        assert.ifError(err);
+        assert(components.foo.dependencies.bar);
+        assert.equal(components.foo.dependencies.baz, undefined);
+        done();
+      });
+  });
+
   it('should reject invalid dependencies', () => {
     assert.throws(
       () => {

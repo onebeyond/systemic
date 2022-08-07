@@ -2,18 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [4.0.2](https://github.com/guidesmiths/systemic/compare/v4.0.1...v4.0.2) (2022-06-14)
+### [4.1.0]
 
+- Added optional dependencies
+- Updated typescript definitions to better reflect all options of Systemic:
+  - optional type param on `Systemic` to set assumed components of master system when creating a subsystem
+  - allow setting a simple dependency on component that doesn't need it (to force the order in which dependencies are created)
+
+### [4.0.2](https://github.com/guidesmiths/systemic/compare/v4.0.1...v4.0.2) (2022-06-14)
 
 ### 📝 Docs
 
-* added assets (logo and banner) ([dc4d534](https://github.com/guidesmiths/systemic/commit/dc4d534edefbec92bff085ea16e5cdd99a8e8956))
-* improved readme adding new assets ([6d1309d](https://github.com/guidesmiths/systemic/commit/6d1309de4e02c01a5bfdf35fe15879e4080ad1ab))
-
+- added assets (logo and banner) ([dc4d534](https://github.com/guidesmiths/systemic/commit/dc4d534edefbec92bff085ea16e5cdd99a8e8956))
+- improved readme adding new assets ([6d1309d](https://github.com/guidesmiths/systemic/commit/6d1309de4e02c01a5bfdf35fe15879e4080ad1ab))
 
 ### 🔧 Others
 
-* added assets folder to npmignore ([cb35c07](https://github.com/guidesmiths/systemic/commit/cb35c0756780fdae82766732653f51c9729ee44b))
+- added assets folder to npmignore ([cb35c07](https://github.com/guidesmiths/systemic/commit/cb35c0756780fdae82766732653f51c9729ee44b))
 
 ## [4.0.1]
 
