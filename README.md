@@ -12,7 +12,7 @@
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="NPM version" /></a>
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="NPM downloads" /></a>
   <a href="https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
-  <a href="https://snyk.io/advisor/npm-package/rascal" target="_blank"><img src="https://snyk.io/advisor/npm-package/systemic/badge.svg" alt="Systemic" /></a>
+  <a href="https://snyk.io/advisor/npm-package/systemic" target="_blank"><img src="https://snyk.io/advisor/npm-package/systemic/badge.svg" alt="Systemic" /></a>
   <a href="https://codeclimate.com/github/guidesmiths/systemic" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg" alt="Code Climate" /></a>
   <a href="https://codeclimate.com/github/guidesmiths/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg" alt="Test Coverage" /></a>
 </p>
