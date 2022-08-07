@@ -21,17 +21,24 @@
 
 ### Define the system
 
+<!-- prettier-ignore-start -->
 ```js
 const Systemic = require('systemic');
 const Config = require('./components/config');
 const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('config', Config(), { scoped: true }).add('logger', Logger()).dependsOn('config').add('mongo.primary', Mongo()).dependsOn('config', 'logger').add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('config', Config(), { scoped: true })
+  .add('logger', Logger()).dependsOn('config')
+  .add('mongo.primary', Mongo()).dependsOn('config', 'logger')
+  .add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
 ```
+<!-- prettier-ignore-end -->
 
 ### Run the system
 
+<!-- prettier-ignore-start -->
 ```js
 const System = require('./system');
 
@@ -54,6 +61,7 @@ async function start() {
 
 start();
 ```
+<!-- prettier-ignore-end -->
 
 See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
 
@@ -78,6 +86,7 @@ Systemic has 4 main concepts
 
 You add components and their dependencies to a system. When you start the system, systemic iterates through all the components, starting them in the order derived from the dependency graph. When you stop the system, systemic iterates through all the components stopping them in the reverse order.
 
+<!-- prettier-ignore-start -->
 ```js
 const Systemic = require('systemic');
 const Config = require('./components/config');
@@ -85,7 +94,14 @@ const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
 async function init() {
-  const system = Systemic().add('config', Config(), { scoped: true }).add('logger', Logger()).dependsOn('config').add('mongo.primary', Mongo()).dependsOn('config', 'logger').add('mongo.secondary', Mongo()).dependsOn('config', 'logger');
+  const system = Systemic()
+    .add('config', Config(), { scoped: true })
+    .add('logger', Logger())
+    .dependsOn('config')
+    .add('mongo.primary', Mongo())
+    .dependsOn('config', 'logger')
+    .add('mongo.secondary', Mongo())
+    .dependsOn('config', 'logger');
 
   const { config, mongo, logger } = await system.start();
 
@@ -102,6 +118,7 @@ async function init() {
 
 init();
 ```
+<!-- prettier-ignore-end -->
 
 System life cycle functions (start, stop, restart) return a promise, but can also take callbacks.
 
@@ -109,11 +126,14 @@ System life cycle functions (start, stop, restart) return a promise, but can als
 
 While not shown in the above examples we usually separate the system definition from system start. This is important for testing since you often want to make changes to the system definition (e.g. replacing components with stubs), before starting the system. By wrapping the system definition in a function you create a new system in each of your tests.
 
+<!-- prettier-ignore-start -->
 ```js
 // system.js
 module.exports = () => Systemic().add('config', Config()).add('logger', Logger()).dependsOn('config').add('mongo', Mongo()).dependsOn('config', 'logger');
 ```
+<!-- prettier-ignore-end -->
 
+<!-- prettier-ignore-start -->
 ```js
 // index.js
 const System = require('./system');
@@ -137,6 +157,7 @@ async function start() {
 
 start();
 ```
+<!-- prettier-ignore-end -->
 
 There are some out of the box runners we can be used in your applications or as a reference for your own custom runner
 
@@ -147,6 +168,7 @@ There are some out of the box runners we can be used in your applications or as 
 
 A component is an object with optional asynchronous start and stop functions. The start function should yield the underlying resource after it has been started. e.g.
 
+<!-- prettier-ignore-start -->
 ```js
 module.exports = () => {
   let db;
@@ -166,6 +188,7 @@ module.exports = () => {
   };
 };
 ```
+<!-- prettier-ignore-end -->
 
 The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. The start and stop functions support both promises and callbacks (not shown)
 
@@ -175,37 +198,56 @@ There are out of the box components for [express](https://github.com/guidesmiths
 
 A component's dependencies must be registered with the system
 
+<!-- prettier-ignore-start -->
 ```js
 const Systemic = require('systemic');
 const Config = require('./components/config');
 const Logger = require('./components/logger');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('config', Config()).add('logger', Logger()).dependsOn('config').add('mongo', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('logger', Logger())
+  .dependsOn('config')
+  .add('mongo', Mongo())
+  .dependsOn('config', 'logger');
 ```
+<!-- prettier-ignore-end -->
 
 The components dependencies are injected via it's start function
 
+<!-- prettier-ignore-start -->
 ```js
 async function start({ config }) {
   db = await MongoClient.connect(config.url);
   return db;
 }
 ```
+<!-- prettier-ignore-end -->
 
 #### Mapping dependencies
 
 You can rename dependencies passed to a components start function by specifying a mapping object instead of a simple string
 
+<!-- prettier-ignore-start -->
 ```js
-module.exports = () => Systemic().add('config', Config()).add('mongo', Mongo()).dependsOn({ component: 'config', destination: 'options' });
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('mongo', Mongo())
+  .dependsOn({ component: 'config', destination: 'options' });
 ```
+<!-- prettier-ignore-end -->
 
 If you want to inject a property or subdocument of the dependency thing you can also express this with a dependency mapping
 
+<!-- prettier-ignore-start -->
 ```js
-module.exports = () => Systemic().add('config', Config()).add('mongo', Mongo()).dependsOn({ component: 'config', source: 'config.mongo' });
+module.exports = () => Systemic()
+  .add('config', Config())
+  .add('mongo', Mongo())
+  .dependsOn({ component: 'config', source: 'config.mongo' });
 ```
+<!-- prettier-ignore-end -->
 
 Now `config.mongo` will be injected as `config` instead of the entire configuration object
 
@@ -213,14 +255,20 @@ Now `config.mongo` will be injected as `config` instead of the entire configurat
 
 Injecting a sub document from a json configuration file is such a common use case, you can enable this behaviour automatically by 'scoping' the component. The following code is equivalent to that above
 
+<!-- prettier-ignore-start -->
 ```js
-module.exports = () => Systemic().add('config', Config(), { scoped: true }).add('mongo', Mongo()).dependsOn('config');
+module.exports = () => Systemic()
+  .add('config', Config(), { scoped: true })
+  .add('mongo', Mongo())
+  .dependsOn('config');
 ```
+<!-- prettier-ignore-end -->
 
 #### Overriding Components
 
 Attempting to add the same component twice will result in an error, but sometimes you need to replace existing components with test doubles. Under such circumstances use `set` instead of `add`
 
+<!-- prettier-ignore-start -->
 ```js
 const System = require('../lib/system');
 const stub = require('./stubs/store');
@@ -236,11 +284,13 @@ after(async () => {
   await testSystem.stop();
 });
 ```
+<!-- prettier-ignore-end -->
 
 #### Removing Components
 
 Removing components during tests can decrease startup time
 
+<!-- prettier-ignore-start -->
 ```js
 const System = require('../lib/system');
 
@@ -255,19 +305,25 @@ after(async () => {
   await testSystem.stop();
 });
 ```
+<!-- prettier-ignore-end -->
 
 #### Including components from another system
 
 You can simplify large systems by breaking them up into smaller ones, then including their component definitions into the main system.
 
+<!-- prettier-ignore-start -->
 ```js
 // db-system.js
 const Systemic = require('systemic');
 const Mongo = require('./components/mongo');
 
-module.exports = () => Systemic().add('mongo', Mongo()).dependsOn('config', 'logger');
+module.exports = () => Systemic()
+  .add('mongo', Mongo())
+  .dependsOn('config', 'logger');
 ```
+<!-- prettier-ignore-end -->
 
+<!-- prettier-ignore-start -->
 ```js
 // system.js
 const Systemic = require('systemic');
@@ -277,17 +333,30 @@ const DbSystem = require('./lib/db/system');
 
 module.exports = () => Systemic().include(UtilSystem()).include(WebSystem()).include(DbSystem());
 ```
+<!-- prettier-ignore-end -->
 
 #### Grouping components
 
 Sometimes it's convenient to depend on a group of components. e.g.
 
+<!-- prettier-ignore-start -->
 ```js
-module.exports = () => Systemic().add('app', app()).add('routes.admin', adminRoutes()).dependsOn('app').add('routes.api', apiRoutes()).dependsOn('app').add('routes').dependsOn('routes.admin', 'routes.api').add('server').dependsOn('app', 'routes');
+module.exports = () => Systemic()
+  .add('app', app())
+  .add('routes.admin', adminRoutes())
+  .dependsOn('app')
+  .add('routes.api', apiRoutes())
+  .dependsOn('app')
+  .add('routes')
+  .dependsOn('routes.admin', 'routes.api')
+  .add('server')
+  .dependsOn('app', 'routes');
 ```
+<!-- prettier-ignore-end -->
 
 The above example will create a component 'routes', which will depend on routes.admin and routes.api and be injected as
 
+<!-- prettier-ignore-start -->
 ```js
  {
   routes: {
@@ -296,12 +365,14 @@ The above example will create a component 'routes', which will depend on routes.
   }
  }
 ```
+<!-- prettier-ignore-end -->
 
 #### Bootstrapping components
 
 The dependency graph for a medium size project can grow quickly leading to a large system definition. To simplify this you can bootstrap components from a specified directory, where each folder in the directory includes an index.js which defines a sub system. e.g.
 
 ```
+<!-- prettier-ignore-end -->
 lib/
   |- system.js
   |- components/
@@ -317,45 +388,68 @@ lib/
          |- index.js
 ```
 
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
 ```js
 // system.js
 const Systemic = require('systemic');
 const path = require('path');
 
-module.exports = () => Systemic().bootstrap(path.join(__dirname, 'components'));
+module.exports = () => Systemic()
+  .bootstrap(path.join(__dirname, 'components'));
 ```
+<!-- prettier-ignore-end -->
 
+<!-- prettier-ignore-start -->
 ```js
 // components/routes/index.js
 const Systemic = require('systemic');
 const adminRoutes = require('./admin-routes');
 const apiRoutes = require('./api-routes');
 
-module.exports = () => Systemic().add('routes.admin', adminRoutes()).dependsOn('app').add('routes.api', apiRoutes()).dependsOn('app', 'mongodb').add('routes').dependsOn('routes.admin', 'routes.api');
+module.exports = () => Systemic()
+  .add('routes.admin', adminRoutes())
+  .dependsOn('app')
+  .add('routes.api', apiRoutes())
+  .dependsOn('app', 'mongodb')
+  .add('routes')
+  .dependsOn('routes.admin', 'routes.api');
 ```
+<!-- prettier-ignore-end -->
 
 ### Debugging
 
 You can debug systemic by setting the DEBUG environment variable to `systemic:*`. Naming your systems will make reading the debug output easier when you have more than one.
 
+<!-- prettier-ignore-start -->
 ```js
 // system.js
 const Systemic = require('systemic');
 const path = require('path');
 
-module.exports = () => Systemic({ name: 'server' }).bootstrap(path.join(__dirname, 'components'));
+module.exports = () => Systemic({ name: 'server' })
+  .bootstrap(path.join(__dirname, 'components'));
 ```
+<!-- prettier-ignore-end -->
 
+<!-- prettier-ignore-start -->
 ```js
 // components/routes/index.js
 import Systemic from 'systemic';
 import adminRoutes from './admin-routes';
 import apiRoutes from './api-routes';
 
-export default Systemic({ name: 'routes' }).add('routes.admin', adminRoutes()).add('routes.api', apiRoutes()).add('routes').dependsOn('routes.admin', 'routes.api');
+export default Systemic({ name: 'routes' })
+  .add('routes.admin', adminRoutes())
+  .add('routes.api', apiRoutes())
+  .add('routes')
+  .dependsOn('routes.admin', 'routes.api');
 ```
+<!-- prettier-ignore-end -->
 
 ```
+<!-- prettier-ignore-end -->
 DEBUG='systemic:*' node system
 systemic:index Adding component routes.admin to system routes +0ms
 systemic:index Adding component routes.api to system auth +2ms
@@ -376,3 +470,5 @@ systemic:index Component routes started +15ms
 systemic:index Injecting dependency routes as routes into server +1ms
 systemic:index System server started +15ms
 ```
+
+<!-- prettier-ignore-end -->
