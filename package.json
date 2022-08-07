@@ -43,7 +43,6 @@
   "dependencies": {
     "async": "^3.2.3",
     "require-all": "^3.0.0",
-    "standard-version": "^9.5.0",
     "toposort-class": "^1.0.1"
   },
   "directories": {

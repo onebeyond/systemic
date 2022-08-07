@@ -2,6 +2,7 @@
 
 ## 4.0.3
 
+- Remove standard-version because it is deprecated and doesnt add much value
 - Stop prettier wrapping markdown examples
 
 ## 4.0.2
