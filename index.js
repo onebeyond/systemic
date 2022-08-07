@@ -198,7 +198,11 @@ module.exports = function (_params) {
       definitions[name].dependencies,
       {},
       (accumulator, dependency, cb) => {
-        if (!hasProp(definitions, dependency.component)) return dependency.optional ? cb(null, accumulator) : cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!hasProp(definitions, dependency.component) && !dependency.optional) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!hasProp(definitions, dependency.component)) {
+          debug('Skipping unsatisfied optional dependency %s for component %s', dependency.component, name);
+          return cb(null, accumulator);
+        }
         if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name;
         dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name) : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
         const component = getProp(system, dependency.component);

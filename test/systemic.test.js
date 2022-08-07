@@ -270,7 +270,7 @@ describe('System', () => {
       });
   });
 
-  it('should accept mssing optional dependency', (test, done) => {
+  it('should accept missing optional dependency', (test, done) => {
     system
       .add('bar', new CallbackComponent())
       .add('foo', new CallbackComponent())
