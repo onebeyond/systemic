@@ -7,8 +7,8 @@
   "scripts": {
     "qa": "npm run lint && npm test",
     "lint": "lint-staged .",
-    "test": "node test",
-    "coverage": "nyc --report html --reporter lcov --reporter text-summary node test",
+    "test": "zUnit",
+    "coverage": "nyc --report html --reporter lcov --reporter text-summary zUnit",
     "prepare": "husky install",
     "release": "standard-version",
     "release:major": "npm run release -- --release-as major",
@@ -66,5 +66,8 @@
     "hooks": {
       "pre-commit": "npm run qa"
     }
+  },
+  "zUnit": {
+    "pollute": true
   }
 }
