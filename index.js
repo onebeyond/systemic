@@ -1,6 +1,6 @@
 const async = require('async');
 const debug = require('debug')('systemic:index');
-const format = require('util').format;
+const { format } = require('util');
 const Toposort = require('toposort-class');
 const requireAll = require('require-all');
 const { randomName, isFunction, arraysIntersection, hasProp, getProp, setProp } = require('./utils');
@@ -85,7 +85,8 @@ module.exports = function (_params) {
             optional: false,
           }
         : Object.assign({}, { destination: arg.component }, arg);
-    if (!record.component) throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)));
+    if (!record.component)
+      throw new Error(format('Component %s has an invalid dependency %s', currentDefinition.name, JSON.stringify(arg)));
     if (currentDefinition.dependencies.find((dep) => dep.destination === record.destination)) {
       throw new Error(format('Component %s has a duplicate dependency %s', currentDefinition.name, record.destination));
     }
@@ -124,10 +125,10 @@ module.exports = function (_params) {
   function startComponent(dependencies, name, system, cb) {
     debug('Starting component %s', name);
     started.push(name);
-    const component = definitions[name].component;
-    const onStarted = function (err, started) {
+    const { component } = definitions[name];
+    const onStarted = (err, c) => {
       if (err) return cb(err);
-      setProp(system, name, started);
+      setProp(system, name, c);
       debug('Component %s started', name);
       setImmediate(() => {
         cb(null, system);
@@ -160,13 +161,13 @@ module.exports = function (_params) {
 
   function stopComponent(name, cb) {
     debug('Stopping component %s', name);
-    const stop = definitions[name].component.stop || noop;
-    const onStopped = function (err) {
+    const stopFn = definitions[name].component.stop || noop;
+    const onStopped = (err) => {
       if (err) return cb(err);
       debug('Component %s stopped', name);
       setImmediate(cb);
     };
-    const p = stop(onStopped);
+    const p = stopFn(onStopped);
     if (p && p.then) {
       p.then(immediateCallback(onStopped)).catch(immediateError(cb));
     }
@@ -198,15 +199,28 @@ module.exports = function (_params) {
       definitions[name].dependencies,
       {},
       (accumulator, dependency, cb) => {
-        if (!hasProp(definitions, dependency.component) && !dependency.optional) return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
+        if (!hasProp(definitions, dependency.component) && !dependency.optional)
+          return cb(new Error(format('Component %s has an unsatisfied dependency on %s', name, dependency.component)));
         if (!hasProp(definitions, dependency.component)) {
           debug('Skipping unsatisfied optional dependency %s for component %s', dependency.component, name);
           return cb(null, accumulator);
         }
         if (!dependency.hasOwnProperty('source') && definitions[dependency.component].scoped) dependency.source = name;
-        dependency.source ? debug('Injecting dependency %s.%s as %s into %s', dependency.component, dependency.source, dependency.destination, name) : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
+        dependency.source
+          ? debug(
+              'Injecting dependency %s.%s as %s into %s',
+              dependency.component,
+              dependency.source,
+              dependency.destination,
+              name
+            )
+          : debug('Injecting dependency %s as %s into %s', dependency.component, dependency.destination, name);
         const component = getProp(system, dependency.component);
-        setProp(accumulator, dependency.destination, dependency.source ? getProp(component, dependency.source) : component);
+        setProp(
+          accumulator,
+          dependency.destination,
+          dependency.source ? getProp(component, dependency.source) : component
+        );
         cb(null, accumulator);
       },
       cb
@@ -233,7 +247,7 @@ module.exports = function (_params) {
   }
 
   function immediateCallback(cb) {
-    return function (resolved) {
+    return (resolved) => {
       setImmediate(() => {
         cb(null, resolved);
       });
@@ -241,7 +255,7 @@ module.exports = function (_params) {
   }
 
   function immediateError(cb, resolved) {
-    return function (err) {
+    return (err) => {
       setImmediate(() => {
         resolved ? cb(err, resolved) : cb(err);
       });

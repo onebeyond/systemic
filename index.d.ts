@@ -13,7 +13,10 @@ type NameToDestination<TOption> = TOption extends {
   ? TOption
   : never;
 
-type MissingDependencies<TDependencies extends Record<string, unknown>, TNames extends unknown[]> = TNames extends [infer Name, ...infer Rest]
+type MissingDependencies<TDependencies extends Record<string, unknown>, TNames extends unknown[]> = TNames extends [
+  infer Name,
+  ...infer Rest
+]
   ? NameToDestination<Name> extends keyof TDependencies
     ? MissingDependencies<Omit<TDependencies, NameToDestination<Name>>, Rest>
     : MissingDependencies<TDependencies, Rest>
@@ -51,7 +54,9 @@ type MappingDependsOnOption<TDependencyKeys, TSystemic> = TDependencyKeys extend
       optional?: boolean;
       source?: string;
     };
-type DependsOnOption<TDependencyKeys, TSystemic> = SimpleDependsOnOption<TSystemic> | MappingDependsOnOption<TDependencyKeys, TSystemic>;
+type DependsOnOption<TDependencyKeys, TSystemic> =
+  | SimpleDependsOnOption<TSystemic>
+  | MappingDependsOnOption<TDependencyKeys, TSystemic>;
 
 type DependsOn<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = {
   /**
@@ -59,10 +64,16 @@ type DependsOn<TSystemic extends Record<string, unknown>, TDependencies extends 
    * When name and type of the dependencies match those available in the system, the dependency can be added by name.
    * When a dependency is named differently in the system or only part of a component is required as a dependency, a MappingDependsOnOption can be used.
    */
-  dependsOn: <TNames extends DependsOnOption<keyof TDependencies, TSystemic>[]>(...names: TNames) => SystemicBuild<TSystemic, MissingDependencies<TDependencies, TNames>>;
+  dependsOn: <TNames extends DependsOnOption<keyof TDependencies, TSystemic>[]>(
+    ...names: TNames
+  ) => SystemicBuild<TSystemic, MissingDependencies<TDependencies, TNames>>;
 };
 
-type SystemicBuild<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = [RequiredKeys<TDependencies>] extends [never] ? Systemic<TSystemic> & DependsOn<TSystemic, TDependencies> : DependsOn<TSystemic, TDependencies>;
+type SystemicBuild<TSystemic extends Record<string, unknown>, TDependencies extends Record<string, unknown>> = [
+  RequiredKeys<TDependencies>
+] extends [never]
+  ? Systemic<TSystemic> & DependsOn<TSystemic, TDependencies>
+  : DependsOn<TSystemic, TDependencies>;
 
 /**
  * Systemic system.
@@ -110,7 +121,9 @@ export type Systemic<T extends Record<string, unknown>> = {
   /**
    * Adds a configuration to the system, which will be available as a scoped dependency named 'config'
    */
-  configure: <TComponent, TDependencies extends Record<string, unknown> = {}>(component: Component<TComponent, TDependencies> | TComponent) => SystemicBuild<T & { config: TComponent }, TDependencies>;
+  configure: <TComponent, TDependencies extends Record<string, unknown> = {}>(
+    component: Component<TComponent, TDependencies> | TComponent
+  ) => SystemicBuild<T & { config: TComponent }, TDependencies>;
 
   /**
    * Removes a component from the system.

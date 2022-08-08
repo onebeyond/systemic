@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.1
+
+- Use eslint-config-airbnb-base
+- Move debug to prod dependency
+
 ## 4.1.0
 
 - Added optional dependencies

@@ -349,7 +349,10 @@ describe('System', () => {
   it('should reject duplicate dependency explicit destinations', () => {
     assert.throws(
       () => {
-        system.add('foo', new CallbackComponent()).dependsOn({ component: 'bar', destination: 'baz' }).dependsOn({ component: 'shaz', destination: 'baz' });
+        system
+          .add('foo', new CallbackComponent())
+          .dependsOn({ component: 'bar', destination: 'baz' })
+          .dependsOn({ component: 'shaz', destination: 'baz' });
       },
       { message: 'Component foo has a duplicate dependency baz' }
     );
@@ -510,7 +513,7 @@ describe('System', () => {
   function CallbackComponent() {
     const state = { counter: 0, started: true, stopped: true, dependencies: [] };
 
-    this.start = function (dependencies, cb) {
+    this.start = (dependencies, cb) => {
       state.started = true;
       state.counter++;
       state.dependencies = dependencies;
@@ -518,7 +521,7 @@ describe('System', () => {
         cb(null, state);
       }, 100);
     };
-    this.stop = function (cb) {
+    this.stop = (cb) => {
       state.stopped = true;
       setTimeout(() => {
         cb();
@@ -529,7 +532,7 @@ describe('System', () => {
   function PromiseComponent() {
     const state = { counter: 0, started: true, stopped: true, dependencies: [] };
 
-    this.start = function (dependencies) {
+    this.start = (dependencies) => {
       state.started = true;
       state.counter++;
       state.dependencies = dependencies;
@@ -539,7 +542,7 @@ describe('System', () => {
         }, 100);
       });
     };
-    this.stop = function () {
+    this.stop = () => {
       state.stopped = true;
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -550,23 +553,22 @@ describe('System', () => {
   }
 
   function ErrorCallbackComponent() {
-    this.start = function (dependencies, cb) {
+    this.start = (dependencies, cb) => {
       cb(new Error('Oh Noes!'));
     };
   }
 
   function ErrorPromiseComponent() {
-    this.start = function () {
-      return new Promise((resolve, reject) => {
+    this.start = () =>
+      new Promise((resolve, reject) => {
         reject(new Error('Oh Noes!'));
       });
-    };
   }
 
   function Unstoppable() {
     const state = { started: true, stopped: true, dependencies: [] };
 
-    this.start = function (dependencies, cb) {
+    this.start = (dependencies, cb) => {
       state.started = true;
       state.dependencies = dependencies;
       cb(null, state);
@@ -574,7 +576,7 @@ describe('System', () => {
   }
 
   function Config(config) {
-    this.start = function (dependencies, cb) {
+    this.start = (dependencies, cb) => {
       cb(null, config);
     };
   }

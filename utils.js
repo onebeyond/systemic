@@ -24,7 +24,10 @@ function arraysIntersection(...arrays) {
 function hasProp(obj, key) {
   if (obj.hasOwnProperty(key)) return true; // Some properties with '.' could fail, so we do a quick check
   const keyParts = key.split('.');
-  return !!obj && (keyParts.length > 1 ? hasProp(obj[key.split('.')[0]], keyParts.slice(1).join('.')) : obj.hasOwnProperty(key));
+  return (
+    !!obj &&
+    (keyParts.length > 1 ? hasProp(obj[key.split('.')[0]], keyParts.slice(1).join('.')) : obj.hasOwnProperty(key))
+  );
 }
 
 function getProp(obj, key) {

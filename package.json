@@ -5,15 +5,13 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "qa": "npm run lint && npm test",
-    "lint": "lint-staged .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier . --check",
+    "prettier:fix": "prettier . --write",
     "test": "zUnit",
     "coverage": "nyc --report html --reporter lcov --reporter text-summary zUnit",
     "prepare": "husky install",
-    "release": "standard-version",
-    "release:major": "npm run release -- --release-as major",
-    "release:minor": "npm run release -- --release-as minor",
-    "release:patch": "npm run release -- --release-as patch",
     "release:prerelease": "npm run release -- prerelease"
   },
   "keywords": [
@@ -30,8 +28,8 @@
   "author": "GuideSmiths Ltd",
   "license": "ISC",
   "devDependencies": {
-    "debug": "^4.3.3",
     "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
@@ -42,6 +40,7 @@
   },
   "dependencies": {
     "async": "^3.2.3",
+    "debug": "^4.3.4",
     "require-all": "^3.0.0",
     "toposort-class": "^1.0.1"
   },
@@ -52,7 +51,8 @@
     "node": ">=12.0.0"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*": "prettier --write --ignore-unknown",
+    "**/*.js": "eslint --fix"
   },
   "repository": {
     "type": "git",
