@@ -10,8 +10,8 @@ type NameToDestination<TOption> = TOption extends {
     ? Component
     : Destination
   : TOption extends string | number | symbol
-    ? TOption
-    : never;
+  ? TOption
+  : never;
 
 type MissingDependencies<TDependencies extends Record<string, unknown>, TNames extends unknown[]> = TNames extends [
   infer Name,
@@ -57,7 +57,7 @@ export type CallbackComponent<TComponent, TDependencies extends Record<string, u
    * @param callback Callback is called when the component has been stopped
    */
   stop?: (callback: (err?: any) => void) => void;
-}
+};
 
 type SimpleDependsOnOption<TSystemic> = keyof TSystemic;
 type MappingDependsOnOption<TDependencyKeys, TSystemic> = TDependencyKeys extends keyof TSystemic
