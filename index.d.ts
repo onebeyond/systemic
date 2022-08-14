@@ -10,8 +10,8 @@ type NameToDestination<TOption> = TOption extends {
     ? Component
     : Destination
   : TOption extends string | number | symbol
-  ? TOption
-  : never;
+    ? TOption
+    : never;
 
 type MissingDependencies<TDependencies extends Record<string, unknown>, TNames extends unknown[]> = TNames extends [
   infer Name,
@@ -24,7 +24,7 @@ type MissingDependencies<TDependencies extends Record<string, unknown>, TNames e
 
 /**
  * Systemic component that can be added to the systemic system.
- * @templace TComponent The type of the component that will be exposed by the systemic system
+ * @template TComponent The type of the component that will be exposed by the systemic system
  * @template TDependencies The type of the dependencies this component depends on
  */
 export type Component<TComponent, TDependencies extends Record<string, unknown> = {}> = {
@@ -39,6 +39,25 @@ export type Component<TComponent, TDependencies extends Record<string, unknown> 
    */
   stop?: () => Promise<void>;
 };
+
+/**
+ * Systemic component that can be added to the systemic system.
+ * @template TComponent The type of the component that will be exposed by the systemic system
+ * @template TDependencies The type of the dependencies this component depends on
+ */
+export type CallbackComponent<TComponent, TDependencies extends Record<string, unknown> = {}> = {
+  /**
+   * Starts this component
+   * @param {TDependencies} dependencies The dependencies of this component
+   * @param callback Callback receives the component after it has been built
+   */
+  start: (dependencies: TDependencies, callback: (err: any, component: TComponent) => void) => void;
+  /**
+   * Stops this component
+   * @param callback Callback is called when the component has been stopped
+   */
+  stop?: (callback: (err?: any) => void) => void;
+}
 
 type SimpleDependsOnOption<TSystemic> = keyof TSystemic;
 type MappingDependsOnOption<TDependencyKeys, TSystemic> = TDependencyKeys extends keyof TSystemic
@@ -92,7 +111,7 @@ export type Systemic<T extends Record<string, unknown>> = {
    */
   add: <S extends string, TComponent, TDependencies extends Record<string, unknown> = {}>(
     name: S extends keyof T ? never : S, // We don't allow duplicate names
-    component?: Component<TComponent, TDependencies> | TComponent,
+    component?: Component<TComponent, TDependencies> | CallbackComponent<TComponent, TDependencies> | TComponent,
     options?: { scoped?: boolean }
   ) => SystemicBuild<
     {
@@ -109,7 +128,7 @@ export type Systemic<T extends Record<string, unknown>> = {
    */
   set: <S extends string, TComponent, TDependencies extends Record<string, unknown> = {}>(
     name: S,
-    component: Component<TComponent, TDependencies> | TComponent,
+    component: Component<TComponent, TDependencies> | CallbackComponent<TComponent, TDependencies> | TComponent,
     options?: { scoped?: boolean }
   ) => SystemicBuild<
     {
@@ -122,7 +141,7 @@ export type Systemic<T extends Record<string, unknown>> = {
    * Adds a configuration to the system, which will be available as a scoped dependency named 'config'
    */
   configure: <TComponent, TDependencies extends Record<string, unknown> = {}>(
-    component: Component<TComponent, TDependencies> | TComponent
+    component: Component<TComponent, TDependencies> | CallbackComponent<TComponent, TDependencies> | TComponent
   ) => SystemicBuild<T & { config: TComponent }, TDependencies>;
 
   /**
