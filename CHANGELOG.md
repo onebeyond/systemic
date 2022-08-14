@@ -3,6 +3,7 @@
 ## 4.1.2
 
 - Fix typescript definitions via . Thanks [PR60](https://github.com/guidesmiths/systemic/pull/60). Thanks [teunmooij](https://github.com/teunmooij).
+- Remove unused dev deps
 
 ## 4.1.1
 
