@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.2
+
+- Fix typescript definitions via . Thanks [PR60](https://github.com/guidesmiths/systemic/pull/60). Thanks [teunmooij](https://github.com/teunmooij).
+
 ## 4.1.1
 
 - Use eslint-config-airbnb-base
