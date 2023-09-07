@@ -12,9 +12,9 @@
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="NPM version" /></a>
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="NPM downloads" /></a>
   <a href="https://github.com/onebeyond/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/onebeyond/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
-  <a href="https://snyk.io/advisor/npm-package/systemic" target="_blank"><img src="https://snyk.io/advisor/npm-package/systemic/badge.svg" alt="Systemic" /></a>
-  <a href="https://codeclimate.com/github/onebeyond/systemic" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/gpa.svg" alt="Code Climate" /></a>
-  <a href="https://codeclimate.com/github/onebeyond/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/coverage.svg" alt="Test Coverage" /></a>
+  <a href="https://codeclimate.com/github/onebeyond/systemic" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/gpa.svg" alt="Code Climate maintainability" /></a>
+  <a href="https://codeclimate.com/github/onebeyond/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/coverage.svg" alt="Code Climate test coverage" /></a>
+  <a href="https://socket.dev/npm/package/systemic" target="_blank"><img src="https://socket.dev/api/badge/npm/package/systemic" alt="socket.dev" /></a>
 </p>
 
 ## tl;dr
