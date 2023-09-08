@@ -11,10 +11,10 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="NPM version" /></a>
   <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="NPM downloads" /></a>
-  <a href="https://github.com/guidesmiths/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/guidesmiths/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
-  <a href="https://snyk.io/advisor/npm-package/systemic" target="_blank"><img src="https://snyk.io/advisor/npm-package/systemic/badge.svg" alt="Systemic" /></a>
-  <a href="https://codeclimate.com/github/guidesmiths/systemic" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/gpa.svg" alt="Code Climate" /></a>
-  <a href="https://codeclimate.com/github/guidesmiths/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/guidesmiths/systemic/badges/coverage.svg" alt="Test Coverage" /></a>
+  <a href="https://github.com/onebeyond/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/onebeyond/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
+  <a href="https://codeclimate.com/github/onebeyond/systemic" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/gpa.svg" alt="Code Climate maintainability" /></a>
+  <a href="https://codeclimate.com/github/onebeyond/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/coverage.svg" alt="Code Climate test coverage" /></a>
+  <a href="https://socket.dev/npm/package/systemic" target="_blank"><img src="https://socket.dev/api/badge/npm/package/systemic" alt="socket.dev" /></a>
 </p>
 
 ## tl;dr
@@ -63,7 +63,7 @@ start();
 ```
 <!-- prettier-ignore-end -->
 
-See the [examples](https://github.com/guidesmiths/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
+See the [examples](https://github.com/onebeyond/systemic/tree/master/examples) for mode details and don't miss the section on [bootstrapping](#bootstraping-components) for how to organise large projects.
 
 ### Why Use Dependency Injection With Node.js?
 
@@ -161,8 +161,8 @@ start();
 
 There are some out of the box runners we can be used in your applications or as a reference for your own custom runner
 
-1. [Service Runner](https://github.com/guidesmiths/systemic-service-runner)
-1. [Domain Runner](https://github.com/guidesmiths/systemic-domain-runner)
+1. [Service Runner](https://github.com/onebeyond/systemic-service-runner)
+1. [Domain Runner](https://github.com/onebeyond/systemic-domain-runner)
 
 #### Components
 
@@ -192,7 +192,7 @@ module.exports = () => {
 
 The components stop function is useful for when you want to disconnect from an external service or release some other kind of resource. The start and stop functions support both promises and callbacks (not shown)
 
-There are out of the box components for [express](https://github.com/guidesmiths/systemic-express), [mongodb](https://github.com/guidesmiths/systemic-mongodb), [redis](https://github.com/guidesmiths/systemic-redis), [postgres](https://github.com/guidesmiths/systemic-pg) and [rabbitmq](https://github.com/guidesmiths/systemic-rabbitmq).
+There are out of the box components for [express](https://github.com/onebeyond/systemic-express), [mongodb](https://github.com/onebeyond/systemic-mongodb), [redis](https://github.com/onebeyond/systemic-redis), [postgres](https://github.com/onebeyond/systemic-pg) and [rabbitmq](https://github.com/onebeyond/systemic-rabbitmq).
 
 #### Dependencies
 
