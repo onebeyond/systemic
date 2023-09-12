@@ -1,0 +1,28 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "inigomarquinez",
+      "name": "Íñigo Marquínez Prado",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25435858?v=4",
+      "profile": "https://github.com/inigomarquinez",
+      "contributions": [
+        "doc",
+        "maintenance",
+        "review"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "systemic",
+  "projectOwner": "onebeyond"
+}
