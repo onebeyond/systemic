@@ -18,6 +18,7 @@
   <a href="https://codeclimate.com/github/onebeyond/systemic" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/gpa.svg" alt="Code Climate maintainability" /></a>
   <a href="https://codeclimate.com/github/onebeyond/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/coverage.svg" alt="Code Climate test coverage" /></a>
   <a href="https://socket.dev/npm/package/systemic" target="_blank"><img src="https://socket.dev/api/badge/npm/package/systemic" alt="socket.dev" /></a>
+  <a href="https://img.shields.io/github/all-contributors/onebeyond/systemic?color=ee8449&style=flat-square" target="_blank"><img src="https://img.shields.io/github/all-contributors/onebeyond/systemic?color=ee8449&style=flat-square" alt="all-contributors" /></a>
 </p>
 
 ## tl;dr
