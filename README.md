@@ -12,12 +12,14 @@
 <br />
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="NPM version" /></a>
-  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="NPM downloads" /></a>
-  <a href="https://github.com/onebeyond/systemic/actions?query=workflow%3A%22Node.js+CI%22" target="_blank"><img src="https://github.com/onebeyond/systemic/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" /></a>
+  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/v/systemic.svg?style=flat-square" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/systemic" target="_blank"><img src="https://img.shields.io/npm/dm/systemic.svg?style=flat-square" alt="npm downloads" /></a>
+  <a href="https://github.com/onebeyond/systemic/actions/workflows/node-js-ci.yml" target="_blank"><img src="https://github.com/onebeyond/systemic/actions/workflows/node-js-ci.yml/badge.svg" alt="node-js-ci workflow" /></a>
+  <a href="https://github.com/onebeyond/systemic/actions/workflows/node-js-publish.yml" target="_blank"><img src="https://github.com/onebeyond/systemic/actions/workflows/node-js-publish.yml/badge.svg" alt="node-js-publish workflow" /></a>
   <a href="https://codeclimate.com/github/onebeyond/systemic" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/gpa.svg" alt="Code Climate maintainability" /></a>
   <a href="https://codeclimate.com/github/onebeyond/systemic/coverage" target="_blank"><img src="https://codeclimate.com/github/onebeyond/systemic/badges/coverage.svg" alt="Code Climate test coverage" /></a>
   <a href="https://socket.dev/npm/package/systemic" target="_blank"><img src="https://socket.dev/api/badge/npm/package/systemic" alt="socket.dev" /></a>
+  <a href="https://img.shields.io/github/all-contributors/onebeyond/systemic?color=ee8449&style=flat-square" target="_blank"><img src="https://img.shields.io/github/all-contributors/onebeyond/systemic?color=ee8449&style=flat-square" alt="all-contributors" /></a>
 </p>
 
 ## tl;dr
