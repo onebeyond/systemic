@@ -192,4 +192,4 @@ export type Systemic<T extends Record<string, unknown>> = {
  */
 declare function Systemic<TMaster extends Record<string, unknown> = {}>(options?: { name?: string }): Systemic<TMaster>;
 
-export default Systemic;
+export = Systemic;
