@@ -115,7 +115,7 @@ module.exports = function (_params) {
   }
 
   function toSystem(system, name, cb) {
-    debug('Inspecting compontent %s', name);
+    debug('Inspecting component %s', name);
     getDependencies(name, system, (err, dependencies) => {
       if (err) return cb(err);
       startComponent(dependencies, name, system, cb);

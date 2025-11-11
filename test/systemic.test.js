@@ -28,7 +28,7 @@ describe('System', () => {
     system.stop(done);
   });
 
-  it('should tolerate being started wthout being stopped', (test, done) => {
+  it('should tolerate being started without being stopped', (test, done) => {
     system.add('foo', new CallbackComponent());
     system.start((err, components) => {
       assert.ifError(err);
