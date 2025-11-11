@@ -580,4 +580,49 @@ describe('System', () => {
       cb(null, config);
     };
   }
+
+  it('should handle accessing nested source properties when first part does not exist', (test, done) => {
+    system
+      .add('config', new Config({ foo: { bar: 'baz' } }))
+      .add('test', new CallbackComponent())
+      .dependsOn({ component: 'config', source: 'nonexistent.path', destination: 'config' })
+      .start((err, components) => {
+        assert.ifError(err);
+        assert.equal(components.test.dependencies.config, undefined);
+        done();
+      });
+  });
+
+  it('should handle accessing deeply nested source properties when intermediate parts exist but final part does not', (test, done) => {
+    system
+      .add('config', new Config({ level1: { level2: 'value' } }))
+      .add('test', new CallbackComponent())
+      .dependsOn({ component: 'config', source: 'level1.level2.level3', destination: 'config' })
+      .start((err, components) => {
+        assert.ifError(err);
+        assert.equal(components.test.dependencies.config, undefined);
+        done();
+      });
+  });
+
+  it('should handle accessing nested source properties on null/undefined component gracefully', (test, done) => {
+    const testCases = [null, undefined];
+    let completed = 0;
+
+    testCases.forEach((value) => {
+      const testSystem = System();
+      testSystem
+        .add('config', new Config(value))
+        .add('test', new CallbackComponent())
+        .dependsOn({ component: 'config', source: 'foo.bar', destination: 'config' })
+        .start((err, components) => {
+          assert.ifError(err);
+          assert.equal(components.test.dependencies.config, undefined);
+          completed++;
+          if (completed === testCases.length) {
+            done();
+          }
+        });
+    });
+  });
 });
