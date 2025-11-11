@@ -162,13 +162,26 @@ describe('System', () => {
     );
   });
 
-  it('should reject attempts to add an undefined component', () => {
-    assert.throws(
-      () => {
-        system.add('foo', undefined);
-      },
-      { message: 'Component foo is null or undefined' }
-    );
+  it('should reject attempts to add null or undefined components', () => {
+    [null, undefined].forEach((value) => {
+      assert.throws(
+        () => {
+          system.add('foo', value);
+        },
+        { message: 'Component foo is null or undefined' }
+      );
+    });
+  });
+
+  it('should reject attempts to set null or undefined components', () => {
+    [null, undefined].forEach((value) => {
+      assert.throws(
+        () => {
+          system.set('foo', value);
+        },
+        { message: 'Component foo is null or undefined' }
+      );
+    });
   });
 
   it('should reject dependsOn called before adding components', () => {
