@@ -34,8 +34,10 @@ function getProp(obj, key) {
   if (!!obj && obj.hasOwnProperty(key)) return obj[key]; // Some properties with '.' could fail, so we do a quick check
   if (key.includes('.')) {
     const keyParts = key.split('.');
+    if (!obj || !obj.hasOwnProperty(keyParts[0])) return undefined;
     return getProp(obj[keyParts[0]], keyParts.slice(1).join('.'));
   }
+  return undefined;
 }
 
 function setProp(obj, key, value) {
